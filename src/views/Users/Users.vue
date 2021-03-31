@@ -1,23 +1,331 @@
 <!--Vista Usuarios-->
 <template>
-    <div class="py-16">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+  <div class="py-8">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <!-- <x-message-status-success class="mb-4" :status="session('status')" /> -->
 
-            <div class="flex items-center overflow-hidden shadow-sm sm:rounded-lg  m-auto ">
-                <div class="px-10 py-4 bg-white border-2 rounded border-gray-400 m-auto ">
-                    <h2 class="font-bold text-xl text-gray-800">¡USUARIOS!</h2>
-                </div>
-            </div>
+      <nav class="navbar navbar-light py-6 mb-4">
+        <div class="bg-white py-4 px-2 rounded border-2 border-gray-300">
+          <div class="flex bg-blue-400 rounded pt-4">
+            <h4 class="pb-4 m-auto text-white font-bold text-lg">
+              Cuadro de búsqueda
+            </h4>
+          </div>
+          <form class="form-inline pt-4" method="GET">
+            <input
+              name="buscaNombre"
+              class="form-control mr-sm-2 rounded bg-gray-200 w-40"
+              type="search"
+              placeholder="Por nombre"
+              aria-label="Search"
+            />
+            <input
+              name="buscaEmail"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              type="search"
+              placeholder="Por email"
+              aria-label="Search"
+            />
+            <input
+              name="buscaNick"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+              type="search"
+              placeholder="Por nick"
+              aria-label="Search"
+            />
+            <input
+              name="buscaFechaLogin"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              type="date"
+              placeholder="Por fecha de creación"
+              aria-label="Search"
+            />
+
+            <label for="tipo" class="ml-4">Tipo de usuario:</label>
+            <select
+              name="buscaTipo"
+              class="form-control mr-sm-2 rounded bg-gray-200"
+            >
+              <option value="0">Todos</option>
+              <option value="admin">Administrador</option>
+              <option value="user">Socio</option>
+            </select>
+            <button
+              class="btn btn-outline-success bg-blue-200 border-2 text-gray-500 font-bold border-gray-400 rounded p-2 float-right"
+              type="button"
+            >
+              Buscar
+            </button>
+          </form>
         </div>
+      </nav>
+
+      <link-button
+        name="NewUser"
+        class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5"
+      >
+        Nuevo usuario
+      </link-button>
+
+      <link-button
+        name="Pieces"
+        class="text-lg text-white font-bold bg-indigo-500 ml-4 p-4 rounded p-1.5"
+      >
+        Piezas usuario.
+      </link-button>
+
+      <link-button
+        name="Sales"
+        class="text-lg text-white font-bold bg-indigo-500 ml-4 p-4 rounded p-1.5"
+      >
+        Ventas usuario
+      </link-button>
+
+      <!--SELECCION DE PAGINACION-->
+      <div class="hidden sm:flex mt-8 mb-1">
+        <dropdown>
+          <template v-slot:trigger>
+            <button
+              class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-400"
+            >
+              Usarios x página
+              <div class="ml-1">
+                <svg
+                  class="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </button>
+          </template>
+          <template v-slot:content>
+            <dropdown-link name="Users"> Paginación de 4 </dropdown-link>
+            <dropdown-link name="Users"> Paginación de 6 </dropdown-link>
+            <dropdown-link name="Users"> Paginación de 8 </dropdown-link>
+            <dropdown-link name="Users"> Paginación de 10 </dropdown-link>
+          </template>
+        </dropdown>
+      </div>
+
+      <!--TABLA-->
+      <div
+        class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
+      >
+        <div
+          class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
+        >
+          <div>
+            <p class="text-sm text-gray-700 leading-5">
+              Showing
+              <span class="font-medium">1</span>
+              to
+              <span class="font-medium">4</span>
+              of
+              <span class="font-medium">13</span>
+              results
+            </p>
+          </div>
+
+          <div>
+            <span class="relative z-0 inline-flex shadow-sm rounded-md">
+              <span aria-disabled="true" aria-label="&amp;laquo; Previo">
+                <span
+                  class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-l-md leading-5"
+                  aria-hidden="true"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </span>
+              </span>
+
+              <span aria-current="page">
+                <span
+                  class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5"
+                  >1</span
+                >
+              </span>
+              <a
+                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=2"
+                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150"
+                aria-label="Go to page 2"
+              >
+                2
+              </a>
+              <a
+                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=3"
+                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150"
+                aria-label="Go to page 3"
+              >
+                3
+              </a>
+              <a
+                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=4"
+                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150"
+                aria-label="Go to page 4"
+              >
+                4
+              </a>
+
+              <a
+                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=2"
+                rel="next"
+                class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md leading-5 hover:text-gray-400 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
+                aria-label="Siguiente &amp;raquo;"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </a>
+            </span>
+          </div>
+        </div>
+
+        <table
+          class="overflow-x-auto overflow-y-auto w-full bg-white divide-y divide-gray-200 mt-4"
+        >
+          <thead class="bg-blue-300">
+            <tr class="divide-x">
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Nombre
+              </th>
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Email
+              </th>
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Tipo
+              </th>
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Nick
+              </th>
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Imagen
+              </th>
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Fecha creación
+              </th>
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            v-if="users.length != 0"
+            class="text-gray-500 text-xs divide-y divide-gray-200"
+          >
+            <tr v-for="user in users" v-bind:key="user.id" class="text-center">
+              <td class="py-3">{{ user.name }}</td>
+              <td class="py-3">{{ user.email }}</td>
+              <td class="py-3">{{ user.type }}</td>
+              <td class="py-3">{{ user.nick }}</td>
+              <td class="py-3 flex justify-center">IMAGEN</td>
+              <td class="py-3">{{ user.created_at }}</td>
+              <td class="py-3">
+                <div class="flex justify-center space-x-1">
+                  <!-- @if($user->id != Auth::user()->id) -->
+                  <nav-link name="EditUser" class="font-bold">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      class="h-4 w-4 text-indigo-500"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                  </nav-link>
+
+                  <nav-link name="destroyUser" class="font-bold">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      class="h-4 w-4 text-red-500"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </nav-link>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+
+          <tbody v-else class="text-gray-500 text-xs divide-y divide-gray-200">
+            <tr class="text-center">
+              <td colspan="7" class="py-3 font-bold text-red-600 text-lg">
+                No usuarios
+              </td>
+            </tr>
+          </tbody>
+          <!-- {{$users->appends(request()->all())->links()}} -->
+        </table>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-
-export default{
-    created(){
-        this.$store.commit('SET_LAYOUT','principal-layout');
-        this.$store.commit('SET_TITLE','Usuarios');
-    },
-}
+import LinkButton from "../components/linkButton.vue";
+import Dropdown from "../components/dropdown";
+import DropdownLink from "../components/dropdown-link";
+import NavLink from "../components/nav-link";
+export default {
+  components: { LinkButton,DropdownLink,Dropdown,NavLink},
+  created() {
+    this.$store.commit("SET_LAYOUT", "principal-layout");
+    this.$store.commit("SET_TITLE", "Usuarios");
+  },
+  data: function () {
+    return {
+      users: [
+        {
+          name: "jaja",
+          email: "@gaga",
+          type: "admin",
+          nick: "jaja",
+          create_at: "2021",
+        },
+      ],
+    };
+  },
+};
 </script>
