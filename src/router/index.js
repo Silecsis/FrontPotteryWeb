@@ -5,6 +5,8 @@ import Users from '@/views/Users/Users'
 import Materials from '@/views/Materials/Materials'
 import MyPieces from '@/views/Pieces/MyPieces'
 import MySales from '@/views/Sales/MySales'
+import EditProfile from '@/views/Users/EditProfile'
+import Login from '@/views/Login'
 
 Vue.use(Router)
 
@@ -15,11 +17,24 @@ export default new Router({
       name: 'Dashboard',
       component: Dashboard
     },
+
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    //USUARIOS
     {
       path: '/users',
       name: 'Users',
       component: Users
     },
+    {
+      path: '/users/editProfile',
+      name: 'EditProfile',
+      component: EditProfile
+    },
+    //MATERIALES
     {
       path: '/materials',
       name: 'Materials',
