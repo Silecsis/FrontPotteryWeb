@@ -1,0 +1,19 @@
+.paginate-links{
+    width:100%;
+    list-style: none;
+    text-align: right;
+    margin-top: 10px;
+}
+.paginate-links li {
+    display: inline;
+    background-color:#C9E5F1 ;
+    color:black;
+    padding:10px;
+    margin-left:3px;
+    margin-right: 3px;
+    border-radius: 3px;
+}
+
+.paginate-links a {
+    cursor:pointer;
+}

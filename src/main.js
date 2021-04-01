@@ -4,8 +4,10 @@ import { store } from './store';
 import router from './router';
 import './assets/css/index.css';
 import 'alpinejs';
+import VuePaginate from 'vue-paginate';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+Vue.use(VuePaginate);
 
 new Vue({
   router,

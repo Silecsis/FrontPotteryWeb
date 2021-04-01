@@ -116,84 +116,11 @@
       <!--TABLA-->
       <div
         class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
-      >
-        <div
-          class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
-        >
-          <div>
-            <p class="text-sm text-gray-700 leading-5">
-              Showing
-              <span class="font-medium">1</span>
-              to
-              <span class="font-medium">4</span>
-              of
-              <span class="font-medium">13</span>
-              results
-            </p>
-          </div>
-
-          <div>
-            <span class="relative z-0 inline-flex shadow-sm rounded-md">
-              <span aria-disabled="true" aria-label="&amp;laquo; Previo">
-                <span
-                  class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-l-md leading-5"
-                  aria-hidden="true"
-                >
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </span>
-              </span>
-
-              <span aria-current="page">
-                <span
-                  class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5"
-                  >1</span
-                >
-              </span>
-              <a
-                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=2"
-                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150"
-                aria-label="Go to page 2"
-              >
-                2
-              </a>
-              <a
-                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=3"
-                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150"
-                aria-label="Go to page 3"
-              >
-                3
-              </a>
-              <a
-                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=4"
-                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-500 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150"
-                aria-label="Go to page 4"
-              >
-                4
-              </a>
-
-              <a
-                href="http://localhost/laravel/ceramicaWeb/public/users?buscaTipo=0&amp;page=2"
-                rel="next"
-                class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md leading-5 hover:text-gray-400 focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
-                aria-label="Siguiente &amp;raquo;"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </a>
-            </span>
-          </div>
-        </div>
+      > 
+           
+      <!-- PAGINACION CON VUE-PAGINATE -->
+        <paginate ref="paginator" name="users" :list="users" :per="2"/>
+        <paginate-links for="users" :limit="2" :show-step-links="true" ></paginate-links>
 
         <table
           class="overflow-x-auto overflow-y-auto w-full bg-white divide-y divide-gray-200 mt-4"
@@ -241,12 +168,13 @@
             v-if="users.length != 0"
             class="text-gray-500 text-xs divide-y divide-gray-200"
           >
-            <tr v-for="user in users" v-bind:key="user.id" class="text-center">
+          
+            <tr v-for="user in paginated('users')" v-bind:key="user.id" class="text-center">
               <td class="py-3">{{ user.name }}</td>
               <td class="py-3">{{ user.email }}</td>
               <td class="py-3">{{ user.type }}</td>
               <td class="py-3">{{ user.nick }}</td>
-              <td class="py-3 flex justify-center">IMAGEN</td>
+              <td class="py-3 flex justify-center">{{ user.img }}</td>
               <td class="py-3">{{ user.created_at }}</td>
               <td class="py-3">
                 <div class="flex justify-center space-x-1">
@@ -296,8 +224,9 @@
               </td>
             </tr>
           </tbody>
-          <!-- {{$users->appends(request()->all())->links()}} -->
+          <!-- {{$users->appends(request()->all())-->
         </table>
+        
       </div>
     </div>
   </div>
@@ -308,6 +237,8 @@ import LinkButton from "../components/linkButton.vue";
 import Dropdown from "../components/dropdown";
 import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
+import axios from "axios";
+
 export default {
   components: { LinkButton,DropdownLink,Dropdown,NavLink},
   created() {
@@ -316,16 +247,19 @@ export default {
   },
   data: function () {
     return {
-      users: [
-        {
-          name: "jaja",
-          email: "@gaga",
-          type: "admin",
-          nick: "jaja",
-          create_at: "2021",
-        },
-      ],
+      users: null,
+      paginate:['users'],
     };
   },
+  mounted () {
+    axios
+      .get('http://localhost:8000/api/users')
+      .then((result) => {
+      this.users = result.data.filter(user=>{
+        user.created_at=user.created_at.substring(0,10);//Modificacion
+        return true;//True porque quiero que me devueva. Si fuera al contrario, pondria false
+      });
+    })
+  }
 };
 </script>
