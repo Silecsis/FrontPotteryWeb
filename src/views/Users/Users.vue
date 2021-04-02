@@ -186,7 +186,12 @@
               <td class="py-3">
                 <div class="flex justify-center space-x-1">
                   <!-- @if($user->id != Auth::user()->id) -->
-                  <button-icon type="edit" class="font-bold"> </button-icon>
+                  <button-icon
+                    type="edit"
+                    @click.native="edit(user.id)"
+                    class="font-bold"
+                  >
+                  </button-icon>
 
                   <button-icon
                     type="remove"
@@ -298,6 +303,9 @@ export default {
     showSuccess: function (msg) {
       this.messageType = "success";
       this.message = msg;
+    },
+    edit: function (id) {
+      this.$router.push({ name: "EditUser", params: { id: id } });
     },
   },
 };

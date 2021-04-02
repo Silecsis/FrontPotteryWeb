@@ -36,7 +36,7 @@ export default new Router({
       component: EditProfile
     },
     {
-      path: '/users/editUser',
+      path: '/users/editUser/:id',
       name: 'EditUser',
       component: EditUser
     },
