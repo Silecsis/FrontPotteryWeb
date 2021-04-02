@@ -5,7 +5,7 @@
 
             <div class="flex items-center overflow-hidden shadow-sm sm:rounded-lg  m-auto ">
                 <div class="px-10 py-4 bg-white border-2 rounded border-gray-400 m-auto ">
-                    <h2 class="font-bold text-xl text-gray-800">¡Edit perfil!</h2>
+                    <h2 class="font-bold text-xl text-gray-800">¡Edit User!</h2>
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
 export default{
     created(){
         this.$store.commit('SET_LAYOUT','principal-layout');
-        this.$store.commit('SET_TITLE','Editar mi perfil');
+        this.$store.commit('SET_TITLE','Usuarios -> Editar Usuario');
     },
 }
 </script>
