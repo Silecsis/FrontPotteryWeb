@@ -1,4 +1,5 @@
-<!--Vista Usuarios-->
+<!--Vista piezas de cada usuario.
+El admin puede ver, borrar y editar la pieza.-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -14,35 +15,26 @@
           </div>
           <form class="form-inline pt-4" method="GET">
             
-            <button
-              class="btn btn-outline-success bg-blue-200 border-2 text-gray-500 font-bold border-gray-400 rounded p-2 float-right"
-              type="button"
-            >
-              Buscar
-            </button>
           </form>
         </div>
       </nav>
 
-      <link-button
-        name="NewMaterial"
-        class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5"
-      >
-        Nuevo material
-      </link-button>
+      
 
       <!--SELECCION DE PAGINACION-->
-      
+      <div class="hidden sm:flex mt-8 mb-1">
+        
+      </div>
 
       <!--TABLA-->
       <div
         class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
       >
         <!-- PAGINACION CON VUE-PAGINATE -->
-        <paginate ref="paginator" name="materials" :list="materials" :per="4" />
+        <paginate ref="paginator" name="pieces" :list="pieces" :per="4" />
         <paginate-links
-          for="materials"
-          :limit="2"
+          for="pieces"
+          :limit="4"
           :show-step-links="true"
         ></paginate-links>
 
@@ -59,17 +51,22 @@
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                Tipo de material
+                Usuario
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                Temperatura
+                Descripción
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                ¿Toxicidad?
+                Imagen
+              </th>
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                ¿Vendida?
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
@@ -84,32 +81,33 @@
             </tr>
           </thead>
           <tbody
-            v-if="materials.length != 0"
+            v-if="pieces.length != 0"
             class="text-gray-500 text-xs divide-y divide-gray-200"
           >
             <tr
-              v-for="material in paginated('materials')"
-              v-bind:key="material.id"
+              v-for="piece in paginated('pieces')"
+              v-bind:key="piece.id"
               class="text-center"
             >
-              <td class="py-3">{{ material.name }}</td>
-              <td class="py-3">{{ material.type_material }}</td>
-              <td class="py-3">{{ material.temperature }}</td>
-              <td class="py-3">{{ material.toxic }}</td>
-              <td class="py-3">{{ material.created_at }}</td>
+              <td class="py-3">{{ piece.name }}</td>
+              <td class="py-3">{{ piece.emailUser }}</td>
+              <td class="py-3">{{ piece.description }}</td>
+              <td class="py-3">{{ piece.img }}</td>
+              <td class="py-3 flex justify-center">{{ piece.sold }}</td>
+              <td class="py-3">{{ piece.created_at }}</td>
               <td class="py-3">
                 <div class="flex justify-center space-x-1">
                   <!-- @if($user->id != Auth::user()->id) -->
                   <button-icon
                     type="edit"
-                    @click.native="edit(material.id)"
+                    @click.native="edit(piece.id)"
                     class="font-bold"
                   >
                   </button-icon>
 
                   <button-icon
                     type="remove"
-                    @click.native="destroy(material.id)"
+                    @click.native="destroy(piece.id)"
                     class="font-bold"
                   >
                   </button-icon>
@@ -120,7 +118,7 @@
 
           <tbody v-else class="text-gray-500 text-xs divide-y divide-gray-200">
             <tr class="text-center">
-              <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
+              <td colspan="7" class="py-3 font-bold text-red-600 text-lg">
                 {{ errorTabla }}
               </td>
             </tr>
@@ -153,12 +151,12 @@ export default {
   },
   created() {
     this.$store.commit("SET_LAYOUT", "principal-layout");
-    this.$store.commit("SET_TITLE", "Materiales");
+    this.$store.commit("SET_TITLE", "Piezas de cada usuario");
   },
   data: function () {
     return {
-      materials: [],
-      paginate: ["materials"],
+      pieces:[],
+      paginate: ["pieces"],
       message: null,
       messageType: null,
       errorTabla: "",
@@ -166,16 +164,17 @@ export default {
   },
   mounted() {
     axios
-      .get(`${process.env.VUE_APP_API}/materials`)
+      .get(`${process.env.VUE_APP_API}/pieces`)
       .then((result) => {
-        this.materials = result.data.filter((material) => {
-          material.created_at = material.created_at.substring(0, 10); //Modificacion
+
+        this.pieces=result.data.filter((piece) => {
+          piece.created_at = piece.created_at.substring(0, 10); //Modificacion
           return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
         });
 
-        if (this.materials.length == 0) {
+        if (this.pieces.length == 0) {
           this.errorTabla =
-            "No existen materiales para este criterio de búsqueda";
+            "No existen piezas para este criterio de búsqueda";
         }
       })
       .catch(() => {
@@ -185,17 +184,17 @@ export default {
   methods: {
     destroy: function (id) {
       axios
-        .delete(`${process.env.VUE_APP_API}/materials/${id}`)
+        .delete(`${process.env.VUE_APP_API}/pieces/${id}`)
         .then((result) => {
           if (result.data.success) {
             this.showSuccess(result.data.message);
-            this.materials = this.materials.filter((material) => {
-              return material.id != id; //Para que no liste el usuario que se ha borrado
+            this.pieces = this.pieces.filter((piece) => {
+              return piece.id != id; //Para que no liste el usuario que se ha borrado
             });
 
-            if (this.materials.length == 0) {
+            if (this.pieces.length == 0) {
               this.errorTabla =
-                "No existen materiales para este criterio de búsqueda";
+                "No existen piezas para este criterio de búsqueda";
             }
           } else {
             this.showError(result.data.message);
@@ -218,7 +217,7 @@ export default {
       this.message = msg;
     },
     edit: function (id) {
-      this.$router.push({ name: "EditMaterial", params: { id: id } });
+      this.$router.push({ name: "EditPiece", params: { id: id } });
     },
   },
 };

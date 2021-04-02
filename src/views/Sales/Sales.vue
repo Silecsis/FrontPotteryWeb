@@ -1,4 +1,5 @@
-<!--Vista Usuarios-->
+<!--Vista piezas de cada usuario.
+El admin puede ver, borrar y editar la pieza.-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -14,35 +15,26 @@
           </div>
           <form class="form-inline pt-4" method="GET">
             
-            <button
-              class="btn btn-outline-success bg-blue-200 border-2 text-gray-500 font-bold border-gray-400 rounded p-2 float-right"
-              type="button"
-            >
-              Buscar
-            </button>
           </form>
         </div>
       </nav>
 
-      <link-button
-        name="NewMaterial"
-        class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5"
-      >
-        Nuevo material
-      </link-button>
+      
 
       <!--SELECCION DE PAGINACION-->
-      
+      <div class="hidden sm:flex mt-8 mb-1">
+        
+      </div>
 
       <!--TABLA-->
       <div
         class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
       >
         <!-- PAGINACION CON VUE-PAGINATE -->
-        <paginate ref="paginator" name="materials" :list="materials" :per="4" />
+        <paginate ref="paginator" name="sales" :list="sales" :per="4" />
         <paginate-links
-          for="materials"
-          :limit="2"
+          for="sales"
+          :limit="4"
           :show-step-links="true"
         ></paginate-links>
 
@@ -54,27 +46,28 @@
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                Nombre
+                Email de usuario
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                Tipo de material
+                Nombre de venta
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                Temperatura
+                Nombre de pieza
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                ¿Toxicidad?
+                Precio de venta
               </th>
+              
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
-                Fecha creación
+                Fecha de venta
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
@@ -84,32 +77,25 @@
             </tr>
           </thead>
           <tbody
-            v-if="materials.length != 0"
+            v-if="sales.length != 0"
             class="text-gray-500 text-xs divide-y divide-gray-200"
           >
             <tr
-              v-for="material in paginated('materials')"
-              v-bind:key="material.id"
+              v-for="sale in paginated('sales')"
+              v-bind:key="sale.id"
               class="text-center"
             >
-              <td class="py-3">{{ material.name }}</td>
-              <td class="py-3">{{ material.type_material }}</td>
-              <td class="py-3">{{ material.temperature }}</td>
-              <td class="py-3">{{ material.toxic }}</td>
-              <td class="py-3">{{ material.created_at }}</td>
+              <td class="py-3">{{ sale.emailUser}}</td>
+              <td class="py-3">{{ sale.name}}</td>
+              <td class="py-3">{{ sale.namePiece }}</td>
+              <td class="py-3">{{ sale.price }}</td>
+              <td class="py-3">{{ sale.created_at }}</td>
               <td class="py-3">
                 <div class="flex justify-center space-x-1">
                   <!-- @if($user->id != Auth::user()->id) -->
                   <button-icon
                     type="edit"
-                    @click.native="edit(material.id)"
-                    class="font-bold"
-                  >
-                  </button-icon>
-
-                  <button-icon
-                    type="remove"
-                    @click.native="destroy(material.id)"
+                    @click.native="edit(sale.id)"
                     class="font-bold"
                   >
                   </button-icon>
@@ -153,12 +139,12 @@ export default {
   },
   created() {
     this.$store.commit("SET_LAYOUT", "principal-layout");
-    this.$store.commit("SET_TITLE", "Materiales");
+    this.$store.commit("SET_TITLE", "Ventas de cada usuario");
   },
   data: function () {
     return {
-      materials: [],
-      paginate: ["materials"],
+      sales:[],
+      paginate: ["sales"],
       message: null,
       messageType: null,
       errorTabla: "",
@@ -166,16 +152,17 @@ export default {
   },
   mounted() {
     axios
-      .get(`${process.env.VUE_APP_API}/materials`)
+      .get(`${process.env.VUE_APP_API}/sales`)
       .then((result) => {
-        this.materials = result.data.filter((material) => {
-          material.created_at = material.created_at.substring(0, 10); //Modificacion
+
+        this.sales=result.data.filter((sale) => {
+          sale.created_at = sale.created_at.substring(0, 10); //Modificacion
           return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
         });
 
-        if (this.materials.length == 0) {
+        if (this.sales.length == 0) {
           this.errorTabla =
-            "No existen materiales para este criterio de búsqueda";
+            "No existen ventas para este criterio de búsqueda";
         }
       })
       .catch(() => {
@@ -185,17 +172,17 @@ export default {
   methods: {
     destroy: function (id) {
       axios
-        .delete(`${process.env.VUE_APP_API}/materials/${id}`)
+        .delete(`${process.env.VUE_APP_API}/sales/${id}`)
         .then((result) => {
           if (result.data.success) {
             this.showSuccess(result.data.message);
-            this.materials = this.materials.filter((material) => {
-              return material.id != id; //Para que no liste el usuario que se ha borrado
+            this.sales = this.sales.filter((sale) => {
+              return sale.id != id; //Para que no liste el usuario que se ha borrado
             });
 
-            if (this.materials.length == 0) {
+            if (this.sales.length == 0) {
               this.errorTabla =
-                "No existen materiales para este criterio de búsqueda";
+                "No existen ventas para este criterio de búsqueda";
             }
           } else {
             this.showError(result.data.message);
@@ -218,7 +205,7 @@ export default {
       this.message = msg;
     },
     edit: function (id) {
-      this.$router.push({ name: "EditMaterial", params: { id: id } });
+      this.$router.push({ name: "EditSale", params: { id: id } });
     },
   },
 };

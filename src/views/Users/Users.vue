@@ -72,14 +72,14 @@
         name="Pieces"
         class="text-lg text-white font-bold bg-indigo-500 ml-4 p-4 rounded p-1.5"
       >
-        Piezas usuario.
+        Piezas de cada usuario
       </link-button>
 
       <link-button
         name="Sales"
         class="text-lg text-white font-bold bg-indigo-500 ml-4 p-4 rounded p-1.5"
       >
-        Ventas usuario
+        Ventas de cada usuario
       </link-button>
 
       <!--SELECCION DE PAGINACION-->
