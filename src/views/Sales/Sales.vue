@@ -138,7 +138,6 @@ export default {
     Message,
   },
   created() {
-    this.$store.commit("SET_LAYOUT", "principal-layout");
     this.$store.commit("SET_TITLE", "Ventas de cada usuario");
   },
   data: function () {

@@ -115,7 +115,6 @@ export default {
     };
   },
   created() {
-    this.$store.commit("SET_LAYOUT", "principal-layout");
     this.$store.commit("SET_TITLE", "Materiales -> Nuevo Material");
   },
  

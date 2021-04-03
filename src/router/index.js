@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Register from '@/views/auth/Register'
+import PasswordRequest from '@/views/auth/PasswordRequest'
 import Dashboard from '@/views/Dashboard'
 
 import Users from '@/views/Users/Users'
@@ -19,22 +21,50 @@ import MySales from '@/views/Sales/MySales'
 import Sales from '@/views/Sales/Sales'
 import EditSale from '@/views/Sales/EditSale'
 
-import Login from '@/views/Login'
+import Login from '@/views/auth/login'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
+const router = new Router();
+
+router.beforeEach((to,from,next)=>{
+  switch(to.name){
+    case 'Login':
+      router.app.$store.commit('SET_LAYOUT','login-layout');
+      break;
+
+    default:
+      router.app.$store.commit('SET_LAYOUT','principal-layout');
+      break;
+  }
+
+  next();
+});
+
+router.addRoutes(
+  [
     {
       path: '/',
       name: 'Dashboard',
-      component: Dashboard
-    },
+      component: Dashboard,
 
+    },
     {
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register,
+      
+    },
+    {
+      path: '/passwordRequest',
+      name: 'PasswordRequest',
+      component: PasswordRequest,
+      
     },
     //USUARIOS
     {
@@ -80,7 +110,7 @@ export default new Router({
       name: 'MyPieces',
       component: MyPieces
     },
-    
+
     {
       path: '/pieces',
       name: 'Pieces',
@@ -108,4 +138,7 @@ export default new Router({
       component: EditSale
     },
   ]
-})
+
+);
+
+export default router;

@@ -238,7 +238,6 @@ export default {
     Message,
   },
   created() {
-    this.$store.commit("SET_LAYOUT", "principal-layout");
     this.$store.commit("SET_TITLE", "Usuarios");
   },
   data: function () {
@@ -251,6 +250,7 @@ export default {
     };
   },
   mounted() {
+  
     axios
       .get(`${process.env.VUE_APP_API}/users`)
       .then((result) => {

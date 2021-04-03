@@ -150,7 +150,6 @@ export default {
     Message,
   },
   created() {
-    this.$store.commit("SET_LAYOUT", "principal-layout");
     this.$store.commit("SET_TITLE", "Piezas de cada usuario");
   },
   data: function () {

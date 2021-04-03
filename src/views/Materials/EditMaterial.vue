@@ -104,7 +104,6 @@ export default {
     CardSinLogo,
   },
   created() {
-    this.$store.commit("SET_LAYOUT", "principal-layout");
     this.$store.commit("SET_TITLE", "Materiales -> Editar material");
   },
   data: function () {
