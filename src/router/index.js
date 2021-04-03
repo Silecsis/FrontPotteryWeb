@@ -38,7 +38,12 @@ router.beforeEach((to,from,next)=>{
       break;
   }
 
-  next();
+  var user=JSON.parse(sessionStorage.getItem('user'));
+  if(to.name=='Users' && (!user || user.type=='user')){
+    next({name:'Dashboard'});
+  }else{
+    next();
+  }
 });
 
 router.addRoutes(

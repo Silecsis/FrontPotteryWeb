@@ -4,7 +4,6 @@
     <message :message="message" :type="messageType" />
 
     <form method="POST">
-
       <!-- Email Address -->
       <div>
         <v-label for="email">Email</v-label>
@@ -69,17 +68,16 @@
 </template>
 
 <script>
+import axios from "axios";
+
 import message from "../components/message.vue";
 import NavLink from "../components/nav-link.vue";
 import VInput from "../components/v-input";
 import VLabel from "../components/v-label";
-import VButton  from "../components/v-button";
-
-
-
+import VButton from "../components/v-button";
 
 export default {
-  components: { message, NavLink, VInput,VLabel,VButton },
+  components: { message, NavLink, VInput, VLabel, VButton },
   data: function () {
     return {
       user: {},
@@ -89,26 +87,44 @@ export default {
   },
   methods: {
     enter: function () {
-
-    //   if (this.user.name.length == 0) {
-    //     this.error.name = "Campo obligatorio";
-    //     return;
-    //   }
+      //   if (this.user.name.length == 0) {
+      //     this.error.name = "Campo obligatorio";
+      //     return;
+      //   }
 
       axios
-        .put(`${process.env.VUE_APP_API}/users/${id}`, this.user)
+        .post(`${process.env.VUE_APP_API}/login`, this.user)
         .then((result) => {
-          this.messageType = "success";
-          this.message = "El usuario ha sido modificado correctamente";
+          if (result.status === 200) {
+            let userStorage = JSON.stringify(result.data.user);
+            sessionStorage.setItem("user", userStorage);
+            sessionStorage.setItem("token", result.data.token);
+            
+            this.$router.push({ name: "Dashboard" });
+          } else {
+            this.showError(result.data.message);
+          }
         })
         .catch((error) => {
-          this.messageType = "error";
-          if (error.response) {
+          if(error.response){
+            if ( error.response.data.error == "Unauthorised") {
+            this.showError(
+              "Los datos introducidos no residen en nuestra base de datos"
+            );}
+          } else if (error.response) {
             this.message = error.response.data.message;
-          } else {
-            this.message = "Ha ocurrido un error inesperado";
+          }else {
+            this.showError("Ha ocurrido un error inesperado");
           }
         });
+    },
+    showError: function (msg) {
+      this.messageType = "error";
+      this.message = msg;
+    },
+    showSuccess: function (msg) {
+      this.messageType = "success";
+      this.message = msg;
     },
   },
 };
