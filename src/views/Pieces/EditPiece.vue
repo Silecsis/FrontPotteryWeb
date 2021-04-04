@@ -96,7 +96,7 @@ export default {
     Validation,
   },
   created() {
-    this.$store.commit("SET_TITLE", "Piezas de cada usuario -> Editar pieza");
+    this.$store.commit("SET_TITLE", "Piezas cerámicas -> Editar pieza");
   },
   data: function () {
     return {

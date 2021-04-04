@@ -84,7 +84,7 @@ export default {
     Validation,
   },
   created() {
-    this.$store.commit("SET_TITLE", "Ventas de cada usuario -> Editar venta");
+    this.$store.commit("SET_TITLE", "Ventas realizadas -> Editar venta");
   },
   data: function () {
     return {

@@ -69,20 +69,6 @@
           Nuevo usuario
         </link-button>
 
-        <link-button
-          name="Pieces"
-          class="text-lg text-white font-bold bg-indigo-500 ml-4 p-4 rounded p-1.5"
-        >
-          Piezas de cada usuario
-        </link-button>
-
-        <link-button
-          name="Sales"
-          class="text-lg text-white font-bold bg-indigo-500 ml-4 p-4 rounded p-1.5"
-        >
-          Ventas de cada usuario
-        </link-button>
-
         <!--SELECCION DE PAGINACION-->
         <div class="hidden sm:flex mt-8 mb-1">
           <dropdown>

@@ -13,18 +13,12 @@ El admin puede ver, borrar y editar la pieza.-->
               Cuadro de búsqueda
             </h4>
           </div>
-          <form class="form-inline pt-4" method="GET">
-            
-          </form>
+          <form class="form-inline pt-4" method="GET"></form>
         </div>
       </nav>
 
-      
-
       <!--SELECCION DE PAGINACION-->
-      <div class="hidden sm:flex mt-8 mb-1">
-        
-      </div>
+      <div class="hidden sm:flex mt-8 mb-1"></div>
 
       <!--TABLA-->
       <div
@@ -63,7 +57,7 @@ El admin puede ver, borrar y editar la pieza.-->
               >
                 Precio de venta
               </th>
-              
+
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
@@ -71,6 +65,7 @@ El admin puede ver, borrar y editar la pieza.-->
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+                v-demo:admin="user"
               >
                 Acciones
               </th>
@@ -85,12 +80,12 @@ El admin puede ver, borrar y editar la pieza.-->
               v-bind:key="sale.id"
               class="text-center"
             >
-              <td class="py-3">{{ sale.emailUser}}</td>
-              <td class="py-3">{{ sale.name}}</td>
+              <td class="py-3">{{ sale.emailUser }}</td>
+              <td class="py-3">{{ sale.name }}</td>
               <td class="py-3">{{ sale.namePiece }}</td>
               <td class="py-3">{{ sale.price }}</td>
               <td class="py-3">{{ sale.created_at }}</td>
-              <td class="py-3">
+              <td class="py-3" v-demo:admin="user">
                 <div class="flex justify-center space-x-1">
                   <!-- @if($user->id != Auth::user()->id) -->
                   <button-icon
@@ -105,7 +100,16 @@ El admin puede ver, borrar y editar la pieza.-->
           </tbody>
 
           <tbody v-else class="text-gray-500 text-xs divide-y divide-gray-200">
-            <tr class="text-center">
+            <tr v-demo:admin="user" class="text-center">
+              <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
+                {{ errorTabla }}
+              </td>
+            </tr>
+
+            <tr
+              v-if="(user != null && user.type != 'admin') || user"
+              class="text-center"
+            >
               <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
                 {{ errorTabla }}
               </td>
@@ -138,35 +142,36 @@ export default {
     Message,
   },
   created() {
-    this.$store.commit("SET_TITLE", "Ventas de cada usuario");
+    this.$store.commit("SET_TITLE", "Ventas realizadas");
   },
   data: function () {
     return {
-      sales:[],
+      sales: [],
       paginate: ["sales"],
       message: null,
       messageType: null,
       errorTabla: "",
+      user: null,
     };
   },
   mounted() {
     axios
       .get(`${process.env.VUE_APP_API}/sales`)
       .then((result) => {
-
-        this.sales=result.data.filter((sale) => {
+        this.sales = result.data.filter((sale) => {
           sale.created_at = sale.created_at.substring(0, 10); //Modificacion
           return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
         });
 
         if (this.sales.length == 0) {
-          this.errorTabla =
-            "No existen ventas para este criterio de búsqueda";
+          this.errorTabla = "No existen ventas para este criterio de búsqueda";
         }
       })
       .catch(() => {
         this.errorTabla = "Ha ocurrido un error inesperado";
       });
+
+    this.user = JSON.parse(sessionStorage.getItem("user"));
   },
   methods: {
     destroy: function (id) {

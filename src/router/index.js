@@ -40,7 +40,7 @@ router.beforeEach((to,from,next)=>{
 
   var user=JSON.parse(sessionStorage.getItem('user'));
   if(to.name=='Users' && (!user || user.type=='user')){
-    next({name:'Dashboard'});
+    next({name:'Dashboard',query:{error:'no-admin'}});
   }else{
     next();
   }

@@ -18,18 +18,25 @@
           <!--HOME-->
           <nav-link name="Dashboard" class="font-bold"> Home </nav-link>
 
-          <!--SOLO SI ES ADMIN-->
-          <!--Usuarios-->
-          <nav-link v-if="user && user.type=='admin'" name="Users" class="font-bold"> Usuarios </nav-link>
+          <!--Usuarios. SOLO SI ES ADMIN-->
+          <nav-link v-demo:admin="user" name="Users" class="font-bold">
+            Usuarios
+          </nav-link>
 
           <!--Materials-->
-          <nav-link name="Materials" class="font-bold"> Materiales </nav-link>
+          <nav-link v-if="user" name="Materials" class="font-bold">
+            Materiales
+          </nav-link>
 
-          <!--Mis piezas-->
-          <nav-link name="MyPieces" class="font-bold"> Mis piezas </nav-link>
+          <!--Pieces-->
+          <nav-link name="Pieces" class="font-bold">
+            Piezas cerámicas
+          </nav-link>
 
-          <!--Mis ventas-->
-          <nav-link name="MySales" class="font-bold"> Mis ventas </nav-link>
+          <!--Sales-->
+          <nav-link name="Sales" class="font-bold">
+            Ventas realizadas
+          </nav-link>
         </div>
       </div>
 
@@ -60,11 +67,19 @@
           </template>
 
           <template v-slot:content>
+            <!-- Mis piezas -->
+            <dropdown-link name="MyPieces">
+              Mis piezas cerámicas
+            </dropdown-link>
+
+            <!-- Mis ventas -->
+            <dropdown-link name="MySales">
+              Mis ventas realizadas
+            </dropdown-link>
+
             <!-- Edita mi perfil -->
             <dropdown-link name="EditProfile"> Editar mi perfil </dropdown-link>
 
-            <!-- Authentication -->
-            <!-- TODO:form -->
             <!-- LOGOUT -->
             <dropdown-link @click.native="logout"> Salir </dropdown-link>
           </template>
@@ -139,16 +154,17 @@ export default {
 
     logout: function () {
       sessionStorage.clear();
-      this.$router.push({ name: "Dashboard" });
-      this.$router.go(0);
+      if (this.$route.name == "Dashboard") {
+        this.$router.go(0);
+      } else {
+        this.$router.push({ name: "Dashboard" });
+
+        this.user = null;
+      }
     },
   },
   mounted() {
-    if (sessionStorage.getItem("user")) {
-      this.user = JSON.parse(sessionStorage.getItem("user"));
-    } else {
-      this.user = null;
-    }
+    this.user = JSON.parse(sessionStorage.getItem("user"));
   },
 };
 </script>

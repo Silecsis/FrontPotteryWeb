@@ -20,7 +20,7 @@
             required
           />
 
-          <validation v-if="error.name" :error="error.name" />
+          <validation v-if="error.name" :errors="error.name" />
         </div>
 
         <!-- Email Address -->
@@ -35,6 +35,8 @@
             v-model="user.email"
             required
           />
+
+          <validation v-if="error.email" :errors="error.email" />
         </div>
 
         <!-- Type -->
@@ -48,6 +50,8 @@
             <option value="admin">Administrador</option>
             <option value="user">Socio</option>
           </select>
+
+          <validation v-if="error.type" :errors="error.type" />
         </div>
 
         <!-- Nick -->
@@ -62,6 +66,8 @@
             v-model="user.nick"
             required
           />
+
+          <validation v-if="error.nick" :errors="error.nick" />
         </div>
 
         <!-- Boton-->
@@ -116,9 +122,12 @@ export default {
       message: null,
       messageType: null,
       id: "",
-      error:{
-          name:''
-          },
+      error: {
+        name: [],
+        email: [],
+        type: [],
+        nick: [],
+      },
     };
   },
   mounted() {
@@ -137,11 +146,10 @@ export default {
     save: function () {
       var id = this.$route.params.id;
 
-      if (this.user.name.length == 0) {
-        this.error.name = "Campo obligatorio";
+      if (!this.validate()) {
         return;
       }
-
+      
       axios
         .put(`${process.env.VUE_APP_API}/users/${id}`, this.user)
         .then((result) => {
@@ -150,12 +158,65 @@ export default {
         })
         .catch((error) => {
           this.messageType = "error";
-          if (error.response) {
+          if (error.response.data.errors) {
+            for (let fieldError in error.response.data.errors) {
+              this.error[fieldError] = error.response.data.errors[fieldError];
+            }
+            // this.message ='Compuebe los errores del form: \n'
+            //     + error.response.data.errors.join('\n');
+          } else if (error.response) {
             this.message = error.response.data.message;
           } else {
             this.message = "Ha ocurrido un error inesperado";
           }
         });
+    },
+    validate: function () {
+      var nameUser = this.user.name;
+      var emailUser = this.user.email;
+      var nickUser = this.user.nick;
+      var typeUser = this.user.type;
+      var regexEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      var valid = true;
+      this.error = {
+        name: [],
+        email: [],
+        type: [],
+        nick: [],
+      };
+
+      if (nameUser.length < 6 || nameUser.length > 255 || !nameUser) {
+        this.error.name.push(
+          "El campo no puede ser un número, debe tener al menos de 6 carácteres y no más de 255."
+        );
+        valid = false;
+      }
+
+      if (
+        emailUser.length < 6 ||
+        emailUser.length > 255 ||
+        !emailUser ||
+        !regexEmail.test(emailUser)
+      ) {
+        this.error.email.push(
+          "El campo debe ser un email válido de al menos de 6 carácteres y máximo 255."
+        );
+        valid = false;
+      }
+
+      if (!typeUser) {
+        this.error.type.push("El campo es obligatorio.");
+        valid = false;
+      }
+
+      if (nickUser.length < 4 || nickUser.length > 255 || !nickUser) {
+        this.error.nick.push(
+          "El campo debe tener al menos 4 carácteres y no más de 255."
+        );
+        valid = false;
+      }
+
+      return valid;
     },
   },
 };
