@@ -1,7 +1,10 @@
-<!--Vista Usuarios-->
+<!--
+  Vista de edición de usuario.
+  Edita a los usuarios de la api.
+  Solo puede acceder los usuarios de tipo admin.
+-->
 <template>
   <div>
-    <!-- <x-guest-layout> -->
     <card-sin-logo>
       <!-- Información operación -->
       <message :message="message" :type="messageType" />
@@ -88,7 +91,6 @@
         </div>
       </form>
     </card-sin-logo>
-    <!-- </x-guest-layout> -->
   </div>
 </template>
 
@@ -162,8 +164,6 @@ export default {
             for (let fieldError in error.response.data.errors) {
               this.error[fieldError] = error.response.data.errors[fieldError];
             }
-            // this.message ='Compuebe los errores del form: \n'
-            //     + error.response.data.errors.join('\n');
           } else if (error.response) {
             this.message = error.response.data.message;
           } else {

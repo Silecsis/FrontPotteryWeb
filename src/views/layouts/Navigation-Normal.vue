@@ -19,7 +19,7 @@
           <nav-link name="Dashboard" class="font-bold"> Home </nav-link>
 
           <!--Usuarios. SOLO SI ES ADMIN-->
-          <nav-link v-demo:admin="user" name="Users" class="font-bold">
+          <nav-link v-rol:admin="user" name="Users" class="font-bold">
             Usuarios
           </nav-link>
 
@@ -78,7 +78,7 @@
             </dropdown-link>
 
             <!-- Edita mi perfil -->
-            <dropdown-link name="EditProfile"> Editar mi perfil </dropdown-link>
+            <dropdown-link @click.native="editProfile(user.id)"> Editar mi perfil </dropdown-link>
 
             <!-- LOGOUT -->
             <dropdown-link @click.native="logout"> Salir </dropdown-link>
@@ -161,6 +161,9 @@ export default {
 
         this.user = null;
       }
+    },
+    editProfile: function (id) {
+      this.$router.push({ name: "EditProfile", params: { id: id } });
     },
   },
   mounted() {

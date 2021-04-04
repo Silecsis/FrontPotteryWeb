@@ -65,7 +65,7 @@ El admin puede ver, borrar y editar la pieza.-->
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-                v-demo:admin="user"
+                v-rol:admin="user"
               >
                 Acciones
               </th>
@@ -85,7 +85,7 @@ El admin puede ver, borrar y editar la pieza.-->
               <td class="py-3">{{ sale.namePiece }}</td>
               <td class="py-3">{{ sale.price }}</td>
               <td class="py-3">{{ sale.created_at }}</td>
-              <td class="py-3" v-demo:admin="user">
+              <td class="py-3" v-rol:admin="user">
                 <div class="flex justify-center space-x-1">
                   <!-- @if($user->id != Auth::user()->id) -->
                   <button-icon
@@ -100,7 +100,7 @@ El admin puede ver, borrar y editar la pieza.-->
           </tbody>
 
           <tbody v-else class="text-gray-500 text-xs divide-y divide-gray-200">
-            <tr v-demo:admin="user" class="text-center">
+            <tr v-rol:admin="user" class="text-center">
               <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
                 {{ errorTabla }}
               </td>

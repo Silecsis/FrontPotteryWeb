@@ -78,7 +78,7 @@ router.addRoutes(
       component: Users
     },
     {
-      path: '/users/editProfile',
+      path: '/users/editProfile/:id',
       name: 'EditProfile',
       component: EditProfile
     },

@@ -9,27 +9,39 @@ import VuePaginate from 'vue-paginate';
 Vue.config.productionTip = false;
 Vue.use(VuePaginate);
 
-Vue.directive('demo', {
+Vue.directive('rol', {
   update: function (el, binding, vnode) {
-    let user =binding.value;
-
-    if(!user || user.type != binding.arg){
-      el.style.display="none";
-    }else{
-      el.style.display=null;
-    }
+    checkPermission(el, binding, vnode);
   },
 
   inserted: function (el, binding, vnode) {
-    let user =binding.value;
-
-    if(!user || user.type != binding.arg){
-      el.style.display="none";
-    }else{
-      el.style.display=null;
-    }
+    checkPermission(el, binding, vnode);
   },
 });
+
+/**
+ * Sustituye lo que no tiene permiso para ver por un commentario en el DOM y
+ * en el caso de que vuelva a adquirir los permisos sustituye el comentario por
+ * la región particular.
+ * 
+ * @param {*} el 
+ * @param {*} binding 
+ * @param {*} vnode 
+ */
+function checkPermission(el, binding, vnode){
+  let user =binding.value;
+
+    if(!user || user.type != binding.arg){
+      let comment = document.createComment('---');
+      vnode.elm.comment=comment;
+      el.replaceWith(comment);
+
+      // el.style.display="none";
+    }else if(vnode.elm.comment){
+      vnode.elm.comment.replaceWith(el);
+      // el.style.display=null;
+    }
+}
 
 new Vue({
   router,

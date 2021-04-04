@@ -1,8 +1,11 @@
-<!--Vista Usuarios-->
+<!--
+  Vista Usuarios.
+  Lista los usuarios de la api.
+  Solo puede acceder los usuarios de tipo admin.
+-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <!-- <x-message-status-success class="mb-4" :status="session('status')" /> -->
       <message :message="message" :type="messageType" />
 
       <div v-if="auth == true">
@@ -172,7 +175,6 @@
                 <td class="py-3">{{ user.created_at }}</td>
                 <td class="py-3">
                   <div class="flex justify-center space-x-1">
-                    <!-- @if($user->id != Auth::user()->id) -->
                     <button-icon
                       type="edit"
                       @click.native="edit(user.id)"
@@ -201,7 +203,6 @@
                 </td>
               </tr>
             </tbody>
-            <!-- {{$users->appends(request()->all())-->
           </table>
         </div>
       </div>

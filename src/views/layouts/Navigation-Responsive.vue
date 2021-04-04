@@ -10,7 +10,7 @@
 
       <!--Usuarios. SOLO SI ES ADMIN-->
       <nav-link
-        v-demo:admin="user"
+        v-rol:admin="user"
         name="Users"
         responsive="true"
         class="font-bold"
@@ -102,7 +102,7 @@
               </dropdown-link>
 
               <!-- Edita mi perfil -->
-              <dropdown-link name="EditProfile">
+              <dropdown-link @click.native="editProfile(user.id)">
                 Editar mi perfil
               </dropdown-link>
 
@@ -155,6 +155,9 @@ export default {
 
         this.user = null;
       }
+    },
+    editProfile: function (id) {
+      this.$router.push({ name: "EditProfile", params: { id: id } });
     },
   },
   mounted() {
