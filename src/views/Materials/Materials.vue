@@ -1,8 +1,11 @@
-<!--Vista Usuarios-->
+<!--
+  Vista Materiales.
+  Lista los materiales de la api.
+  Pueden acceder los usuarios logados.
+-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <!-- <x-message-status-success class="mb-4" :status="session('status')" /> -->
       <message :message="message" :type="messageType" />
 
       <nav class="navbar navbar-light py-6 mb-4">
@@ -76,7 +79,7 @@
               >
                 Fecha creación
               </th>
-              <th
+              <th v-rol:admin="user"
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
                 Acciones
@@ -97,9 +100,8 @@
               <td class="py-3">{{ material.temperature }}</td>
               <td class="py-3">{{ material.toxic }}</td>
               <td class="py-3">{{ material.created_at }}</td>
-              <td class="py-3">
+              <td class="py-3" v-rol:admin="user">
                 <div class="flex justify-center space-x-1">
-                  <!-- @if($user->id != Auth::user()->id) -->
                   <button-icon
                     type="edit"
                     @click.native="edit(material.id)"
@@ -119,13 +121,18 @@
           </tbody>
 
           <tbody v-else class="text-gray-500 text-xs divide-y divide-gray-200">
-            <tr class="text-center">
+            <tr v-rol:admin="user" class="text-center">
               <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
                 {{ errorTabla }}
               </td>
             </tr>
+
+            <tr v-if=" user!= null && user.type != 'admin' || user" class="text-center">
+              <td colspan="5" class="py-3 font-bold text-red-600 text-lg">
+                {{ errorTabla }}
+              </td>
+            </tr>
           </tbody>
-          <!-- {{$users->appends(request()->all())-->
         </table>
       </div>
     </div>

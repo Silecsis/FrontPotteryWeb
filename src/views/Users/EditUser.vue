@@ -185,17 +185,16 @@ export default {
         nick: [],
       };
 
-      if (nameUser.length < 6 || nameUser.length > 255 || !nameUser) {
+      if (!nameUser || nameUser.length < 6 || nameUser.length > 255) {
         this.error.name.push(
           "El campo no puede ser un número, debe tener al menos de 6 carácteres y no más de 255."
         );
         valid = false;
       }
 
-      if (
+      if (!emailUser ||
         emailUser.length < 6 ||
         emailUser.length > 255 ||
-        !emailUser ||
         !regexEmail.test(emailUser)
       ) {
         this.error.email.push(
@@ -209,7 +208,7 @@ export default {
         valid = false;
       }
 
-      if (nickUser.length < 4 || nickUser.length > 255 || !nickUser) {
+      if (!nickUser || nickUser.length < 4 || nickUser.length > 255 ) {
         this.error.nick.push(
           "El campo debe tener al menos 4 carácteres y no más de 255."
         );

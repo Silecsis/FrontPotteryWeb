@@ -23,6 +23,7 @@
                 type="search"
                 placeholder="Por nombre"
                 aria-label="Search"
+                v-model="searchForm.buscaNombre"
               />
               <input
                 name="buscaEmail"
@@ -30,6 +31,7 @@
                 type="search"
                 placeholder="Por email"
                 aria-label="Search"
+                v-model="searchForm.buscaEmail"
               />
               <input
                 name="buscaNick"
@@ -37,6 +39,7 @@
                 type="search"
                 placeholder="Por nick"
                 aria-label="Search"
+                v-model="searchForm.buscaNick"
               />
               <input
                 name="buscaFechaLogin"
@@ -44,20 +47,23 @@
                 type="date"
                 placeholder="Por fecha de creación"
                 aria-label="Search"
+                v-model="searchForm.buscaFechaLogin"
               />
 
               <label for="tipo" class="ml-4">Tipo de usuario:</label>
               <select
                 name="buscaTipo"
                 class="form-control mr-sm-2 rounded bg-gray-200"
+                v-model="searchForm.buscaTipo"
               >
-                <option value="0">Todos</option>
+                <option value="">Todos</option>
                 <option value="admin">Administrador</option>
                 <option value="user">Socio</option>
               </select>
               <button
                 class="btn btn-outline-success bg-blue-200 border-2 text-gray-500 font-bold border-gray-400 rounded p-2 float-right"
                 type="button"
+                @click="search"
               >
                 Buscar
               </button>
@@ -79,7 +85,7 @@
               <button
                 class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-400"
               >
-                Usarios x página
+                Mostrar {{pageSize}} por página
                 <div class="ml-1">
                   <svg
                     class="fill-current h-4 w-4"
@@ -96,10 +102,10 @@
               </button>
             </template>
             <template v-slot:content>
-              <dropdown-link name="Users"> Paginación de 4 </dropdown-link>
-              <dropdown-link name="Users"> Paginación de 6 </dropdown-link>
-              <dropdown-link name="Users"> Paginación de 8 </dropdown-link>
-              <dropdown-link name="Users"> Paginación de 10 </dropdown-link>
+              <dropdown-link @click.native="pageSize=4"> Paginación de 4 </dropdown-link>
+              <dropdown-link @click.native="pageSize=6"> Paginación de 6 </dropdown-link>
+              <dropdown-link @click.native="pageSize=8"> Paginación de 8 </dropdown-link>
+              <dropdown-link @click.native="pageSize=10"> Paginación de 10 </dropdown-link>
             </template>
           </dropdown>
         </div>
@@ -109,7 +115,7 @@
           class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
         >
           <!-- PAGINACION CON VUE-PAGINATE -->
-          <paginate ref="paginator" name="users" :list="users" :per="2" />
+          <paginate ref="paginator" name="users" :list="users" :per="pageSize" />
           <paginate-links
             for="users"
             :limit="2"
@@ -240,32 +246,13 @@ export default {
       messageType: null,
       errorTabla: "",
       auth: true,
+      pageSize:4,
+      searchForm:{},
     };
   },
   mounted() {
-    axios
-      .get(`${process.env.VUE_APP_API}/users`)
-      .then((result) => {
-        this.users = result.data.filter((user) => {
-          user.created_at = user.created_at.substring(0, 10); //Modificacion
-          return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-        });
-
-        if (this.users.length == 0) {
-          this.errorTabla =
-            "No existen usuarios para este criterio de búsqueda";
-        }
-      })
-      .catch((error) => {
-        if (error.response.data.message == "Unauthenticated.") {
-          this.showError("No estás autorizado para esta vista");
-          this.$store.commit("SET_TITLE", "Usuarios --> Error");
-          this.auth = false;
-        } else {
-          this.users = [];
-          this.errorTabla = "Ha ocurrido un error inesperado";
-        }
-      });
+    this.searchForm={buscaTipo:""};
+    this.search();
   },
   methods: {
     destroy: function (id) {
@@ -305,6 +292,34 @@ export default {
     edit: function (id) {
       this.$router.push({ name: "EditUser", params: { id: id } });
     },
+    search:function(){
+      let config={
+        params:this.searchForm,
+      };
+      axios
+      .get(`${process.env.VUE_APP_API}/users`,config)
+      .then((result) => {
+        this.users = result.data.filter((user) => {
+          user.created_at = user.created_at.substring(0, 10); //Modificacion
+          return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
+        });
+
+        if (this.users.length == 0) {
+          this.errorTabla =
+            "No existen usuarios para este criterio de búsqueda";
+        }
+      })
+      .catch((error) => {
+        if (error.response.data.message == "Unauthenticated.") {
+          this.showError("No estás autorizado para esta vista");
+          this.$store.commit("SET_TITLE", "Usuarios --> Error");
+          this.auth = false;
+        } else {
+          this.users = [];
+          this.errorTabla = "Ha ocurrido un error inesperado";
+        }
+      });
+    }
   },
 };
 </script>

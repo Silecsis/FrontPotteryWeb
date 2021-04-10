@@ -130,7 +130,7 @@ export default {
     Validation,
   },
   created() {
-    this.$store.commit("SET_TITLE", "Usuarios -> Editar Usuario");
+    this.$store.commit("SET_TITLE", "Editar mi perfil");
   },
   data: function () {
     return {

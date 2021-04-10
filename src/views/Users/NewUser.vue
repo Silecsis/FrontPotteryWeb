@@ -70,7 +70,10 @@
             v-model="user.password_confirmation"
             required
           />
-          <validation v-if="error.password_confirmation" :errors="error.password_confirmation" />
+          <validation
+            v-if="error.password_confirmation"
+            :errors="error.password_confirmation"
+          />
         </div>
 
         <!-- Type -->
@@ -81,7 +84,7 @@
             name="type"
             class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           >
-            <option value="null" selected disabled>Seleccione el tipo</option>
+            <option value="" selected disabled>Seleccione el tipo</option>
             <option value="admin">Administrador</option>
             <option value="user">Socio</option>
           </select>
@@ -150,7 +153,7 @@ export default {
 
   data: function () {
     return {
-      user: {type:"null"},
+      user: { type: "" },
       message: null,
       messageType: null,
       error: {
@@ -158,9 +161,9 @@ export default {
         email: [],
         type: [],
         nick: [],
-        email:[],
+        email: [],
         password: [],
-        password_confirmation:[],
+        password_confirmation: [],
       },
     };
   },
@@ -181,12 +184,11 @@ export default {
           this.message = "El usuario ha sido creado correctamente";
         })
         .catch((error) => {
-           this.messageType = "error";
+          this.messageType = "error";
           if (error.response.data.errors) {
             for (let fieldError in error.response.data.errors) {
               this.error[fieldError] = error.response.data.errors[fieldError];
             }
-            
           } else if (error.response) {
             this.message = error.response.data.message;
           } else {
@@ -209,12 +211,12 @@ export default {
         email: [],
         type: [],
         nick: [],
-        email:[],
+        email: [],
         password: [],
-        password_confirmation:[],
+        password_confirmation: [],
       };
 
-      if (nameUser.length < 6 || nameUser.length > 255 || !nameUser) {
+      if (!nameUser || nameUser.length < 6 || nameUser.length > 255) {
         this.error.name.push(
           "El campo no puede ser un número, debe tener al menos de 6 carácteres y no más de 255."
         );
@@ -222,9 +224,9 @@ export default {
       }
 
       if (
+        !emailUser ||
         emailUser.length < 6 ||
         emailUser.length > 255 ||
-        !emailUser ||
         !regexEmail.test(emailUser)
       ) {
         this.error.email.push(
@@ -233,7 +235,7 @@ export default {
         valid = false;
       }
 
-      if (!passwordUser || passwordUser.length<8) {
+      if (!passwordUser || passwordUser.length < 8) {
         this.error.password.push("El campo debe tener 8 carácteres.");
         valid = false;
       }
@@ -243,7 +245,7 @@ export default {
         valid = false;
       }
 
-      if (nickUser.length < 4 || nickUser.length > 255 || !nickUser) {
+      if (!nickUser || nickUser.length < 4 || nickUser.length > 255) {
         this.error.nick.push(
           "El campo debe tener al menos 4 carácteres y no más de 255."
         );

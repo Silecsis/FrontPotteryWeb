@@ -18,4 +18,20 @@
     cursor:pointer;
 }
 
+.paginate-links li.active{
+    background-color: brown;
+}
+
+.paginate-links li.active a{
+    cursor: default;
+}
+
+.paginate-links li.disabled{
+    background-color: darkblue;
+}
+
+.paginate-links li.disabled a{
+    cursor: default;
+}
+
 
