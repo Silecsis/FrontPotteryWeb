@@ -16,6 +16,8 @@
             v-model="material.name"
             required
           />
+
+          <validation v-if="error.name" :errors="error.name" />
         </div>
 
         <!-- Tipo de material -->
@@ -30,6 +32,7 @@
             v-model="material.type_material"
             required
           />
+          <validation v-if="error.type_material" :errors="error.type_material" />
         </div>
 
         <!-- Temperature -->
@@ -45,6 +48,7 @@
             name="temperature"
             required
           />
+          <validation v-if="error.temperature" :errors="error.temperature" />
         </div>
 
         <!-- Toxic -->
@@ -56,9 +60,11 @@
             id="sold"
             class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           >
+            <option value="" selected disabled>Seleccione si es tóxico</option>
             <option value="0">No</option>
             <option value="1">Si</option>
           </select>
+          <validation v-if="error.toxic" :errors="error.toxic" />
         </div>
 
         <!-- Boton-->
@@ -106,12 +112,15 @@ export default {
   
   data: function () {
     return {
-      material: {},
+      material: {toxic:""},
       message: null,
       messageType: null,
-      error:{
-          name:''
-          },
+      error: {
+        name: [],
+        type_material: [],
+        temperature:[],
+        toxic:[],
+      },
     };
   },
   created() {
@@ -120,6 +129,10 @@ export default {
  
   methods: {
     save: function () { 
+      if (!this.validate()) {
+        return;
+      }
+
       axios
         .post(`${process.env.VUE_APP_API}/materials`,this.material)
         .then((result) => {
@@ -127,14 +140,69 @@ export default {
           this.message = "El material ha sido creado correctamente";
         })
         .catch((error) => {
-          this.messageType = "error";
-          if (error.response) {
+         this.messageType = "error";
+          if (error.response.data.errors) {
+            for (let fieldError in error.response.data.errors) {
+              this.error[fieldError] = error.response.data.errors[fieldError];
+            }
+          } else if (error.response) {
             this.message = error.response.data.message;
           } else {
             this.message = "Ha ocurrido un error inesperado";
           }
         });
+
+      this.clear();
     },
+     validate: function () {
+      var nameMat = this.material.name;
+      var typeMat = this.material.type_material;
+      var tempMat = this.material.temperature;
+      var toxicMat = this.material.toxic;
+      var valid = true;
+      this.error = {
+        name: [],
+        type_material: [],
+        temperature: [],
+        toxic: [],
+      };
+
+      if (!nameMat || nameMat.length < 3 || nameMat.length > 20) {
+        this.error.name.push(
+          "El campo no puede ser un número, debe tener al menos de 3 carácteres y no más de 20."
+        );
+        valid = false;
+      }
+
+      if (!typeMat || typeMat.length < 3 || typeMat.length > 20) {
+        this.error.name.push(
+          "El campo no puede ser un número, debe tener al menos de 3 carácteres y no más de 20."
+        );
+        valid = false;
+      }
+
+      if (!tempMat ||
+        isNaN(tempMat)
+      ) {
+        this.error.email.push(
+          "El campo debe ser un número entero válido."
+        );
+        valid = false;
+      }
+
+      if (toxicMat!=0 && toxicMat!=1) {
+        this.error.type.push("El campo es obligatorio.");
+        valid = false;
+      }
+
+      return valid;
+    },
+    clear:function(){
+      this.material.name="";
+      this.material.type_material="";
+      this.material.temperature="";
+      this.material.toxic="";
+    }
   },
 };
 </script>

@@ -1,6 +1,7 @@
 <!--
   Vista Usuarios.
   Lista los usuarios de la api.
+  Filtra los usuarios
   Solo puede acceder los usuarios de tipo admin.
 -->
 <template>
@@ -180,7 +181,7 @@
                 <td class="py-3 flex justify-center">{{ user.img }}</td>
                 <td class="py-3">{{ user.created_at }}</td>
                 <td class="py-3">
-                  <div class="flex justify-center space-x-1">
+                  <div class="flex justify-center space-x-1" v-if="user.id != userLog.id">
                     <button-icon
                       type="edit"
                       @click.native="edit(user.id)"
@@ -248,11 +249,13 @@ export default {
       auth: true,
       pageSize:4,
       searchForm:{},
+      userLog:null,
     };
   },
   mounted() {
     this.searchForm={buscaTipo:""};
     this.search();
+    this.userLog = JSON.parse(sessionStorage.getItem("user"));
   },
   methods: {
     destroy: function (id) {

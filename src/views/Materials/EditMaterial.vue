@@ -17,6 +17,8 @@
             v-model="material.name"
             required
           />
+
+          <validation v-if="error.name" :errors="error.name" />
         </div>
 
         <!-- Tipo de material -->
@@ -31,6 +33,8 @@
             v-model="material.type_material"
             required
           />
+
+          <validation v-if="error.type_material" :errors="error.type_material" />
         </div>
 
         <!-- Temperature -->
@@ -46,6 +50,8 @@
             name="temperature"
             required
           />
+
+          <validation v-if="error.temperature" :errors="error.temperature" />
         </div>
 
         <!-- Toxic -->
@@ -60,6 +66,8 @@
             <option value="0">No</option>
             <option value="1">Si</option>
           </select>
+
+          <validation v-if="error.toxic" :errors="error.toxic" />
         </div>
 
         <div class="mt-4">
@@ -113,7 +121,10 @@ export default {
       messageType: null,
       id: "",
       error: {
-        name: "",
+        name: [],
+        type_material: [],
+        temperature:[],
+        toxic:[],
       },
     };
   },
@@ -132,8 +143,7 @@ export default {
     save: function () {
       var id = this.$route.params.id;
 
-      if (this.material.name.length == 0) {
-        this.error.name = "Campo obligatorio";
+      if (!this.validate()) {
         return;
       }
 
@@ -145,12 +155,59 @@ export default {
         })
         .catch((error) => {
           this.messageType = "error";
-          if (error.response) {
+          if (error.response.data.errors) {
+            for (let fieldError in error.response.data.errors) {
+              this.error[fieldError] = error.response.data.errors[fieldError];
+            }
+          } else if (error.response) {
             this.message = error.response.data.message;
           } else {
             this.message = "Ha ocurrido un error inesperado";
           }
         });
+    },
+    validate: function () {
+      var nameMat = this.material.name;
+      var typeMat = this.material.type_material;
+      var tempMat = this.material.temperature;
+      var toxicMat = this.material.toxic;
+      var valid = true;
+      this.error = {
+        name: [],
+        type_material: [],
+        temperature: [],
+        toxic: [],
+      };
+
+      if (!nameMat || nameMat.length < 3 || nameMat.length > 20) {
+        this.error.name.push(
+          "El campo no puede ser un número, debe tener al menos de 3 carácteres y no más de 20."
+        );
+        valid = false;
+      }
+
+      if (!typeMat || typeMat.length < 3 || typeMat.length > 20) {
+        this.error.name.push(
+          "El campo no puede ser un número, debe tener al menos de 3 carácteres y no más de 20."
+        );
+        valid = false;
+      }
+
+      if (!tempMat ||
+        isNaN(tempMat)
+      ) {
+        this.error.email.push(
+          "El campo debe ser un número entero válido."
+        );
+        valid = false;
+      }
+
+      if (toxicMat!=0 && toxicMat!=1) {
+        this.error.type.push("El campo es obligatorio.");
+        valid = false;
+      }
+
+      return valid;
     },
   },
 };
