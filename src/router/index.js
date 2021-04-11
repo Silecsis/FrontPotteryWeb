@@ -20,6 +20,7 @@ import EditPiece from '@/views/Pieces/EditPiece'
 import MySales from '@/views/Sales/MySales'
 import Sales from '@/views/Sales/Sales'
 import EditSale from '@/views/Sales/EditSale'
+import EditMySale from '@/views/Sales/MyEditSale'
 
 import Login from '@/views/auth/login'
 
@@ -127,8 +128,9 @@ router.addRoutes(
       component: EditPiece
     },
     //VENTAS
+    
     {
-      path: '/mySales',
+      path: '/mySales/:id',
       name: 'MySales',
       component: MySales
     },
@@ -141,6 +143,11 @@ router.addRoutes(
       path: '/sales/:id',
       name: 'EditSale',
       component: EditSale
+    },
+    {
+      path: '/mysales/:idUser/:id',
+      name: 'EditMySale',
+      component: EditMySale
     },
   ]
 

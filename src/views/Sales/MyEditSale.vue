@@ -43,10 +43,11 @@
         <!-- Boton-->
         <div class="mt-4">
           <link-button
-            name="Sales"
+            name="MySales"
+            :params="{ id: userLog.id }"
             class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4 flex float-left text-white font-bold bg-blue-400 p-4 rounded p-1.5"
           >
-            Volver a "Ventas realizadas"
+            Volver a "Mis ventas realizadas"
           </link-button>
 
           <v-button
@@ -83,7 +84,8 @@ export default {
     Validation,
   },
   created() {
-    this.$store.commit("SET_TITLE", "Ventas realizadas -> Editar venta");
+    this.$store.commit("SET_TITLE", "Mis ventas realizadas -> Editar venta");
+    this.userLog = JSON.parse(sessionStorage.getItem("user"));
   },
   data: function () {
     return {
@@ -95,12 +97,14 @@ export default {
         name: [],
         price: [],
       },
+      userLog: null,
     };
   },
   mounted() {
     var id = this.$route.params.id;
+
     axios
-      .get(`${process.env.VUE_APP_API}/sales/${id}`)
+      .get(`${process.env.VUE_APP_API}/mysales/${this.userLog.id}/${id}`)
       .then((result) => {
         this.sale = result.data.data;
       })
@@ -117,7 +121,10 @@ export default {
       }
 
       axios
-        .put(`${process.env.VUE_APP_API}/sales/${id}`, this.sale)
+        .put(
+          `${process.env.VUE_APP_API}/mysales/${this.userLog.id}/${id}`,
+          this.sale
+        )
         .then((result) => {
           this.messageType = "success";
           this.message = "La venta ha sido modificada correctamente";

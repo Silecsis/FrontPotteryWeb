@@ -195,6 +195,8 @@ export default {
             this.message = "Ha ocurrido un error inesperado";
           }
         });
+
+        this.clear();
     },
     validate: function () {
       var nameUser = this.user.name;
@@ -254,6 +256,14 @@ export default {
 
       return valid;
     },
+    clear:function(){
+      this.user.name="";
+      this.user.email="";
+      this.user.type="";
+      this.user.email="";
+      this.user.password="";
+      this.user.password_confirmation="";
+    }
   },
 };
 </script>

@@ -216,7 +216,7 @@
             </tr>
 
             <tr
-              v-if="(userLog != null && userLog.type != 'admin') || userLog"
+              v-if="!userLog || (userLog != null && userLog.type != 'admin') "
               class="text-center"
             >
               <td colspan="5" class="py-3 font-bold text-red-600 text-lg">

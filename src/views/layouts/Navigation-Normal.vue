@@ -73,7 +73,7 @@
             </dropdown-link>
 
             <!-- Mis ventas -->
-            <dropdown-link name="MySales">
+            <dropdown-link @click.native="mySales(user.id)">
               Mis ventas realizadas
             </dropdown-link>
 
@@ -164,6 +164,9 @@ export default {
     },
     editProfile: function (id) {
       this.$router.push({ name: "EditProfile", params: { id: id } });
+    },
+    mySales: function (id) {
+      this.$router.push({ name: "MySales", params: { idUser: id } });
     },
   },
   mounted() {

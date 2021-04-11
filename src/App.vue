@@ -39,6 +39,12 @@ export default {
       console.log("Recibi respesta");
       $this.loading=false;
       return response;
+    },(error) => {
+      console.log("Recibi respesta");
+      $this.loading=false;
+      return new Promise((resolve,reject)=>{
+        reject(error);
+      });
     });
   },
 };

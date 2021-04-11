@@ -175,7 +175,7 @@ export default {
       }
 
       if (!typeMat || typeMat.length < 3 || typeMat.length > 20) {
-        this.error.name.push(
+        this.error.type_material.push(
           "El campo no puede ser un número, debe tener al menos de 3 carácteres y no más de 20."
         );
         valid = false;
@@ -184,14 +184,14 @@ export default {
       if (!tempMat ||
         isNaN(tempMat)
       ) {
-        this.error.email.push(
+        this.error.temperature.push(
           "El campo debe ser un número entero válido."
         );
         valid = false;
       }
 
       if (toxicMat!=0 && toxicMat!=1) {
-        this.error.type.push("El campo es obligatorio.");
+        this.error.toxic.push("El campo es obligatorio.");
         valid = false;
       }
 

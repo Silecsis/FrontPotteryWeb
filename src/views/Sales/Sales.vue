@@ -14,18 +14,122 @@ El admin puede ver, borrar y editar la pieza.-->
             </h4>
           </div>
           <form class="form-inline pt-4" method="GET"></form>
+          <!--Lista todos los usuarios:-->
+          <label for="buscaUser" class="ml-4"
+            >Buscar por correo de usuario:</label
+          >
+          <select
+            name="buscaUser"
+            class="form-control mr-sm-2 rounded bg-gray-200"
+            v-model="searchForm.buscaUser"
+          >
+            <option value="">Todos</option>
+            <option
+              v-for="sale in sales"
+              v-bind:key="sale.id"
+              :value="sale.user_id"
+            >
+              {{ sale.emailUser }}
+            </option>
+          </select>
+
+          <!--Lista todas piezas:-->
+          <label for="buscaPiece" class="ml-4">Buscar por pieza:</label>
+          <select
+            name="buscaPiece"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+            v-model="searchForm.buscaPiece"
+          >
+            <option value="">Todos</option>
+            <option
+              v-for="sale in sales"
+              v-bind:key="sale.id"
+              :value="sale.piece_id"
+            >
+              {{ sale.namePiece }}
+            </option>
+          </select>
+
+          <input
+            name="buscaNombre"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+            type="search"
+            placeholder="Por venta"
+            aria-label="Search"
+            v-model="searchForm.buscaNombre"
+          />
+          <input
+            name="buscaPrecio"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+            type="search"
+            placeholder="Por precio "
+            aria-label="Search"
+            v-model="searchForm.buscaPrecio"
+          />
+          <input
+            name="buscaFechaLogin"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+            type="date"
+            placeholder="Por fecha de creación"
+            aria-label="Search"
+            v-model="searchForm.buscaFechaLogin"
+          />
+          <button
+            class="btn btn-outline-success bg-blue-200 border-2 text-gray-500 font-bold border-gray-400 rounded p-2 float-right"
+            type="button"
+            @click="search"
+          >
+            Buscar
+          </button>
         </div>
       </nav>
 
       <!--SELECCION DE PAGINACION-->
-      <div class="hidden sm:flex mt-8 mb-1"></div>
+      <div class="hidden sm:flex mt-8 mb-1">
+        <dropdown>
+          <template v-slot:trigger>
+            <button
+              class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-400"
+            >
+              Mostrar {{ pageSize }} por página
+              <div class="ml-1">
+                <svg
+                  class="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </button>
+          </template>
+          <template v-slot:content>
+            <dropdown-link @click.native="pageSize = 4">
+              Paginación de 4
+            </dropdown-link>
+            <dropdown-link @click.native="pageSize = 6">
+              Paginación de 6
+            </dropdown-link>
+            <dropdown-link @click.native="pageSize = 8">
+              Paginación de 8
+            </dropdown-link>
+            <dropdown-link @click.native="pageSize = 10">
+              Paginación de 10
+            </dropdown-link>
+          </template>
+        </dropdown>
+      </div>
 
       <!--TABLA-->
       <div
         class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
       >
         <!-- PAGINACION CON VUE-PAGINATE -->
-        <paginate ref="paginator" name="sales" :list="sales" :per="4" />
+        <paginate ref="paginator" name="sales" :list="sales" :per="pageSize" />
         <paginate-links
           for="sales"
           :limit="4"
@@ -65,7 +169,7 @@ El admin puede ver, borrar y editar la pieza.-->
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-                v-rol:admin="user"
+                v-rol:admin="userLog"
               >
                 Acciones
               </th>
@@ -85,9 +189,8 @@ El admin puede ver, borrar y editar la pieza.-->
               <td class="py-3">{{ sale.namePiece }}</td>
               <td class="py-3">{{ sale.price }}</td>
               <td class="py-3">{{ sale.created_at }}</td>
-              <td class="py-3" v-rol:admin="user">
+              <td class="py-3" v-rol:admin="userLog">
                 <div class="flex justify-center space-x-1">
-                  <!-- @if($user->id != Auth::user()->id) -->
                   <button-icon
                     type="edit"
                     @click.native="edit(sale.id)"
@@ -100,22 +203,21 @@ El admin puede ver, borrar y editar la pieza.-->
           </tbody>
 
           <tbody v-else class="text-gray-500 text-xs divide-y divide-gray-200">
-            <tr v-rol:admin="user" class="text-center">
+            <tr v-rol:admin="userLog" class="text-center">
               <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
                 {{ errorTabla }}
               </td>
             </tr>
 
             <tr
-              v-if="(user != null && user.type != 'admin') || user"
+              v-if="!userLog || (userLog != null && userLog.type != 'admin') "
               class="text-center"
             >
-              <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
+              <td colspan="5" class="py-3 font-bold text-red-600 text-lg">
                 {{ errorTabla }}
               </td>
             </tr>
           </tbody>
-          <!-- {{$users->appends(request()->all())-->
         </table>
       </div>
     </div>
@@ -151,55 +253,17 @@ export default {
       message: null,
       messageType: null,
       errorTabla: "",
-      user: null,
+      pageSize: 4,
+      searchForm: {},
+      userLog: null,
     };
   },
   mounted() {
-    axios
-      .get(`${process.env.VUE_APP_API}/sales`)
-      .then((result) => {
-        this.sales = result.data.filter((sale) => {
-          sale.created_at = sale.created_at.substring(0, 10); //Modificacion
-          return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-        });
-
-        if (this.sales.length == 0) {
-          this.errorTabla = "No existen ventas para este criterio de búsqueda";
-        }
-      })
-      .catch(() => {
-        this.errorTabla = "Ha ocurrido un error inesperado";
-      });
-
-    this.user = JSON.parse(sessionStorage.getItem("user"));
+    this.searchForm = { buscaUser: "" , buscaPiece:""};
+    this.search();
+    this.userLog = JSON.parse(sessionStorage.getItem("user"));
   },
   methods: {
-    destroy: function (id) {
-      axios
-        .delete(`${process.env.VUE_APP_API}/sales/${id}`)
-        .then((result) => {
-          if (result.data.success) {
-            this.showSuccess(result.data.message);
-            this.sales = this.sales.filter((sale) => {
-              return sale.id != id; //Para que no liste el usuario que se ha borrado
-            });
-
-            if (this.sales.length == 0) {
-              this.errorTabla =
-                "No existen ventas para este criterio de búsqueda";
-            }
-          } else {
-            this.showError(result.data.message);
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            this.showError(error.response.data.message);
-          } else {
-            this.showError("Ha ocurrido un error inesperado");
-          }
-        });
-    },
     showError: function (msg) {
       this.messageType = "error";
       this.message = msg;
@@ -210,6 +274,34 @@ export default {
     },
     edit: function (id) {
       this.$router.push({ name: "EditSale", params: { id: id } });
+    },
+    search: function () {
+      let config = {
+        params: this.searchForm,
+      };
+      axios
+        .get(`${process.env.VUE_APP_API}/sales`, config)
+        .then((result) => {
+          this.sales = result.data.filter((sale) => {
+            sale.created_at = sale.created_at.substring(0, 10); //Modificacion
+            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
+          });
+
+          if (this.sales.length == 0) {
+            this.errorTabla =
+              "No existen ventas para este criterio de búsqueda";
+          }
+        })
+        .catch((error) => {
+          if (error.response.data.message == "Unauthenticated.") {
+            this.showError("No estás autorizado para esta vista");
+            this.$store.commit("SET_TITLE", "Ventas realizadas --> Error");
+            this.auth = false;
+          } else {
+            this.sales = [];
+            this.errorTabla = "Ha ocurrido un error inesperado";
+          }
+        });
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <a
     href="javascript:void(0)"
-    @click="$router.push({ name })"
+    @click="$router.push({ name,params })"
   >
     <slot />
   </a>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-     props: ["name"],
+     props: ["name","params"],
      
 }
 </script>
