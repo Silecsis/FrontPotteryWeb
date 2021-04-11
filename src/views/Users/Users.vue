@@ -86,7 +86,7 @@
               <button
                 class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-400"
               >
-                Mostrar {{pageSize}} por página
+                Mostrar {{ pageSize }} por página
                 <div class="ml-1">
                   <svg
                     class="fill-current h-4 w-4"
@@ -103,10 +103,18 @@
               </button>
             </template>
             <template v-slot:content>
-              <dropdown-link @click.native="pageSize=4"> Paginación de 4 </dropdown-link>
-              <dropdown-link @click.native="pageSize=6"> Paginación de 6 </dropdown-link>
-              <dropdown-link @click.native="pageSize=8"> Paginación de 8 </dropdown-link>
-              <dropdown-link @click.native="pageSize=10"> Paginación de 10 </dropdown-link>
+              <dropdown-link @click.native="pageSize = 4">
+                Paginación de 4
+              </dropdown-link>
+              <dropdown-link @click.native="pageSize = 6">
+                Paginación de 6
+              </dropdown-link>
+              <dropdown-link @click.native="pageSize = 8">
+                Paginación de 8
+              </dropdown-link>
+              <dropdown-link @click.native="pageSize = 10">
+                Paginación de 10
+              </dropdown-link>
             </template>
           </dropdown>
         </div>
@@ -116,7 +124,12 @@
           class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
         >
           <!-- PAGINACION CON VUE-PAGINATE -->
-          <paginate ref="paginator" name="users" :list="users" :per="pageSize" />
+          <paginate
+            ref="paginator"
+            name="users"
+            :list="users"
+            :per="pageSize"
+          />
           <paginate-links
             for="users"
             :limit="2"
@@ -178,10 +191,24 @@
                 <td class="py-3">{{ user.email }}</td>
                 <td class="py-3">{{ user.type }}</td>
                 <td class="py-3">{{ user.nick }}</td>
-                <td class="py-3 flex justify-center">{{ user.img }}</td>
+                <td class="py-3 flex justify-center">
+                  <image-server
+                    :params="{
+                      width: '48',
+                      height: '48',
+                      class: 'ml-1 rounded-full w-10 h-10 mr-4 shadow-lg',
+                      alt: 'imagen defecto',
+                    }"
+                    type="avatar"
+                    :id="user.id"
+                  />
+                </td>
                 <td class="py-3">{{ user.created_at }}</td>
                 <td class="py-3">
-                  <div class="flex justify-center space-x-1" v-if="user.id != userLog.id">
+                  <div
+                    class="flex justify-center space-x-1"
+                    v-if="user.id != userLog.id"
+                  >
                     <button-icon
                       type="edit"
                       @click.native="edit(user.id)"
@@ -226,6 +253,7 @@ import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
+import ImageServer from "../components/image-server.vue";
 
 export default {
   components: {
@@ -235,6 +263,7 @@ export default {
     NavLink,
     ButtonIcon,
     Message,
+    ImageServer,
   },
   created() {
     this.$store.commit("SET_TITLE", "Usuarios");
@@ -247,13 +276,13 @@ export default {
       messageType: null,
       errorTabla: "",
       auth: true,
-      pageSize:4,
-      searchForm:{},
-      userLog:null,
+      pageSize: 4,
+      searchForm: {},
+      userLog: null,
     };
   },
   mounted() {
-    this.searchForm={buscaTipo:""};
+    this.searchForm = { buscaTipo: "" };
     this.search();
     this.userLog = JSON.parse(sessionStorage.getItem("user"));
   },
@@ -295,34 +324,34 @@ export default {
     edit: function (id) {
       this.$router.push({ name: "EditUser", params: { id: id } });
     },
-    search:function(){
-      let config={
-        params:this.searchForm,
+    search: function () {
+      let config = {
+        params: this.searchForm,
       };
       axios
-      .get(`${process.env.VUE_APP_API}/users`,config)
-      .then((result) => {
-        this.users = result.data.filter((user) => {
-          user.created_at = user.created_at.substring(0, 10); //Modificacion
-          return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-        });
+        .get(`${process.env.VUE_APP_API}/users`, config)
+        .then((result) => {
+          this.users = result.data.filter((user) => {
+            user.created_at = user.created_at.substring(0, 10); //Modificacion
+            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
+          });
 
-        if (this.users.length == 0) {
-          this.errorTabla =
-            "No existen usuarios para este criterio de búsqueda";
-        }
-      })
-      .catch((error) => {
-        if (error.response.data.message == "Unauthenticated.") {
-          this.showError("No estás autorizado para esta vista");
-          this.$store.commit("SET_TITLE", "Usuarios --> Error");
-          this.auth = false;
-        } else {
-          this.users = [];
-          this.errorTabla = "Ha ocurrido un error inesperado";
-        }
-      });
-    }
+          if (this.users.length == 0) {
+            this.errorTabla =
+              "No existen usuarios para este criterio de búsqueda";
+          }
+        })
+        .catch((error) => {
+          if (error.response.data.message == "Unauthenticated.") {
+            this.showError("No estás autorizado para esta vista");
+            this.$store.commit("SET_TITLE", "Usuarios --> Error");
+            this.auth = false;
+          } else {
+            this.users = [];
+            this.errorTabla = "Ha ocurrido un error inesperado";
+          }
+        });
+    },
   },
 };
 </script>

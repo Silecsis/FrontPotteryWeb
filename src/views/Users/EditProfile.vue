@@ -10,7 +10,7 @@
       <message :message="message" :type="messageType" />
 
       <div v-if="auth">
-        <form method="POST" action="">
+        <form method="POST" action="" ref="form">
           <!-- Name -->
           <div>
             <v-label for="name">Nombre</v-label>
@@ -93,6 +93,38 @@
             <validation v-if="error.nick" :errors="error.nick" />
           </div>
 
+          <!-- Imagen Actual-->
+          <div class="mt-4">
+            <v-label for="imgAct" class="font-bold">Imagen actual</v-label>
+
+            <div class="flex flex-wrap justify-center mt-2">
+              <div class="w-6/12 sm:w-4/12 px-4">
+                <image-server
+                  type="avatar"
+                  :id="user.id"
+                  :params="{
+                    alt: 'Imagen de perfil',
+                    class:
+                      'shadow rounded max-w-full h-auto align-middle border-none',
+                  }"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Imagen Nueva-->
+          <div class="mt-4">
+            <v-label for="image" class="font-bold">Imagen nueva:</v-label>
+            <v-input
+              id="image"
+              class="block mt-1 w-full"
+              type="file"
+              @change.native="uploadImg"
+              name="image"
+              ref="image"
+            />
+          </div>
+
           <!-- Boton-->
           <div class="mt-4">
             <v-button
@@ -118,6 +150,7 @@ import VInput from "../components/v-input";
 import LinkButton from "../components/linkButton.vue";
 import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
+import ImageServer from "../components/image-server.vue";
 
 export default {
   components: {
@@ -128,6 +161,7 @@ export default {
     LinkButton,
     VButton,
     Validation,
+    ImageServer,
   },
   created() {
     this.$store.commit("SET_TITLE", "Editar mi perfil");
@@ -146,6 +180,7 @@ export default {
         password_confirmation: [],
         nick: [],
       },
+      image: "",
     };
   },
   mounted() {
@@ -174,8 +209,24 @@ export default {
         return;
       }
 
+      //PARA ENVIAR IMG, NECESARIO USAR EL FORMDATA
+      var formData = new FormData();
+
+      //EL BUCLE RELLENA EL FORMDATA CON LOS DATOS DEL MODELO
+      for (const property in this.user) {
+        const value = this.user[property];
+        formData.append(property, value);
+      }
+
+      //GUARDA LA IMAGEN EN EL FORM DATA
+      formData.append("image", this.image);
+
       axios
-        .put(`${process.env.VUE_APP_API}/users/profile/${id}`, this.user)
+        .post(`${process.env.VUE_APP_API}/users/profile/${id}`, formData, {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        })
         .then((result) => {
           this.messageType = "success";
           this.message = "Se han guardado los cambios de su perfil";
@@ -247,6 +298,19 @@ export default {
     showSuccess: function (msg) {
       this.messageType = "success";
       this.message = msg;
+    },
+    uploadImg: function () {
+      //let $this=this;
+      this.image = this.$refs.image.$el.files[0];
+      //   if (this.image) {
+      //     var reader = new FileReader();
+
+      //     reader.onload = function (e) {
+      //         $this.refs.image.$el.src=e.target.result;
+      //     }
+
+      //     reader.readAsDataURL(this.image);
+      // }
     },
   },
 };

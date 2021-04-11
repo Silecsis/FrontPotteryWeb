@@ -11,7 +11,7 @@
           class="px-10 py-4 bg-white border-2 rounded border-gray-400 m-auto"
         >
           <h2 class="font-bold text-xl text-gray-800">
-            ¡Bienvenido a PotterSil!
+            ¡Bienvenido a PotterWeb!
           </h2>
         </div>
       </div>

@@ -78,14 +78,25 @@
             </dropdown-link>
 
             <!-- Edita mi perfil -->
-            <dropdown-link @click.native="editProfile(user.id)"> Editar mi perfil </dropdown-link>
+            <dropdown-link @click.native="editProfile(user.id)">
+              Editar mi perfil
+            </dropdown-link>
 
             <!-- LOGOUT -->
             <dropdown-link @click.native="logout"> Salir </dropdown-link>
           </template>
         </dropdown>
 
-        <!-- IMAGEN DEFECTO Y DE USER. IF CON SI ES USER, VISITA O SOSIO -->
+        <image-server
+          type="avatar"
+          :id="user.id"
+          :params="{
+            alt: 'Imagen de perfil',
+            class: 'ml-1 rounded-full w-10 h-10 mr-4 shadow-lg',
+            width: '48',
+            height: '48',
+          }"
+        />
       </div>
 
       <div v-else>
@@ -133,6 +144,7 @@ import NavLink from "../components/nav-link.vue";
 import Dropdown from "../components/dropdown.vue";
 import DropdownLink from "../components/dropdown-link.vue";
 import VButton from "../components/v-button.vue";
+import ImageServer from "../components/image-server.vue";
 
 export default {
   components: {
@@ -141,6 +153,7 @@ export default {
     Dropdown,
     DropdownLink,
     VButton,
+    ImageServer,
   },
   data: function () {
     return {
