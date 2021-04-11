@@ -175,7 +175,7 @@ export default {
       }
 
       axios
-        .put(`${process.env.VUE_APP_API}/users/${id}`, this.user)
+        .put(`${process.env.VUE_APP_API}/users/profile/${id}`, this.user)
         .then((result) => {
           this.messageType = "success";
           this.message = "Se han guardado los cambios de su perfil";

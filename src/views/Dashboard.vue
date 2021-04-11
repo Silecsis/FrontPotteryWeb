@@ -31,31 +31,24 @@
 import Message from "./components/message";
 
 export default {
-  data: function () {
-    return {
-      message: null,
-      messageType: null,
-    };
-  },
   components: {
     Message,
   },
   created() {
     this.$store.commit("SET_TITLE", "Home");
   },
-  mounted(){
-      if(this.$route.query.error == 'no-admin' ){
-          this.showError('No tienes permisos de administrador para acceder a esa página');
+  computed: {
+    message: function () {
+      var error = this.$route.query.error;
+      if (error == "no-admin") {
+        return "No tienes permisos de administrador para acceder a esa página";
       }
-  },
-  methods: {
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
     },
-    showSuccess: function (msg) {
-      this.messageType = "success";
-      this.message = msg;
+    messageType: function () {
+      var error = this.$route.query.error;
+      if (error == "no-admin") {
+        return 'error';//Por si el mensaje trae un success o error
+      }
     },
   },
 };

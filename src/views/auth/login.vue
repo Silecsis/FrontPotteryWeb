@@ -16,6 +16,7 @@
           v-model="user.email"
           required
           autofocus
+          @keyup.enter.native="enter"
         />
       </div>
 
@@ -31,6 +32,7 @@
           name="password"
           required
           autocomplete="current-password"
+          @keyup.enter.native="enter"
         />
       </div>
 
