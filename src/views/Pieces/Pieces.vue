@@ -14,16 +14,100 @@ El admin puede ver, borrar y editar la pieza.-->
             </h4>
           </div>
           <form class="form-inline pt-4" method="GET">
-            
+            <!--Lista todos los usuarios:-->
+            <select
+              name="buscaUser"
+              class="form-control mr-sm-2 rounded bg-gray-200"
+              v-model="searchForm.buscaUser"
+            >
+              <option disabled value="">Buscar por correo</option>
+              <option value="">Todos</option>
+              <option
+                v-for="u in users"
+                v-bind:key="u.id"
+                :value="u.id"
+              >
+                {{ u.email }}
+              </option>
+            </select>
+
+            <select
+              name="buscaVendido"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              v-model="searchForm.buscaVendido"
+            >
+              <option disabled value="">¿Vendido?</option>
+              <option value="">Todos</option>
+              <option value="no">No vendido</option>
+              <option value="si">Vendido</option>
+            </select>
+
+            <input
+              name="buscaNombre"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+              type="search"
+              placeholder="Por pieza"
+              aria-label="Search"
+              v-model="searchForm.buscaNombre"
+            />
+            <input
+              name="buscaFechaLogin"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              type="date"
+              placeholder="Por fecha de creación"
+              aria-label="Search"
+              v-model="searchForm.buscaFechaLogin"
+            />
+
+            <button
+              class="btn btn-outline-success bg-blue-200 border-2 text-gray-500 font-bold border-gray-400 rounded p-2 float-right"
+              type="button"
+              @click="search"
+            >
+              Buscar
+            </button>
           </form>
         </div>
       </nav>
 
-      
-
       <!--SELECCION DE PAGINACION-->
       <div class="hidden sm:flex mt-8 mb-1">
-        
+        <dropdown>
+          <template v-slot:trigger>
+            <button
+              class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-400"
+            >
+              Mostrar {{ pageSize }} por página
+              <div class="ml-1">
+                <svg
+                  class="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </button>
+          </template>
+          <template v-slot:content>
+            <dropdown-link @click.native="pageSize = 4">
+              Paginación de 4
+            </dropdown-link>
+            <dropdown-link @click.native="pageSize = 6">
+              Paginación de 6
+            </dropdown-link>
+            <dropdown-link @click.native="pageSize = 8">
+              Paginación de 8
+            </dropdown-link>
+            <dropdown-link @click.native="pageSize = 10">
+              Paginación de 10
+            </dropdown-link>
+          </template>
+        </dropdown>
       </div>
 
       <!--TABLA-->
@@ -31,7 +115,7 @@ El admin puede ver, borrar y editar la pieza.-->
         class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
       >
         <!-- PAGINACION CON VUE-PAGINATE -->
-        <paginate ref="paginator" name="pieces" :list="pieces" :per="4" />
+        <paginate ref="paginator" name="pieces" :list="pieces" :per="pageSize" />
         <paginate-links
           for="pieces"
           :limit="4"
@@ -94,7 +178,8 @@ El admin puede ver, borrar y editar la pieza.-->
               <td class="py-3">{{ piece.emailUser }}</td>
               <td class="py-3">{{ piece.description }}</td>
               <td class="py-3">{{ piece.img }}</td>
-              <td class="py-3 flex justify-center">{{ piece.sold }}</td>
+              <td v-if="piece.sold==1" class="py-3 bg-green-500 text-white font-bold">Vendida</td>
+              <td v-else class="py-3 bg-green-100 font-bold">No vendida</td>
               <td class="py-3">{{ piece.created_at }}</td>
               <td class="py-3" v-rol:admin="user">
                 <div class="flex justify-center space-x-1">
@@ -124,13 +209,15 @@ El admin puede ver, borrar y editar la pieza.-->
               </td>
             </tr>
 
-            <tr v-if=" user!= null && user.type != 'admin' || user" class="text-center">
+            <tr
+              v-if=" !user ||(user != null && user.type != 'admin')"
+              class="text-center"
+            >
               <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
                 {{ errorTabla }}
               </td>
             </tr>
           </tbody>
-          <!-- {{$users->appends(request()->all())-->
         </table>
       </div>
     </div>
@@ -161,34 +248,21 @@ export default {
   },
   data: function () {
     return {
-      pieces:[],
+      pieces: [],
+      users:[],
       paginate: ["pieces"],
       message: null,
       messageType: null,
       errorTabla: "",
-      user:null,
+      user: null,
+      pageSize: 4,
+      searchForm: {},
     };
   },
   mounted() {
-    axios
-      .get(`${process.env.VUE_APP_API}/pieces`)
-      .then((result) => {
-
-        this.pieces=result.data.filter((piece) => {
-          piece.created_at = piece.created_at.substring(0, 10); //Modificacion
-          return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-        });
-
-        if (this.pieces.length == 0) {
-          this.errorTabla =
-            "No existen piezas para este criterio de búsqueda";
-        }
-      })
-      .catch(() => {
-        this.errorTabla = "Ha ocurrido un error inesperado";
-      });
-
-
+   
+    this.searchForm = { buscaUser: "", buscaVendido: "" };
+    this.search();
     this.user = JSON.parse(sessionStorage.getItem("user"));
   },
   methods: {
@@ -228,6 +302,37 @@ export default {
     },
     edit: function (id) {
       this.$router.push({ name: "EditPiece", params: { id: id } });
+    },
+    search: function () {
+      let config = {
+        params: this.searchForm,
+      };
+
+      axios
+        .get(`${process.env.VUE_APP_API}/pieces`, config)
+        .then((result) => {
+          this.pieces = result.data.pieces.filter((piece) => {
+            piece.created_at = piece.created_at.substring(0, 10); //Modificacion
+            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
+          });
+
+          this.users= result.data.users;
+
+          if (this.pieces.length == 0) {
+            this.errorTabla =
+              "No existen piezas para este criterio de búsqueda";
+          }
+        })
+        .catch((error) => {
+          if (error.response.data.message == "Unauthenticated.") {
+            this.showError("No estás autorizado para esta vista");
+            this.$store.commit("SET_TITLE", "Ventas realizadas --> Error");
+            this.auth = false;
+          } else {
+            this.sales = [];
+            this.errorTabla = "Ha ocurrido un error inesperado";
+          }
+        });
     },
   },
 };

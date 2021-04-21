@@ -15,38 +15,36 @@ El admin puede ver, borrar y editar la pieza.-->
           </div>
           <form class="form-inline pt-4" method="GET"></form>
           <!--Lista todos los usuarios:-->
-          <label for="buscaUser" class="ml-4"
-            >Buscar por correo de usuario:</label
-          >
           <select
             name="buscaUser"
             class="form-control mr-sm-2 rounded bg-gray-200"
             v-model="searchForm.buscaUser"
           >
+            <option disabled value="">Buscar por correo</option>
             <option value="">Todos</option>
             <option
-              v-for="sale in sales"
-              v-bind:key="sale.id"
-              :value="sale.user_id"
+              v-for="u in users"
+              v-bind:key="u.id"
+              :value="u.id"
             >
-              {{ sale.emailUser }}
+              {{ u.email }}
             </option>
           </select>
 
           <!--Lista todas piezas:-->
-          <label for="buscaPiece" class="ml-4">Buscar por pieza:</label>
           <select
             name="buscaPiece"
             class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
             v-model="searchForm.buscaPiece"
           >
+            <option disabled value="">Buscar por pieza</option>
             <option value="">Todos</option>
             <option
-              v-for="sale in sales"
-              v-bind:key="sale.id"
-              :value="sale.piece_id"
+              v-for="p in pieces"
+              v-bind:key="p.id"
+              :value="p.id"
             >
-              {{ sale.namePiece }}
+              {{ p.name }}
             </option>
           </select>
 
@@ -210,7 +208,7 @@ El admin puede ver, borrar y editar la pieza.-->
             </tr>
 
             <tr
-              v-if="!userLog || (userLog != null && userLog.type != 'admin') "
+              v-if="!userLog || (userLog != null && userLog.type != 'admin')"
               class="text-center"
             >
               <td colspan="5" class="py-3 font-bold text-red-600 text-lg">
@@ -249,6 +247,8 @@ export default {
   data: function () {
     return {
       sales: [],
+      pieces:[],
+      users:[],
       paginate: ["sales"],
       message: null,
       messageType: null,
@@ -259,7 +259,7 @@ export default {
     };
   },
   mounted() {
-    this.searchForm = { buscaUser: "" , buscaPiece:""};
+    this.searchForm = { buscaUser: "", buscaPiece: "" };
     this.search();
     this.userLog = JSON.parse(sessionStorage.getItem("user"));
   },
@@ -282,10 +282,13 @@ export default {
       axios
         .get(`${process.env.VUE_APP_API}/sales`, config)
         .then((result) => {
-          this.sales = result.data.filter((sale) => {
+          this.sales = result.data.sales.filter((sale) => {
             sale.created_at = sale.created_at.substring(0, 10); //Modificacion
             return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
           });
+
+          this.pieces=result.data.pieces;
+          this.users=result.data.users;
 
           if (this.sales.length == 0) {
             this.errorTabla =

@@ -28,20 +28,37 @@ Vue.use(Router)
 
 const router = new Router();
 
-router.beforeEach((to,from,next)=>{
-  switch(to.name){
+router.beforeEach((to, from, next) => {
+  switch (to.name) {
     case 'Login':
-      router.app.$store.commit('SET_LAYOUT','login-layout');
+      router.app.$store.commit('SET_LAYOUT', 'login-layout');
       break;
 
     default:
-      router.app.$store.commit('SET_LAYOUT','principal-layout');
+      router.app.$store.commit('SET_LAYOUT', 'principal-layout');
       break;
   }
 
-  var user=JSON.parse(sessionStorage.getItem('user'));
-  if(to.name=='Users' && (!user || user.type=='user')){
-    next({name:'Dashboard',query:{error:'no-admin'}});
+  var user = JSON.parse(sessionStorage.getItem('user'));
+
+  //CONTROL DE QUE NO ENTRE EN VISTAS DE USUARIO ADMIN SIN SER ADMIN
+  if ((to.name == 'Users' || 
+       to.name == 'EditUser' ||
+       to.name == 'NewUser' ||
+       to.name == 'EditMaterial' ||
+       to.name == 'NewMaterial' ||
+       to.name == 'EditPiece' ||
+       to.name == 'EditSale') 
+      && (!user || user.type == 'user')) {
+    next({ name: 'Dashboard', query: { error: 'no-admin' } });
+
+  //CONTROL DE QUE NO ENTRE EN VISTAS PARA USUARIOS LOGADO SIN ESTAR LOGADO  
+  } else if((to.name == 'EditProfile' ||
+             to.name == 'Materials' ||
+             to.name == 'MyPieces' ||
+             to.name == 'MySales' ||
+             to.name == 'EditMySale') && (!user)){
+    next({ name: 'Dashboard', query: { error: 'no-login' } });
   }else{
     next();
   }
@@ -64,13 +81,13 @@ router.addRoutes(
       path: '/register',
       name: 'Register',
       component: Register,
-      
+
     },
     {
       path: '/passwordRequest',
       name: 'PasswordRequest',
       component: PasswordRequest,
-      
+
     },
     //USUARIOS
     {
@@ -128,7 +145,7 @@ router.addRoutes(
       component: EditPiece
     },
     //VENTAS
-    
+
     {
       path: '/mySales/:id',
       name: 'MySales',

@@ -49,13 +49,12 @@
               aria-label="Search"
               v-model="searchForm.buscaFechaCreac"
             />
-
-            <label for="tipo" class="ml-4">Tóxicidad:</label>
             <select
               name="buscaToxico"
               class="form-control mr-sm-2 rounded bg-gray-200"
               v-model="searchForm.buscaToxico"
             >
+              <option disabled value="">¿Toxicidad?</option>
               <option value="">Todos</option>
               <option value="no">No tóxico</option>
               <option value="si">Tóxico</option>

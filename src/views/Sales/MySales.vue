@@ -164,7 +164,7 @@ El admin puede ver, borrar y editar la pieza.-->
               <td class="py-3">{{ sale.namePiece }}</td>
               <td class="py-3">{{ sale.price }}</td>
               <td class="py-3">{{ sale.created_at }}</td>
-              <td class="py-3" v-rol:admin="userLog">
+              <td class="py-3">
                 <div class="flex justify-center space-x-1">
                   <button-icon
                     type="edit"

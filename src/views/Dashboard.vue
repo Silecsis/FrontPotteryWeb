@@ -43,10 +43,18 @@ export default {
       if (error == "no-admin") {
         return "No tienes permisos de administrador para acceder a esa página";
       }
+
+      if (error == "no-login"){
+        return "Debe estar logado para acceder a esta página";
+      }
     },
     messageType: function () {
       var error = this.$route.query.error;
       if (error == "no-admin") {
+        return 'error';//Por si el mensaje trae un success o error
+      }
+
+      if (error == "no-login") {
         return 'error';//Por si el mensaje trae un success o error
       }
     },
