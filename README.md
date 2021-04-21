@@ -1,19 +1,11 @@
-# multiplelayouts
+## Información del repositorio
+Proyecto final del curso. Frontend
 
-## Project setup
-```
-npm install
-```
+## Para clonar el repositorio
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+<p><b>Realizar:</b></p>
+<lu>
+    <li>npm install</li>
+</lu> 
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<b>Recuerda lanzar el proyecto con "npm run serve"</b>
