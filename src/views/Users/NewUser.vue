@@ -130,7 +130,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 import cardSinLogo from "../components/card-sin-logo.vue";
 import VLabel from "../components/v-label";
@@ -139,6 +138,12 @@ import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import LinkButton from "../components/linkButton.vue";
 import Message from "../components/message";
+import Commons from '../../helpers/commons';
+
+//Constantes:
+const msg = {
+  "success-save": "El usuario ha sido creado correctamente",
+};
 
 export default {
   components: {
@@ -173,37 +178,14 @@ export default {
 
   methods: {
     save: function () {
-      if (!this.validate()) {
-        return;
-      }
-
-      axios
-        .post(`${process.env.VUE_APP_API}/users`, this.user)
-        .then((result) => {
-          this.messageType = "success";
-          this.message = "El usuario ha sido creado correctamente";
-        })
-        .catch((error) => {
-          this.messageType = "error";
-          if (error.response.data.errors) {
-            for (let fieldError in error.response.data.errors) {
-              this.error[fieldError] = error.response.data.errors[fieldError];
-            }
-          } else if (error.response) {
-            this.message = error.response.data.message;
-          } else {
-            this.message = "Ha ocurrido un error inesperado";
-          }
-        });
-
-        this.clear();
+      Commons.save(this,'create','users',this.user,msg['success-save'],this.validate,this.clear);
     },
-    validate: function () {
-      var nameUser = this.user.name;
-      var emailUser = this.user.email;
-      var nickUser = this.user.nick;
-      var typeUser = this.user.type;
-      var passwordUser = this.user.password;
+    validate: function (formData) {
+      var nameUser = formData.name;
+      var emailUser = formData.email;
+      var nickUser = formData.nick;
+      var typeUser = formData.type;
+      var passwordUser = formData.password;
       var regexEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
       // var regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
       var valid = true;
@@ -260,7 +242,7 @@ export default {
       this.user.name="";
       this.user.email="";
       this.user.type="";
-      this.user.email="";
+      this.user.nick="";
       this.user.password="";
       this.user.password_confirmation="";
     }

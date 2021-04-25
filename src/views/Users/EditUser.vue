@@ -104,6 +104,12 @@ import VInput from "../components/v-input";
 import LinkButton from "../components/linkButton.vue";
 import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
+import Commons from '../../helpers/commons';
+
+//Constantes:
+const msg = {
+  "success-save": "El usuario ha sido modificado correctamente",
+};
 
 export default {
   components: {
@@ -133,49 +139,17 @@ export default {
     };
   },
   mounted() {
-    var id = this.$route.params.id;
-    axios
-      .get(`${process.env.VUE_APP_API}/users/${id}`)
-      .then((result) => {
-        this.user = result.data.data;
-      })
-      .catch(() => {
-        this.users = [];
-        this.errorTabla = "Ha ocurrido un error inesperado";
-      });
+    Commons.loadForm(this,'users','user','Usuarios --> Editar usuario');
   },
   methods: {
     save: function () {
-      var id = this.$route.params.id;
-
-      if (!this.validate()) {
-        return;
-      }
-      
-      axios
-        .put(`${process.env.VUE_APP_API}/users/${id}`, this.user)
-        .then((result) => {
-          this.messageType = "success";
-          this.message = "El usuario ha sido modificado correctamente";
-        })
-        .catch((error) => {
-          this.messageType = "error";
-          if (error.response.data.errors) {
-            for (let fieldError in error.response.data.errors) {
-              this.error[fieldError] = error.response.data.errors[fieldError];
-            }
-          } else if (error.response) {
-            this.message = error.response.data.message;
-          } else {
-            this.message = "Ha ocurrido un error inesperado";
-          }
-        });
+      Commons.save(this,'edit','users',this.user,msg['success-save'],this.validate);
     },
-    validate: function () {
-      var nameUser = this.user.name;
-      var emailUser = this.user.email;
-      var nickUser = this.user.nick;
-      var typeUser = this.user.type;
+    validate: function (formData) {
+      var nameUser = formData.name;
+      var emailUser = formData.email;
+      var nickUser = formData.nick;
+      var typeUser = formData.type;
       var regexEmail = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
       var valid = true;
       this.error = {

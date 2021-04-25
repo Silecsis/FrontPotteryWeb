@@ -245,7 +245,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 import LinkButton from "../components/linkButton.vue";
 import Dropdown from "../components/dropdown";
@@ -254,6 +253,12 @@ import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
 import ImageServer from "../components/image-server.vue";
+import Commons from "../../helpers/commons";
+
+//Constantes:
+const msg = {
+  "no-users": "No existen usuarios para este criterio de búsqueda",
+};
 
 export default {
   components: {
@@ -288,69 +293,13 @@ export default {
   },
   methods: {
     destroy: function (id) {
-      axios
-        .delete(`${process.env.VUE_APP_API}/users/${id}`)
-        .then((result) => {
-          if (result.data.success) {
-            this.showSuccess(result.data.message);
-            this.users = this.users.filter((user) => {
-              return user.id != id; //Para que no liste el usuario que se ha borrado
-            });
-
-            if (this.users.length == 0) {
-              this.errorTabla =
-                "No existen usuarios para este criterio de búsqueda";
-            }
-          } else {
-            this.showError(result.data.message);
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            this.showError(error.response.data.message);
-          } else {
-            this.showError("Ha ocurrido un error inesperado");
-          }
-        });
-    },
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
-    },
-    showSuccess: function (msg) {
-      this.messageType = "success";
-      this.message = msg;
+      Commons.destroy(this,"users", id, "users", msg["no-users"]);
     },
     edit: function (id) {
       this.$router.push({ name: "EditUser", params: { id: id } });
     },
     search: function () {
-      let config = {
-        params: this.searchForm,
-      };
-      axios
-        .get(`${process.env.VUE_APP_API}/users`, config)
-        .then((result) => {
-          this.users = result.data.filter((user) => {
-            user.created_at = user.created_at.substring(0, 10); //Modificacion
-            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-          });
-
-          if (this.users.length == 0) {
-            this.errorTabla =
-              "No existen usuarios para este criterio de búsqueda";
-          }
-        })
-        .catch((error) => {
-          if (error.response.data.message == "Unauthenticated.") {
-            this.showError("No estás autorizado para esta vista");
-            this.$store.commit("SET_TITLE", "Usuarios --> Error");
-            this.auth = false;
-          } else {
-            this.users = [];
-            this.errorTabla = "Ha ocurrido un error inesperado";
-          }
-        });
+      Commons.search(this,"users","users", msg["no-users"], "Usuarios");
     },
   },
 };

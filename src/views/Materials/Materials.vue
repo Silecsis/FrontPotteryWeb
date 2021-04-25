@@ -239,6 +239,11 @@ import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
 
+//Constantes:
+const msg={
+  'no-materials': "No existen materiales para este criterio de búsqueda",
+};
+
 export default {
   components: {
     LinkButton,
@@ -280,8 +285,7 @@ export default {
             });
 
             if (this.materials.length == 0) {
-              this.errorTabla =
-                "No existen materiales para este criterio de búsqueda";
+              this.errorTabla =msg['no-materials'];
             }
           } else {
             this.showError(result.data.message);
@@ -319,8 +323,7 @@ export default {
           });
 
           if (this.materials.length == 0) {
-            this.errorTabla =
-              "No existen materiales para este criterio de búsqueda";
+            this.errorTabla =msg['no-materials'];
           }
         })
         .catch((error) => {

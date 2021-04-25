@@ -151,6 +151,7 @@ import LinkButton from "../components/linkButton.vue";
 import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import ImageServer from "../components/image-server.vue";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -184,22 +185,7 @@ export default {
     };
   },
   mounted() {
-    var id = this.$route.params.id;
-    axios
-      .get(`${process.env.VUE_APP_API}/users/profile/${id}`)
-      .then((result) => {
-        this.user = result.data.data;
-      })
-      .catch((error) => {
-        if (error.response.data.error == "Unauthorised") {
-          this.showError("No puedes editar el perfil de otro usuario");
-          this.$store.commit("SET_TITLE", "Editar perfil --> Error");
-          this.auth = false;
-        } else {
-          this.users = [];
-          this.errorTabla = "Ha ocurrido un error inesperado";
-        }
-      });
+    Commons.loadForm(this,'users/profile','user','Editar perfil');
   },
   methods: {
     save: function () {
@@ -291,14 +277,7 @@ export default {
 
       return valid;
     },
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
-    },
-    showSuccess: function (msg) {
-      this.messageType = "success";
-      this.message = msg;
-    },
+
     uploadImg: function () {
       //let $this=this;
       this.image = this.$refs.image.$el.files[0];
