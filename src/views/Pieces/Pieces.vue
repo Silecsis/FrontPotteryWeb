@@ -22,11 +22,7 @@ El admin puede ver, borrar y editar la pieza.-->
             >
               <option disabled value="">Buscar por correo</option>
               <option value="">Todos</option>
-              <option
-                v-for="u in users"
-                v-bind:key="u.id"
-                :value="u.id"
-              >
+              <option v-for="u in users" v-bind:key="u.id" :value="u.id">
                 {{ u.email }}
               </option>
             </select>
@@ -115,7 +111,12 @@ El admin puede ver, borrar y editar la pieza.-->
         class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
       >
         <!-- PAGINACION CON VUE-PAGINATE -->
-        <paginate ref="paginator" name="pieces" :list="pieces" :per="pageSize" />
+        <paginate
+          ref="paginator"
+          name="pieces"
+          :list="pieces"
+          :per="pageSize"
+        />
         <paginate-links
           for="pieces"
           :limit="4"
@@ -127,6 +128,11 @@ El admin puede ver, borrar y editar la pieza.-->
         >
           <thead class="bg-blue-300">
             <tr class="divide-x">
+              <th
+                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
+              >
+                Imagen
+              </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
@@ -142,11 +148,7 @@ El admin puede ver, borrar y editar la pieza.-->
               >
                 Descripción
               </th>
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                Imagen
-              </th>
+              
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
@@ -159,7 +161,6 @@ El admin puede ver, borrar y editar la pieza.-->
               </th>
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-                v-rol:admin="user"
               >
                 Acciones
               </th>
@@ -174,16 +175,31 @@ El admin puede ver, borrar y editar la pieza.-->
               v-bind:key="piece.id"
               class="text-center"
             >
+              <td class="py-3 flex justify-center">
+                <image-server
+                    :params="{
+                      width: '48',
+                      height: '48',
+                      class: 'rounded w-20 h-20 shadow-lg',
+                      alt: 'imagen pieza',
+                    }"
+                    type="img"
+                    :id="piece.id"
+                  />
+              </td>
               <td class="py-3">{{ piece.name }}</td>
               <td class="py-3">{{ piece.emailUser }}</td>
               <td class="py-3">{{ piece.description }}</td>
-              <td class="py-3">{{ piece.img }}</td>
-              <td v-if="piece.sold==1" class="py-3 bg-green-500 text-white font-bold">Vendida</td>
+              <td
+                v-if="piece.sold == 1"
+                class="py-3 bg-green-500 text-white font-bold"
+              >
+                Vendida
+              </td>
               <td v-else class="py-3 bg-green-100 font-bold">No vendida</td>
               <td class="py-3">{{ piece.created_at }}</td>
-              <td class="py-3" v-rol:admin="user">
-                <div class="flex justify-center space-x-1">
-                  <!-- @if($user->id != Auth::user()->id) -->
+              <td class="py-3">
+                <div class="flex justify-center space-x-1" v-rol:admin="user">
                   <button-icon
                     type="edit"
                     @click.native="edit(piece.id)"
@@ -198,6 +214,14 @@ El admin puede ver, borrar y editar la pieza.-->
                   >
                   </button-icon>
                 </div>
+                <div class="flex justify-center space-x-1">
+                  <link-button
+                   @click.native="detail(piece.id)"
+                    class="text-sm text-white font-bold bg-purple-500 ml-4 p-4 rounded p-1.5"
+                  >
+                    Ver en detalle
+                  </link-button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -210,7 +234,7 @@ El admin puede ver, borrar y editar la pieza.-->
             </tr>
 
             <tr
-              v-if=" !user ||(user != null && user.type != 'admin')"
+              v-if="!user || (user != null && user.type != 'admin')"
               class="text-center"
             >
               <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
@@ -233,6 +257,7 @@ import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
+import ImageServer from "../components/image-server.vue";
 
 export default {
   components: {
@@ -242,6 +267,7 @@ export default {
     NavLink,
     ButtonIcon,
     Message,
+    ImageServer,
   },
   created() {
     this.$store.commit("SET_TITLE", "Piezas cerámicas");
@@ -249,7 +275,7 @@ export default {
   data: function () {
     return {
       pieces: [],
-      users:[],
+      users: [],
       paginate: ["pieces"],
       message: null,
       messageType: null,
@@ -260,7 +286,6 @@ export default {
     };
   },
   mounted() {
-   
     this.searchForm = { buscaUser: "", buscaVendido: "" };
     this.search();
     this.user = JSON.parse(sessionStorage.getItem("user"));
@@ -303,6 +328,9 @@ export default {
     edit: function (id) {
       this.$router.push({ name: "EditPiece", params: { id: id } });
     },
+    detail: function (id) {
+      this.$router.push({ name: "DetailPiece", params: { id: id } });
+    },
     search: function () {
       let config = {
         params: this.searchForm,
@@ -316,7 +344,7 @@ export default {
             return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
           });
 
-          this.users= result.data.users;
+          this.users = result.data.users;
 
           if (this.pieces.length == 0) {
             this.errorTabla =

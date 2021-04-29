@@ -107,6 +107,7 @@
                     class:
                       'shadow rounded max-w-full h-auto align-middle border-none',
                   }"
+                  ref="preview"
                 />
               </div>
             </div>
@@ -185,7 +186,7 @@ export default {
     };
   },
   mounted() {
-    Commons.loadForm(this,'users/profile','user','Editar perfil');
+    Commons.loadForm(this, "users/profile", "user", "Editar perfil");
   },
   methods: {
     save: function () {
@@ -278,18 +279,25 @@ export default {
       return valid;
     },
 
+    //Para previsualizar la img seleccionada.
     uploadImg: function () {
-      //let $this=this;
-      this.image = this.$refs.image.$el.files[0];
-      //   if (this.image) {
-      //     var reader = new FileReader();
+      let $this = this;
+      this.image = this.$refs.image.$el.files[0];//Actualiza el modelo con la img del server.
 
-      //     reader.onload = function (e) {
-      //         $this.refs.image.$el.src=e.target.result;
-      //     }
+      if (FileReader && this.image) {
+        var fr = new FileReader();
+        fr.onload = function () {
+          //Asigan a la variable el componente image-serve que se ha referenciado como preview.
+          let previewComponent= $this.$refs.preview; 
 
-      //     reader.readAsDataURL(this.image);
-      // }
+          //Accede a la referencia imagen del componente de previsualización, para modificar su src.
+          previewComponent.$refs.imagen.src = fr.result;
+
+          //Como previewcomponent es una instancia a image-serve, puede acceder a todos sus datos.
+          previewComponent.urlOk();
+        };
+        fr.readAsDataURL(this.image);
+      }
     },
   },
 };

@@ -68,7 +68,7 @@
 
           <template v-slot:content>
             <!-- Mis piezas -->
-            <dropdown-link name="MyPieces">
+            <dropdown-link @click.native="myPieces(user.id)">
               Mis piezas cerámicas
             </dropdown-link>
 
@@ -180,6 +180,9 @@ export default {
     },
     mySales: function (id) {
       this.$router.push({ name: "MySales", params: { idUser: id } });
+    },
+    myPieces: function (id) {
+      this.$router.push({ name: "MyPieces", params: { idUser: id } });
     },
   },
   mounted() {

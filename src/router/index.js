@@ -16,6 +16,7 @@ import EditMaterial from '@/views/Materials/EditMaterial'
 import MyPieces from '@/views/Pieces/MyPieces'
 import Pieces from '@/views/Pieces/Pieces'
 import EditPiece from '@/views/Pieces/EditPiece'
+import DetailPiece from '@/views/Pieces/DetailPiece'
 
 import MySales from '@/views/Sales/MySales'
 import Sales from '@/views/Sales/Sales'
@@ -129,7 +130,7 @@ router.addRoutes(
 
     //PIEZAS
     {
-      path: '/myPieces',
+      path: '/myPieces/:id',
       name: 'MyPieces',
       component: MyPieces
     },
@@ -138,6 +139,11 @@ router.addRoutes(
       path: '/pieces',
       name: 'Pieces',
       component: Pieces
+    },
+    {
+      path: '/pieces/detail/:id',
+      name: 'DetailPiece',
+      component: DetailPiece
     },
     {
       path: '/pieces/:id',

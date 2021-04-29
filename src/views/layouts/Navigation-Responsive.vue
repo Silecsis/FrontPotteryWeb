@@ -92,12 +92,12 @@
             </template>
             <template v-slot:content>
               <!-- Mis piezas -->
-              <dropdown-link name="MyPieces">
+              <dropdown-link @click.native="myPieces(user.id)">
                 Mis piezas cerámicas
               </dropdown-link>
 
               <!-- Mis ventas -->
-              <dropdown-link name="MySales">
+              <dropdown-link @click.native="mySales(user.id)">
                 Mis ventas realizadas
               </dropdown-link>
 
@@ -158,6 +158,12 @@ export default {
     },
     editProfile: function (id) {
       this.$router.push({ name: "EditProfile", params: { id: id } });
+    },
+    mySales: function (id) {
+      this.$router.push({ name: "MySales", params: { idUser: id } });
+    },
+    myPieces: function (id) {
+      this.$router.push({ name: "MyPieces", params: { idUser: id } });
     },
   },
   mounted() {
