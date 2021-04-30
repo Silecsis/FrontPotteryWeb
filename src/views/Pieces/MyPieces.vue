@@ -68,6 +68,7 @@ El admin puede ver, borrar y editar la pieza.-->
       >
         Nueva pieza
       </link-button>
+      
 
       <!--SELECCION DE PAGINACION-->
       <div class="hidden sm:flex mt-8 mb-1">
