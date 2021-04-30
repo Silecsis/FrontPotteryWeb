@@ -1,0 +1,30 @@
+<!--Vista home-->
+<template>
+  <div class="py-16">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <message :message="message" :type="messageType" />
+
+      <div
+        class="flex items-center overflow-hidden shadow-sm sm:rounded-lg m-auto"
+      >
+        <div
+          class="px-10 py-4 bg-white border-2 rounded border-gray-400 m-auto"
+        >
+          <h2 class="font-bold text-xl text-gray-800">
+            ¡NEWMYPIECE!
+          </h2>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+
+export default {
+  created() {
+    this.$store.commit("SET_TITLE", "Mis piezas cerámicas -> Nueva Pieza");
+  },
+};
+</script>

@@ -14,6 +14,8 @@ import NewMaterial from '@/views/Materials/NewMaterial'
 import EditMaterial from '@/views/Materials/EditMaterial'
 
 import MyPieces from '@/views/Pieces/MyPieces'
+import EditMyPiece from '@/views/Pieces/EditMyPiece'
+import NewMyPiece from '@/views/Pieces/NewMyPiece'
 import Pieces from '@/views/Pieces/Pieces'
 import EditPiece from '@/views/Pieces/EditPiece'
 import DetailPiece from '@/views/Pieces/DetailPiece'
@@ -58,7 +60,8 @@ router.beforeEach((to, from, next) => {
              to.name == 'Materials' ||
              to.name == 'MyPieces' ||
              to.name == 'MySales' ||
-             to.name == 'EditMySale') && (!user)){
+             to.name == 'EditMySale' ||
+             to.name == 'EditMyPiece') && (!user)){
     next({ name: 'Dashboard', query: { error: 'no-login' } });
   }else{
     next();
@@ -133,8 +136,18 @@ router.addRoutes(
       path: '/myPieces/:id',
       name: 'MyPieces',
       component: MyPieces
+    }, 
+    {
+      path: '/mypieces/:idUser/:id',
+      name: 'EditMyPiece',
+      component: EditMyPiece
     },
-
+    {
+      //METER ID DE USER
+      path: '/mypieces',
+      name: 'NewMyPiece',
+      component: NewMyPiece
+    },
     {
       path: '/pieces',
       name: 'Pieces',

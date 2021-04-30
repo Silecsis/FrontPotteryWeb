@@ -42,14 +42,6 @@ El admin puede ver, borrar y editar la pieza.-->
               <option value="si">Vendido</option>
             </select>
 
-            <!-- <input
-              name="buscaNombre"
-              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
-              type="search"
-              placeholder="Por pieza"
-              aria-label="Search"
-              v-model="searchForm.buscaNombre"
-            /> -->
             <input
               name="buscaFechaLogin"
               class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
@@ -69,6 +61,13 @@ El admin puede ver, borrar y editar la pieza.-->
           </form>
         </div>
       </nav>
+
+      <link-button
+        name="NewMyPiece"
+        class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5"
+      >
+        Nueva pieza
+      </link-button>
 
       <!--SELECCION DE PAGINACION-->
       <div class="hidden sm:flex mt-8 mb-1">
@@ -198,7 +197,7 @@ El admin puede ver, borrar y editar la pieza.-->
               <td v-else class="py-3 bg-green-100 font-bold">No vendida</td>
               <td class="py-3">{{ piece.created_at }}</td>
               <td class="py-3">
-                <div class="flex justify-center space-x-1" v-rol:admin="user">
+                <div class="flex justify-center space-x-1">
                   <button-icon
                     type="edit"
                     @click.native="edit(piece.id)"
@@ -282,7 +281,7 @@ export default {
   methods: {
     destroy: function (id) {
       axios
-        .delete(`${process.env.VUE_APP_API}/pieces/${id}`)
+        .delete(`${process.env.VUE_APP_API}/mypieces/${this.user.id}/${id}`)
         .then((result) => {
           if (result.data.success) {
             this.showSuccess(result.data.message);
@@ -315,7 +314,7 @@ export default {
       this.message = msg;
     },
     edit: function (id) {
-      this.$router.push({ name: "EditPiece", params: { id: id } });
+      this.$router.push({ name: "EditMyPiece", params: { idUser:this.user.id,id: id } });
     },
     detail: function (id) {
       this.$router.push({ name: "DetailPiece", params: { id: id } });
