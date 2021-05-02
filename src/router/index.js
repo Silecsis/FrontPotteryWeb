@@ -61,7 +61,8 @@ router.beforeEach((to, from, next) => {
              to.name == 'MyPieces' ||
              to.name == 'MySales' ||
              to.name == 'EditMySale' ||
-             to.name == 'EditMyPiece') && (!user)){
+             to.name == 'EditMyPiece' ||
+             to.name == 'NewMyPiece') && (!user)){
     next({ name: 'Dashboard', query: { error: 'no-login' } });
   }else{
     next();

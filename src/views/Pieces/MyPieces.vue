@@ -63,7 +63,7 @@ El admin puede ver, borrar y editar la pieza.-->
       </nav>
 
       <link-button
-        name="NewMyPiece"
+        @click.native="newPiece()"
         class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5"
       >
         Nueva pieza
@@ -319,6 +319,9 @@ export default {
     },
     detail: function (id) {
       this.$router.push({ name: "DetailPiece", params: { id: id } });
+    },
+    newPiece: function () {
+      this.$router.push({ name: "NewMyPiece", params: { idUser:this.user.id } });
     },
     search: function () {
       let config = {

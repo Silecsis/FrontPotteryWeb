@@ -19,6 +19,8 @@ export default {
     url: function () {
       if (this.type && this.id) {
         return `${process.env.VUE_APP_API}/${this.type}/${this.id}`;
+      }else{
+        return `../../assets/img/default-img.png`;
       }
     },
   },
