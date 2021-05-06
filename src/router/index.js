@@ -15,15 +15,16 @@ import EditMaterial from '@/views/Materials/EditMaterial'
 
 import MyPieces from '@/views/Pieces/MyPieces'
 import EditMyPiece from '@/views/Pieces/EditMyPiece'
-import NewMyPiece from '@/views/Pieces/NewMyPiece'
 import Pieces from '@/views/Pieces/Pieces'
 import EditPiece from '@/views/Pieces/EditPiece'
+import AddSale from '@/views/Pieces/AddSale'
 import DetailPiece from '@/views/Pieces/DetailPiece'
 
 import MySales from '@/views/Sales/MySales'
 import Sales from '@/views/Sales/Sales'
 import EditSale from '@/views/Sales/EditSale'
 import EditMySale from '@/views/Sales/MyEditSale'
+import NewMyPiece from '@/views/Pieces/NewMyPiece'
 
 import Login from '@/views/auth/login'
 
@@ -51,7 +52,8 @@ router.beforeEach((to, from, next) => {
        to.name == 'EditMaterial' ||
        to.name == 'NewMaterial' ||
        to.name == 'EditPiece' ||
-       to.name == 'EditSale') 
+       to.name == 'EditSale' ||
+       to.name == 'AddSale') 
       && (!user || user.type == 'user')) {
     next({ name: 'Dashboard', query: { error: 'no-admin' } });
 
@@ -164,6 +166,12 @@ router.addRoutes(
       name: 'EditPiece',
       component: EditPiece
     },
+    
+    {
+      path: '/addsale/:id',
+      name: 'AddSale',
+      component: AddSale
+    },
     //VENTAS
 
     {
@@ -175,7 +183,7 @@ router.addRoutes(
       path: '/sales',
       name: 'Sales',
       component: Sales
-    },
+    },   
     {
       path: '/sales/:id',
       name: 'EditSale',

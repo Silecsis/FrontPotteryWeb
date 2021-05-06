@@ -49,22 +49,6 @@
           <validation v-if="error.description" :errors="error.description" />
         </div>
 
-        <!-- Vendida -->
-        <div class="mt-4">
-          <v-label for="sold">¿Vendida?</v-label>
-          <select
-            v-model="piece.sold"
-            name="sold"
-            id="sold"
-            class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          >
-            <option value="0">No</option>
-            <option value="1">Si</option>
-          </select>
-
-          <validation v-if="error.sold" :errors="error.sold" />
-        </div>
-
         <!-- Visualización cambio img-->
         <div class="mt-4">
           <v-label for="imgAct" class="font-bold"

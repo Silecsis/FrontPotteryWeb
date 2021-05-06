@@ -221,7 +221,20 @@ El admin puede ver, borrar y editar la pieza.-->
                   >
                     Ver en detalle
                   </link-button>
+                   <link-button v-if="piece.sold" v-rol:admin="user"
+                   @click.native="delSale(piece.id)"
+                    class="text-sm text-white font-bold bg-gray-500 ml-4 p-4 rounded p-1.5"
+                  >
+                    Quitar venta
+                  </link-button>
+                  <link-button v-else v-rol:admin="user"
+                   @click.native="addSale(piece.id)"
+                    class="text-sm text-white font-bold bg-green-500 ml-4 p-4 rounded p-1.5"
+                  >
+                    Añadir venta
+                  </link-button>
                 </div>
+
               </td>
             </tr>
           </tbody>
@@ -287,6 +300,11 @@ export default {
   },
   mounted() {
     this.searchForm = { buscaUser: "", buscaVendido: "" };
+    var success = this.$route.query.success;
+    if(success && success == "addSale"){
+      this.showSuccess("La pieza ha sido actualizada a vendida correctamente");
+    }
+
     this.search();
     this.user = JSON.parse(sessionStorage.getItem("user"));
   },
@@ -317,6 +335,24 @@ export default {
           }
         });
     },
+    delSale: function (id) {
+      axios
+        .delete(`${process.env.VUE_APP_API}/sales/${id}`)
+        .then((result) => {
+          if (result.data.success) {
+            this.showSuccess(result.data.message);
+          } else {
+            this.showError(result.data.message);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            this.showError(error.response.data.message);
+          } else {
+            this.showError("Ha ocurrido un error inesperado");
+          }
+        });
+    },
     showError: function (msg) {
       this.messageType = "error";
       this.message = msg;
@@ -330,6 +366,9 @@ export default {
     },
     detail: function (id) {
       this.$router.push({ name: "DetailPiece", params: { id: id } });
+    },
+    addSale: function (id) {
+      this.$router.push({ name: "AddSale", params: { id: id } });
     },
     search: function () {
       let config = {
