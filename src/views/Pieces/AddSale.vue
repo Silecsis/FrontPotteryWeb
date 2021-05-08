@@ -141,21 +141,7 @@ export default {
 
         .post(`${process.env.VUE_APP_API}/addsale/${id}`,this.sale)
         .then((result) => {
-
-          //CAMBIAR SOLD DE LA PIEZA
-          axios
-            .put(`${process.env.VUE_APP_API}/changeSold/${id}`)
-            .then((resultB)=>{
-              this.clear(); 
-            })
-            .catch((errorB) => {
-              this.messageType = "error";
-              if (errorB.response) {
-                this.message = errorB.response.data.message;
-              } else {
-                this.message = "Ha ocurrido un error inesperado";
-              }
-            });
+            this.clear(); 
         })
         .catch((error) => {
           this.messageType = "error";
@@ -169,12 +155,10 @@ export default {
             this.message = "Ha ocurrido un error inesperado";
           }
         });
-
       
-
-            //MANDAR A VISTA PIEZAS
-            
-      this.$router.push({ name: "Pieces", query: { success: "addSale" } });
+      //MANDAR A VISTA PIEZAS     
+      this.$router.push({ name: "Pieces", query: { success: "addSale", id:this.piece.id } });
+      
     },
     validate: function () {
       var nameSale = this.sale.name;

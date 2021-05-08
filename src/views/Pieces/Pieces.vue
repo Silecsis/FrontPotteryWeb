@@ -148,7 +148,7 @@ El admin puede ver, borrar y editar la pieza.-->
               >
                 Descripción
               </th>
-              
+
               <th
                 class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
               >
@@ -177,15 +177,15 @@ El admin puede ver, borrar y editar la pieza.-->
             >
               <td class="py-3 flex justify-center">
                 <image-server
-                    :params="{
-                      width: '48',
-                      height: '48',
-                      class: 'rounded w-20 h-20 shadow-lg',
-                      alt: 'imagen pieza',
-                    }"
-                    type="img"
-                    :id="piece.id"
-                  />
+                  :params="{
+                    width: '48',
+                    height: '48',
+                    class: 'rounded w-20 h-20 shadow-lg',
+                    alt: 'imagen pieza',
+                  }"
+                  type="img"
+                  :id="piece.id"
+                />
               </td>
               <td class="py-3">{{ piece.name }}</td>
               <td class="py-3">{{ piece.emailUser }}</td>
@@ -216,25 +216,28 @@ El admin puede ver, borrar y editar la pieza.-->
                 </div>
                 <div class="flex justify-center space-x-1">
                   <link-button
-                   @click.native="detail(piece.id)"
+                    @click.native="detail(piece.id)"
                     class="text-sm text-white font-bold bg-purple-500 ml-4 p-4 rounded p-1.5"
                   >
                     Ver en detalle
                   </link-button>
-                   <link-button v-if="piece.sold" v-rol:admin="user"
-                   @click.native="delSale(piece.id)"
+                  <link-button
+                    v-if="piece.sold"
+                    v-rol:admin="user"
+                    @click.native.prevent="delSale(piece.id)"
                     class="text-sm text-white font-bold bg-gray-500 ml-4 p-4 rounded p-1.5"
                   >
                     Quitar venta
                   </link-button>
-                  <link-button v-else v-rol:admin="user"
-                   @click.native="addSale(piece.id)"
+                  <link-button
+                    v-else
+                    v-rol:admin="user"
+                    @click.native.prevent="addSale(piece.id)"
                     class="text-sm text-white font-bold bg-green-500 ml-4 p-4 rounded p-1.5"
                   >
                     Añadir venta
                   </link-button>
                 </div>
-
               </td>
             </tr>
           </tbody>
@@ -301,7 +304,7 @@ export default {
   mounted() {
     this.searchForm = { buscaUser: "", buscaVendido: "" };
     var success = this.$route.query.success;
-    if(success && success == "addSale"){
+    if (success && success == "addSale") {
       this.showSuccess("La pieza ha sido actualizada a vendida correctamente");
     }
 
@@ -340,7 +343,21 @@ export default {
         .delete(`${process.env.VUE_APP_API}/sales/${id}`)
         .then((result) => {
           if (result.data.success) {
+            //Como se ha puesto prevent en la instacia del metodo (en el click)
+            //este no se mueve del sitio, pero se debe meter el
+            //search para que recargue la pagina con los datos correctos
+            this.search();
             this.showSuccess(result.data.message);
+
+            // //3000==1segundo
+            // setTimeout(function () {
+            //   this.messageType = null;
+            //   this.message = null;
+            // }, 3000);
+            if (this.pieces.length == 0) {
+              this.errorTabla =
+                "No existen piezas para este criterio de búsqueda";
+            }
           } else {
             this.showError(result.data.message);
           }
@@ -352,6 +369,7 @@ export default {
             this.showError("Ha ocurrido un error inesperado");
           }
         });
+
     },
     showError: function (msg) {
       this.messageType = "error";
