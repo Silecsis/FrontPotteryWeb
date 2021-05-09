@@ -1,3 +1,8 @@
+<!--
+  Vista de nuevo material.
+  Crea un nuevo material a la api.
+  Solo puede acceder los usuarios de tipo admin.
+-->
 <template>
   <div>
     <card-sin-logo>
@@ -73,7 +78,7 @@
             name="Materials"
             class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4 flex float-left text-white font-bold bg-blue-400 p-4 rounded p-1.5"
           >
-            Volver a "Materiales"
+            Volver
           </link-button>
 
           <v-button
@@ -89,8 +94,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import cardSinLogo from "../components/card-sin-logo.vue";
 import VLabel from "../components/v-label";
 import VInput from "../components/v-input";
@@ -98,6 +101,7 @@ import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import LinkButton from "../components/linkButton.vue";
 import Message from "../components/message";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -129,30 +133,7 @@ export default {
  
   methods: {
     save: function () { 
-      if (!this.validate()) {
-        return;
-      }
-
-      axios
-        .post(`${process.env.VUE_APP_API}/materials`,this.material)
-        .then((result) => {
-          this.messageType = "success";
-          this.message = "El material ha sido creado correctamente";
-        })
-        .catch((error) => {
-         this.messageType = "error";
-          if (error.response.data.errors) {
-            for (let fieldError in error.response.data.errors) {
-              this.error[fieldError] = error.response.data.errors[fieldError];
-            }
-          } else if (error.response) {
-            this.message = error.response.data.message;
-          } else {
-            this.message = "Ha ocurrido un error inesperado";
-          }
-        });
-
-      this.clear();
+      Commons.save(this,'create','materials',this.material,"El material ha sido creado correctamente",this.validate,this.clear);
     },
      validate: function () {
       var nameMat = this.material.name;

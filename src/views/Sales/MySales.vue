@@ -1,9 +1,13 @@
-<!--Vista piezas de cada usuario.
-El admin puede ver, borrar y editar la pieza.-->
+<!--
+  Vista Ventas realizadas del usuario logado.
+  Lista las ventas de la api que ha realizado el usuario logado.
+  Filtra las ventas
+  Solo puede acceder el usuario logado a sus ventas. 
+  No puede acceder a las ventas de otro usuario logado.
+-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <!-- <x-message-status-success class="mb-4" :status="session('status')" /> -->
       <message :message="message" :type="messageType" />
 
       <nav class="navbar navbar-light py-6 mb-4">
@@ -15,7 +19,7 @@ El admin puede ver, borrar y editar la pieza.-->
           </div>
           <form class="form-inline pt-4" method="GET"></form>
 
-          <!--Lista todas piezas:-->
+          <!--Lista todas piezas que ha vendido el usuario logado:-->
           <label for="buscaPiece" class="ml-4">Buscar por pieza:</label>
           <select
             name="buscaPiece"
@@ -191,7 +195,6 @@ El admin puede ver, borrar y editar la pieza.-->
 </template>
 
 <script>
-import axios from "axios";
 
 import LinkButton from "../components/linkButton.vue";
 import Dropdown from "../components/dropdown";
@@ -199,6 +202,7 @@ import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -230,44 +234,11 @@ export default {
     this.search();
   },
   methods: {
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
-    },
-    showSuccess: function (msg) {
-      this.messageType = "success";
-      this.message = msg;
-    },
     edit: function (idUser,id) {
       this.$router.push({ name: "EditMySale", params: { idUser: idUser,id: id } });
     },
     search: function () {
-      let config = {
-        params: this.searchForm,
-      };
-      axios
-        .get(`${process.env.VUE_APP_API}/mysales/${this.userLog.id}`, config)
-        .then((result) => {
-          this.sales = result.data.filter((sale) => {
-            sale.created_at = sale.created_at.substring(0, 10); //Modificacion
-            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-          });
-
-          if (this.sales.length == 0) {
-            this.errorTabla =
-              "No existen ventas para este usuario y criterio de búsqueda";
-          }
-        })
-        .catch((error) => {
-          if (error.response.data.message == "Unauthenticated.") {
-            this.showError("No estás autorizado para esta vista");
-            this.$store.commit("SET_TITLE", "Mis ventas realizadas --> Error");
-            this.auth = false;
-          } else {
-            this.sales = [];
-            this.errorTabla = "Ha ocurrido un error inesperado";
-          }
-        });
+      Commons.search(this,`mysales/${this.userLog.id}`,"sales", "No existen ventas para este usuario y criterio de búsqueda", "Mis ventas realizadas");
     },
   },
 };

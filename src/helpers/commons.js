@@ -6,9 +6,17 @@ const commons = {
         $this.messageType = "error";
         $this.message = msg;
     },
-    showSuccess: function ($this, msg) {
+    showSuccess: function ($this, msg,time) {
         $this.messageType = "success";
         $this.message = msg;
+
+        if (time && time > 0) {
+          //1000==1segundo
+          setTimeout(function () {
+            $this.messageType = null;
+            $this.message = null;
+          }, time * 1000); //Introduce un numero y se pone a ms
+        }
     },
     destroy: function ($this, path, id, model, msgEmpty) {
         axios

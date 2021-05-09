@@ -1,3 +1,8 @@
+<!--
+  Vista de edición de material.
+  Edita a los materiales de la api.
+  Solo puede acceder los usuarios de tipo admin.
+-->
 <template>
   <div>
     <card-sin-logo>
@@ -75,7 +80,7 @@
             name="Materials"
             class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4 flex float-left text-white font-bold bg-blue-400 p-4 rounded p-1.5"
           >
-            Volver a "Materiales"
+            Volver
           </link-button>
 
           <v-button
@@ -91,8 +96,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import Message from "../components/message";
 import VLabel from "../components/v-label";
 import VInput from "../components/v-input";
@@ -100,6 +103,7 @@ import LinkButton from "../components/linkButton.vue";
 import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import CardSinLogo from "../components/card-sin-logo.vue";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -129,42 +133,11 @@ export default {
     };
   },
   mounted() {
-    var id = this.$route.params.id;
-    axios
-      .get(`${process.env.VUE_APP_API}/materials/${id}`)
-      .then((result) => {
-        this.material = result.data.data;
-      })
-      .catch(() => {
-        this.errorTabla = "Ha ocurrido un error inesperado";
-      });
+    Commons.loadForm(this,'materials','material','Materiales --> Editar material');
   },
   methods: {
     save: function () {
-      var id = this.$route.params.id;
-
-      if (!this.validate()) {
-        return;
-      }
-
-      axios
-        .put(`${process.env.VUE_APP_API}/materials/${id}`, this.material)
-        .then((result) => {
-          this.messageType = "success";
-          this.message = "El material ha sido modificado correctamente";
-        })
-        .catch((error) => {
-          this.messageType = "error";
-          if (error.response.data.errors) {
-            for (let fieldError in error.response.data.errors) {
-              this.error[fieldError] = error.response.data.errors[fieldError];
-            }
-          } else if (error.response) {
-            this.message = error.response.data.message;
-          } else {
-            this.message = "Ha ocurrido un error inesperado";
-          }
-        });
+      Commons.save(this,'edit','materials',this.material,"El material ha sido modificado correctamente",this.validate);
     },
     validate: function () {
       var nameMat = this.material.name;

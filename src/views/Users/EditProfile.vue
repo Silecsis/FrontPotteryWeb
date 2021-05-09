@@ -189,6 +189,7 @@ export default {
     Commons.loadForm(this, "users/profile", "user", "Editar perfil");
   },
   methods: {
+    //Al ser un guardado con img, se realiza de forma diferente que en commons.
     save: function () {
       var id = this.$route.params.id;
 
@@ -278,7 +279,6 @@ export default {
 
       return valid;
     },
-
     //Para previsualizar la img seleccionada.
     uploadImg: function () {
       let $this = this;

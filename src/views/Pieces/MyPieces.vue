@@ -1,9 +1,12 @@
-<!--Vista piezas de cada usuario.
-El admin puede ver, borrar y editar la pieza.-->
+<!--
+  Vista Mis Piezas realizadas.
+  Lista las piezas de la api que posee el usuario logado.
+  Filtra las piezas
+  Solo accederán los usuarios logados a sus propias piezas.
+-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <!-- <x-message-status-success class="mb-4" :status="session('status')" /> -->
       <message :message="message" :type="messageType" />
 
       <nav class="navbar navbar-light py-6 mb-4">
@@ -14,7 +17,7 @@ El admin puede ver, borrar y editar la pieza.-->
             </h4>
           </div>
           <form class="form-inline pt-4" method="GET">
-            <!--Lista todas piezas:-->
+            <!--Lista todas piezas que dispone el usurio logado:-->
             <label for="buscaPiece" class="ml-4">Buscar por nombre:</label>
             <select
               name="buscaNombre"
@@ -267,6 +270,7 @@ import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
 import ImageServer from "../components/image-server.vue";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -288,7 +292,7 @@ export default {
       message: null,
       messageType: null,
       errorTabla: "",
-      user: null,
+      user: {},
       pageSize: 4,
       searchForm: {},
     };
@@ -298,83 +302,40 @@ export default {
     
     var success = this.$route.query.success;
     if (success && success == "addSale") {
-      this.showSuccess("La pieza ha sido actualizada a vendida correctamente");
+      Commons.showSuccess(this,"La pieza ha sido actualizada a vendida correctamente",5);
     }
     this.user = JSON.parse(sessionStorage.getItem("user"));
     this.search();
   },
   methods: {
     destroy: function (id) {
-      axios
-        .delete(`${process.env.VUE_APP_API}/mypieces/${this.user.id}/${id}`)
-        .then((result) => {
-          if (result.data.success) {
-            this.showSuccess(result.data.message);
-            this.pieces = this.pieces.filter((piece) => {
-              return piece.id != id; //Para que no liste el usuario que se ha borrado
-            });
-
-            if (this.pieces.length == 0) {
-              this.errorTabla =
-                "No existen piezas para este criterio de búsqueda";
-            }
-          } else {
-            this.showError(result.data.message);
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            this.showError(error.response.data.message);
-          } else {
-            this.showError("Ha ocurrido un error inesperado");
-          }
-        });
+      Commons.destroy(this,`mypieces/${this.user.id}`, id, "pieces", "No existen piezas para este criterio de búsqueda");
     },
-    
+    //No se puede utilizar el del commun porque no es el mismo
     delSale: function (id) {
       axios
         .delete(`${process.env.VUE_APP_API}/mysales/${this.user.id}/${id}`)
         .then((result) => {
           if (result.data.success) {
-            //Como se ha puesto prevent en la instacia del metodo (en el click)
-            //este no se mueve del sitio, pero se debe meter el
-            //search para que recargue la pagina con los datos correctos
             this.search();
-            this.showSuccess(result.data.message,5);
+            Commons.showSuccess(this,result.data.message,5);
 
             if (this.pieces.length == 0) {
               this.errorTabla =
                 "No existen piezas para este criterio de búsqueda";
             }
           } else {
-            this.showError(result.data.message);
+            Commons.showError(this,result.data.message);
           }
         })
         .catch((error) => {
           if (error.response) {
-            this.showError(error.response.data.message);
+            Commons.showError(this,error.response.data.message);
           } else {
-            this.showError("Ha ocurrido un error inesperado");
+            Commons.showError(this,"Ha ocurrido un error inesperado");
           }
         });
 
-    },
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
-    },
-    showSuccess: function (msg,time) {
-      var $this = this;
-      this.messageType = "success";
-      this.message = msg;
-
-      if (time && time > 0) {
-        //1000==1segundo
-        setTimeout(function () {
-          $this.messageType = null;
-          $this.message = null;
-        }, time * 1000); //Introduce un numero y se pone a ms
-      }
     },
     edit: function (id) {
       this.$router.push({ name: "EditMyPiece", params: { idUser:this.user.id,id: id } });
@@ -383,33 +344,7 @@ export default {
       this.$router.push({ name: "DetailPiece", params: { id: id } });
     },
     search: function () {
-      let config = {
-        params: this.searchForm,
-      };
-
-      axios
-        .get(`${process.env.VUE_APP_API}/mypieces/${this.user.id}`, config)
-        .then((result) => {
-          this.pieces = result.data.pieces.filter((piece) => {
-            piece.created_at = piece.created_at.substring(0, 10); //Modificacion
-            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-          });
-
-          if (this.pieces.length == 0) {
-            this.errorTabla =
-              "No existen piezas para este criterio de búsqueda";
-          }
-        })
-        .catch((error) => {
-          if (error.response.data.message == "Unauthenticated.") {
-            this.showError("No estás autorizado para esta vista");
-            this.$store.commit("SET_TITLE", "Ventas realizadas --> Error");
-            this.auth = false;
-          } else {
-            this.sales = [];
-            this.errorTabla = "Ha ocurrido un error inesperado";
-          }
-        });
+      Commons.search(this,`mypieces/${this.user.id}`,"pieces","No existen piezas para este criterio de búsqueda", "Mis piezas realizadas");
     },
   },
 };

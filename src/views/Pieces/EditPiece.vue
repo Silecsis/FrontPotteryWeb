@@ -1,3 +1,8 @@
+<!--
+  Vista de edición de pieza.
+  Edita a las piezas de la api.
+  Solo puede acceder los usuarios de tipo admin.
+-->
 <template>
   <div>
     <card-sin-logo>
@@ -115,6 +120,7 @@ import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import CardSinLogo from "../components/card-sin-logo.vue";
 import ImageServer from "../components/image-server.vue";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -145,17 +151,11 @@ export default {
     };
   },
   mounted() {
-    var id = this.$route.params.id;
-    axios
-      .get(`${process.env.VUE_APP_API}/pieces/${id}`)
-      .then((result) => {
-        this.piece = result.data.data;
-      })
-      .catch(() => {
-        this.errorTabla = "Ha ocurrido un error inesperado";
-      });
+    
+    Commons.loadForm(this,'pieces','piece','Piezas realizadas --> Editar pieza');
   },
   methods: {
+    //No se utiliza el del commons porque guarda imgs y es diferente.
     save: function () {
       var id = this.$route.params.id;
 
@@ -182,19 +182,18 @@ export default {
           },
         })
         .then((result) => {
-          this.messageType = "success";
-          this.message = "La pieza ha sido modificada correctamente";
+          Commons.showSuccess(this,"La pieza ha sido modificada correctamente");
         })
         .catch((error) => {
-          this.messageType = "error";
+
           if (error.response.data.errors) {
             for (let fieldError in error.response.data.errors) {
               this.error[fieldError] = error.response.data.errors[fieldError];
             }
           } else if (error.response) {
-            this.message = error.response.data.message;
+            Commons.showError(this,error.response.data.message);
           } else {
-            this.message = "Ha ocurrido un error inesperado";
+            Commons.showError(this,"Ha ocurrido un error inesperado");
           }
         });
     },

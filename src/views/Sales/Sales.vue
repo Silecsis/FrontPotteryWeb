@@ -1,9 +1,13 @@
-<!--Vista piezas de cada usuario.
-El admin puede ver, borrar y editar la pieza.-->
+<!--
+  Vista Ventas realizadas.
+  Lista las ventas de la api.
+  Filtra las ventas
+  Pueden acceder todos los roles.
+  El rol admin es el unico que puede editar las ventas listadas.
+-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <!-- <x-message-status-success class="mb-4" :status="session('status')" /> -->
       <message :message="message" :type="messageType" />
 
       <nav class="navbar navbar-light py-6 mb-4">
@@ -14,7 +18,8 @@ El admin puede ver, borrar y editar la pieza.-->
             </h4>
           </div>
           <form class="form-inline pt-4" method="GET"></form>
-          <!--Lista todos los usuarios:-->
+
+          <!--Lista todos los usuarios que tienen ventas:-->
           <select
             name="buscaUser"
             class="form-control mr-sm-2 rounded bg-gray-200"
@@ -31,7 +36,7 @@ El admin puede ver, borrar y editar la pieza.-->
             </option>
           </select>
 
-          <!--Lista todas piezas:-->
+          <!--Lista todas piezas que se han vendido:-->
           <select
             name="buscaPiece"
             class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
@@ -231,6 +236,7 @@ import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -264,18 +270,11 @@ export default {
     this.userLog = JSON.parse(sessionStorage.getItem("user"));
   },
   methods: {
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
-    },
-    showSuccess: function (msg) {
-      this.messageType = "success";
-      this.message = msg;
-    },
     edit: function (id) {
       this.$router.push({ name: "EditSale", params: { id: id } });
     },
     search: function () {
+      let $this = this;
       let config = {
         params: this.searchForm,
       };
@@ -297,7 +296,7 @@ export default {
         })
         .catch((error) => {
           if (error.response.data.message == "Unauthenticated.") {
-            this.showError("No estás autorizado para esta vista");
+            Commons.showError($this,"No estás autorizado para esta vista");
             this.$store.commit("SET_TITLE", "Ventas realizadas --> Error");
             this.auth = false;
           } else {

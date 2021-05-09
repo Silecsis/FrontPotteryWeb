@@ -2,7 +2,9 @@
   Vista Materiales.
   Lista los materiales de la api.
   Filtra los materiales
-  Pueden acceder los usuarios logados.
+  Pueden acceder los usuarios logados
+  A los usuarios de rol user solo se les permitirá listar (READ)
+  A los usuarios de rol admin se les permitirán todas las acciones (CRUD).
 -->
 <template>
   <div class="py-8">
@@ -230,14 +232,13 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import LinkButton from "../components/linkButton.vue";
 import Dropdown from "../components/dropdown";
 import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import Message from "../components/message";
+import Commons from "../../helpers/commons";
 
 //Constantes:
 const msg={
@@ -275,67 +276,15 @@ export default {
   },
   methods: {
     destroy: function (id) {
-      axios
-        .delete(`${process.env.VUE_APP_API}/materials/${id}`)
-        .then((result) => {
-          if (result.data.success) {
-            this.showSuccess(result.data.message);
-            this.materials = this.materials.filter((material) => {
-              return material.id != id; //Para que no liste el usuario que se ha borrado
-            });
-
-            if (this.materials.length == 0) {
-              this.errorTabla =msg['no-materials'];
-            }
-          } else {
-            this.showError(result.data.message);
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            this.showError(error.response.data.message);
-          } else {
-            this.showError("Ha ocurrido un error inesperado");
-          }
-        });
-    },
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
-    },
-    showSuccess: function (msg) {
-      this.messageType = "success";
-      this.message = msg;
+      Commons.destroy(this,"materials", id, "materials", msg["no-materials"]);
     },
     edit: function (id) {
       this.$router.push({ name: "EditMaterial", params: { id: id } });
     },
     search: function () {
-      let config = {
-        params: this.searchForm,
-      };
-      axios
-        .get(`${process.env.VUE_APP_API}/materials`, config)
-        .then((result) => {
-          this.materials = result.data.filter((material) => {
-            material.created_at = material.created_at.substring(0, 10); //Modificacion
-            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-          });
-
-          if (this.materials.length == 0) {
-            this.errorTabla =msg['no-materials'];
-          }
-        })
-        .catch((error) => {
-          if (error.response.data.message == "Unauthenticated.") {
-            this.showError("No estás autorizado para esta vista");
-            this.$store.commit("SET_TITLE", "Materiales --> Error");
-            this.auth = false;
-          } else {
-            this.materials = [];
-            this.errorTabla = "Ha ocurrido un error inesperado";
-          }
-        });
+      
+      Commons.search(this,"materials","materials", msg["no-materials"], "Materiales");
+      
     },
   },
 };

@@ -95,8 +95,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import CardSinLogo from "../components/card-sin-logo";
 import Message from "../components/message";
 import VLabel from "../components/v-label";

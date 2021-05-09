@@ -1,9 +1,13 @@
-<!--Vista piezas de cada usuario.
-El admin puede ver, borrar y editar la pieza.-->
+<!--
+  Vista Piezas.
+  Lista las piezas de la api.
+  Filtra las piezas
+  Pueden acceder todos los roles, pero solo tendrán lectura y ver en detalle (READ Y DETAIL).
+  Los usuarios de tipo admin podrán realizar todas las acciones (CRUD).
+-->
 <template>
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <!-- <x-message-status-success class="mb-4" :status="session('status')" /> -->
       <message :message="message" :type="messageType" />
 
       <nav class="navbar navbar-light py-6 mb-4">
@@ -14,7 +18,7 @@ El admin puede ver, borrar y editar la pieza.-->
             </h4>
           </div>
           <form class="form-inline pt-4" method="GET">
-            <!--Lista todos los usuarios:-->
+            <!--Lista todos los usuarios que tienen piezas:-->
             <select
               name="buscaUser"
               class="form-control mr-sm-2 rounded bg-gray-200"
@@ -276,6 +280,7 @@ import ButtonIcon from "../components/button-icon";
 import VButton from "../components/v-button";
 import Message from "../components/message";
 import ImageServer from "../components/image-server.vue";
+import Commons from "../../helpers/commons";
 
 export default {
   components: {
@@ -308,7 +313,7 @@ export default {
     this.searchForm = { buscaUser: "", buscaVendido: "" };
     var success = this.$route.query.success;
     if (success && success == "addSale") {
-      this.showSuccess("La pieza ha sido actualizada a vendida correctamente");
+      Commons.showSuccess(this,"La pieza ha sido actualizada a vendida correctamente",5);
     }
 
     this.search();
@@ -316,74 +321,32 @@ export default {
   },
   methods: {
     destroy: function (id) {
-      axios
-        .delete(`${process.env.VUE_APP_API}/pieces/${id}`)
-        .then((result) => {
-          if (result.data.success) {
-            this.showSuccess(result.data.message);
-            this.pieces = this.pieces.filter((piece) => {
-              return piece.id != id; //Para que no liste el usuario que se ha borrado
-            });
-
-            if (this.pieces.length == 0) {
-              this.errorTabla =
-                "No existen piezas para este criterio de búsqueda";
-            }
-          } else {
-            this.showError(result.data.message);
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            this.showError(error.response.data.message);
-          } else {
-            this.showError("Ha ocurrido un error inesperado");
-          }
-        });
+      Commons.destroy(this,"pieces", id, "pieces", "No existen piezas para este criterio de búsqueda");
     },
+    //No se puede utilizar el del commun porque no es el mismo
     delSale: function (id) {
       axios
         .delete(`${process.env.VUE_APP_API}/sales/${id}`)
         .then((result) => {
           if (result.data.success) {
-            //Como se ha puesto prevent en la instacia del metodo (en el click)
-            //este no se mueve del sitio, pero se debe meter el
-            //search para que recargue la pagina con los datos correctos
             this.search();
-            this.showSuccess(result.data.message,5);
+            Commons.showSuccess(this,result.data.message,5);
 
             if (this.pieces.length == 0) {
               this.errorTabla =
                 "No existen piezas para este criterio de búsqueda";
             }
           } else {
-            this.showError(result.data.message);
+            Commons.showError(this,result.data.message);
           }
         })
         .catch((error) => {
           if (error.response) {
-            this.showError(error.response.data.message);
+            Commons.showError(this,error.response.data.message);
           } else {
-            this.showError("Ha ocurrido un error inesperado");
+            Commons.showError(this,"Ha ocurrido un error inesperado");
           }
         });
-    },
-    showError: function (msg) {
-      this.messageType = "error";
-      this.message = msg;
-    },
-    showSuccess: function (msg, time) {
-      var $this = this;
-      this.messageType = "success";
-      this.message = msg;
-
-      if (time && time > 0) {
-        //1000==1segundo
-        setTimeout(function () {
-          $this.messageType = null;
-          $this.message = null;
-        }, time * 1000); //Introduce un numero y se pone a ms
-      }
     },
     edit: function (id) {
       this.$router.push({ name: "EditPiece", params: { id: id } });
@@ -416,7 +379,7 @@ export default {
         })
         .catch((error) => {
           if (error.response.data.message == "Unauthenticated.") {
-            this.showError("No estás autorizado para esta vista");
+            Commons.showError(this,"No estás autorizado para esta vista");
             this.$store.commit("SET_TITLE", "Ventas realizadas --> Error");
             this.auth = false;
           } else {

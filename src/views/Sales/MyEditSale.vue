@@ -1,11 +1,13 @@
+<!--
+  Vista de edición de venta del usuario logado.
+  Muestra la venta de la api que ha realizado el usuario logado.
+  Solo puede acceder y editarla el usuario logado. 
+-->
 <template>
   <div>
     <card-sin-logo>
       <!-- Información operación -->
       <message :message="message" :type="messageType" />
-      <div class="flex justify-center space-x-1">
-        <div class="bg-white rounded p-4">IMAGEN</div>
-      </div>
 
       <form method="POST">
         <!-- Price -->
@@ -26,7 +28,7 @@
 
         <!-- Name -->
         <div>
-          <v-label for="name">Nombre</v-label>
+          <v-label for="name">Nombre de venta</v-label>
 
           <v-input
             id="name"
@@ -47,7 +49,7 @@
             :params="{ id: userLog.id }"
             class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4 flex float-left text-white font-bold bg-blue-400 p-4 rounded p-1.5"
           >
-            Volver a "Mis ventas realizadas"
+            Volver
           </link-button>
 
           <v-button
@@ -63,8 +65,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import CardSinLogo from "../components/card-sin-logo";
 import Message from "../components/message";
 import VLabel from "../components/v-label";
@@ -72,6 +72,7 @@ import VInput from "../components/v-input";
 import LinkButton from "../components/linkButton.vue";
 import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
+import Commons from '../../helpers/commons';
 
 export default {
   components: {
@@ -101,46 +102,11 @@ export default {
     };
   },
   mounted() {
-    var id = this.$route.params.id;
-
-    axios
-      .get(`${process.env.VUE_APP_API}/mysales/${this.userLog.id}/${id}`)
-      .then((result) => {
-        this.sale = result.data.data;
-      })
-      .catch(() => {
-        this.errorTabla = "Ha ocurrido un error inesperado";
-      });
+    Commons.loadForm(this,`mysales/${this.userLog.id}`,"sale",'Mis ventas realizadas --> Editar venta');
   },
   methods: {
     save: function () {
-      var id = this.$route.params.id;
-
-      if (!this.validate()) {
-        return;
-      }
-
-      axios
-        .put(
-          `${process.env.VUE_APP_API}/mysales/${this.userLog.id}/${id}`,
-          this.sale
-        )
-        .then((result) => {
-          this.messageType = "success";
-          this.message = "La venta ha sido modificada correctamente";
-        })
-        .catch((error) => {
-          this.messageType = "error";
-          if (error.response.data.errors) {
-            for (let fieldError in error.response.data.errors) {
-              this.error[fieldError] = error.response.data.errors[fieldError];
-            }
-          } else if (error.response) {
-            this.message = error.response.data.message;
-          } else {
-            this.message = "Ha ocurrido un error inesperado";
-          }
-        });
+      Commons.save(this,'edit',`mysales/${this.userLog.id}`,this.sale,"La venta ha sido modificada correctamente",this.validate);
     },
     validate: function () {
       var nameSale = this.sale.name;
