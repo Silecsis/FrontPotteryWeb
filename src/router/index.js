@@ -18,6 +18,7 @@ import EditMyPiece from '@/views/Pieces/EditMyPiece'
 import Pieces from '@/views/Pieces/Pieces'
 import EditPiece from '@/views/Pieces/EditPiece'
 import AddSale from '@/views/Pieces/AddSale'
+import AddMySale from '@/views/Pieces/AddMySale'
 import DetailPiece from '@/views/Pieces/DetailPiece'
 
 import MySales from '@/views/Sales/MySales'
@@ -64,7 +65,8 @@ router.beforeEach((to, from, next) => {
              to.name == 'MySales' ||
              to.name == 'EditMySale' ||
              to.name == 'EditMyPiece' ||
-             to.name == 'NewMyPiece') && (!user)){
+             to.name == 'NewMyPiece' ||
+             to.name == 'AddMySale') && (!user)){
     next({ name: 'Dashboard', query: { error: 'no-login' } });
   }else{
     next();
@@ -171,6 +173,11 @@ router.addRoutes(
       path: '/addsale/:id',
       name: 'AddSale',
       component: AddSale
+    },
+    {
+      path: '/addmysale/:idUser/:id',
+      name: 'AddMySale',
+      component: AddMySale
     },
     //VENTAS
 

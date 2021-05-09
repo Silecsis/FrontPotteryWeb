@@ -221,18 +221,19 @@ El admin puede ver, borrar y editar la pieza.-->
                   >
                     Ver en detalle
                   </link-button>
-                  <link-button
+                  <button
                     v-if="piece.sold"
                     v-rol:admin="user"
-                    @click.native.prevent="delSale(piece.id)"
+                    @click="delSale(piece.id)"
                     class="text-sm text-white font-bold bg-gray-500 ml-4 p-4 rounded p-1.5"
                   >
                     Quitar venta
-                  </link-button>
+                  </button>
                   <link-button
                     v-else
                     v-rol:admin="user"
-                    @click.native.prevent="addSale(piece.id)"
+                    name="AddSale"
+                    :params="{ id: piece.id }"
                     class="text-sm text-white font-bold bg-green-500 ml-4 p-4 rounded p-1.5"
                   >
                     Añadir venta
@@ -272,6 +273,7 @@ import Dropdown from "../components/dropdown";
 import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
+import VButton from "../components/v-button";
 import Message from "../components/message";
 import ImageServer from "../components/image-server.vue";
 
@@ -284,6 +286,7 @@ export default {
     ButtonIcon,
     Message,
     ImageServer,
+    VButton,
   },
   created() {
     this.$store.commit("SET_TITLE", "Piezas cerámicas");
@@ -347,13 +350,8 @@ export default {
             //este no se mueve del sitio, pero se debe meter el
             //search para que recargue la pagina con los datos correctos
             this.search();
-            this.showSuccess(result.data.message);
+            this.showSuccess(result.data.message,5);
 
-            // //3000==1segundo
-            // setTimeout(function () {
-            //   this.messageType = null;
-            //   this.message = null;
-            // }, 3000);
             if (this.pieces.length == 0) {
               this.errorTabla =
                 "No existen piezas para este criterio de búsqueda";
@@ -369,15 +367,23 @@ export default {
             this.showError("Ha ocurrido un error inesperado");
           }
         });
-
     },
     showError: function (msg) {
       this.messageType = "error";
       this.message = msg;
     },
-    showSuccess: function (msg) {
+    showSuccess: function (msg, time) {
+      var $this = this;
       this.messageType = "success";
       this.message = msg;
+
+      if (time && time > 0) {
+        //1000==1segundo
+        setTimeout(function () {
+          $this.messageType = null;
+          $this.message = null;
+        }, time * 1000); //Introduce un numero y se pone a ms
+      }
     },
     edit: function (id) {
       this.$router.push({ name: "EditPiece", params: { id: id } });

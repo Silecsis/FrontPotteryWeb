@@ -63,7 +63,8 @@ El admin puede ver, borrar y editar la pieza.-->
       </nav>
 
       <link-button
-        @click.native="newPiece()"
+        name = "NewMyPiece"
+        :params="{ idUser:user.id }"
         class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5"
       >
         Nueva pieza
@@ -220,6 +221,24 @@ El admin puede ver, borrar y editar la pieza.-->
                   >
                     Ver en detalle
                   </link-button>
+                  
+                  <button
+                    v-if="piece.sold"
+                    v-rol:admin="user"
+                    @click="delSale(piece.id)"
+                    class="text-sm text-white font-bold bg-gray-500 ml-4 p-4 rounded p-1.5"
+                  >
+                    Quitar venta
+                  </button>
+                  <link-button
+                    v-else
+                    v-rol:admin="user"
+                    name="AddMySale"
+                    :params="{ id: piece.id }"
+                    class="text-sm text-white font-bold bg-green-500 ml-4 p-4 rounded p-1.5"
+                  >
+                    Añadir venta
+                  </link-button>
                 </div>
               </td>
             </tr>
@@ -276,6 +295,11 @@ export default {
   },
   mounted() {
     this.searchForm = { buscaNombre:"" ,buscaVendido: "" };
+    
+    var success = this.$route.query.success;
+    if (success && success == "addSale") {
+      this.showSuccess("La pieza ha sido actualizada a vendida correctamente");
+    }
     this.user = JSON.parse(sessionStorage.getItem("user"));
     this.search();
   },
@@ -306,22 +330,57 @@ export default {
           }
         });
     },
+    
+    delSale: function (id) {
+      axios
+        .delete(`${process.env.VUE_APP_API}/mysales/${this.user.id}/${id}`)
+        .then((result) => {
+          if (result.data.success) {
+            //Como se ha puesto prevent en la instacia del metodo (en el click)
+            //este no se mueve del sitio, pero se debe meter el
+            //search para que recargue la pagina con los datos correctos
+            this.search();
+            this.showSuccess(result.data.message,5);
+
+            if (this.pieces.length == 0) {
+              this.errorTabla =
+                "No existen piezas para este criterio de búsqueda";
+            }
+          } else {
+            this.showError(result.data.message);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            this.showError(error.response.data.message);
+          } else {
+            this.showError("Ha ocurrido un error inesperado");
+          }
+        });
+
+    },
     showError: function (msg) {
       this.messageType = "error";
       this.message = msg;
     },
-    showSuccess: function (msg) {
+    showSuccess: function (msg,time) {
+      var $this = this;
       this.messageType = "success";
       this.message = msg;
+
+      if (time && time > 0) {
+        //1000==1segundo
+        setTimeout(function () {
+          $this.messageType = null;
+          $this.message = null;
+        }, time * 1000); //Introduce un numero y se pone a ms
+      }
     },
     edit: function (id) {
       this.$router.push({ name: "EditMyPiece", params: { idUser:this.user.id,id: id } });
     },
     detail: function (id) {
       this.$router.push({ name: "DetailPiece", params: { id: id } });
-    },
-    newPiece: function () {
-      this.$router.push({ name: "NewMyPiece", params: { idUser:this.user.id } });
     },
     search: function () {
       let config = {
