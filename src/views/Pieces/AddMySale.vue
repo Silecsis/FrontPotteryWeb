@@ -1,3 +1,8 @@
+<!--
+  Vista de nuevo añadir venta desde mypieces.
+  Crea una nueva venta a la api y modifica el estado de venta de la pieza a vendido.
+  Solo puede acceder los usuarios que estén logados para crear sus propias ventas.
+-->
 <template>
   <div>
     <card-sin-logo>
@@ -88,6 +93,7 @@ import LinkButton from "../components/linkButton.vue";
 import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import ImageServer from "../components/image-server.vue";
+import Commons from '../../helpers/commons';
 
 export default {
   components: {
@@ -141,10 +147,11 @@ export default {
       }
 
       axios
-
         .post(`${process.env.VUE_APP_API}/addmysale/${this.user.id}/${id}`,this.sale)
         .then((result) => {
             this.clear(); 
+            //MANDAR A VISTA PIEZAS     
+            this.$router.push({ name: "MyPieces", query: { success: "addSale"} });
         })
         .catch((error) => {
           this.messageType = "error";
@@ -153,15 +160,11 @@ export default {
               this.error[fieldError] = error.response.data.errors[fieldError];
             }
           } else if (error.response) {
-            this.message = error.response.data.message;
+            Commons.showError(this,error.response.data.message);
           } else {
-            this.message = "Ha ocurrido un error inesperado";
+            Commons.showError(this,"Ha ocurrido un error inesperado");
           }
-        });
-      
-      //MANDAR A VISTA PIEZAS     
-      this.$router.push({ name: "MyPieces", query: { success: "addSale"} });
-      
+        });      
     },
     validate: function () {
       var nameSale = this.sale.name;
@@ -189,7 +192,6 @@ export default {
     clear:function(){
       this.sale.name="";
       this.sale.price="";
-      
     }
   },
 };

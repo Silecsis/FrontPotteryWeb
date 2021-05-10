@@ -1,3 +1,8 @@
+<!--
+  Vista de nuevo añadir venta.
+  Crea una nueva venta a la api y modifica el estado de venta de la pieza a vendido.
+  Solo puede acceder los usuarios de tipo admin.
+-->
 <template>
   <div>
     <card-sin-logo>
@@ -88,6 +93,7 @@ import LinkButton from "../components/linkButton.vue";
 import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import ImageServer from "../components/image-server.vue";
+import Commons from '../../helpers/commons';
 
 export default {
   components: {
@@ -130,6 +136,7 @@ export default {
       });
   },
   methods: {
+    //No se puede coger el commons porque en los result es diferente
     save: function () {
       var id = this.piece.id;
 
@@ -138,27 +145,24 @@ export default {
       }
 
       axios
-
         .post(`${process.env.VUE_APP_API}/addsale/${id}`,this.sale)
         .then((result) => {
             this.clear(); 
+            
+             //MANDAR A VISTA PIEZAS CON PARAMETRO DE TODO OK     
+             this.$router.push({ name: "Pieces", query: { success: "addSale", id:this.piece.id } });
         })
         .catch((error) => {
-          this.messageType = "error";
           if (error.response.data.errors) {
             for (let fieldError in error.response.data.errors) {
               this.error[fieldError] = error.response.data.errors[fieldError];
             }
           } else if (error.response) {
-            this.message = error.response.data.message;
+            Commons.showError(this,error.response.data.message);
           } else {
-            this.message = "Ha ocurrido un error inesperado";
+            Commons.showError(this,"Ha ocurrido un error inesperado");
           }
         });
-      
-      //MANDAR A VISTA PIEZAS     
-      this.$router.push({ name: "Pieces", query: { success: "addSale", id:this.piece.id } });
-      
     },
     validate: function () {
       var nameSale = this.sale.name;
@@ -185,8 +189,7 @@ export default {
     },
     clear:function(){
       this.sale.name="";
-      this.sale.price="";
-      
+      this.sale.price=""; 
     }
   },
 };

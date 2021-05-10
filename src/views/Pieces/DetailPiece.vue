@@ -1,4 +1,8 @@
-
+<!--
+  Vista de detalle de la pieza.
+  Muestra los datos de la pieza junto su img y los materiales empleados.
+  Puede acceder todos los roles.
+-->
 <template>
   <div>
     <!-- Información operación -->

@@ -1,3 +1,8 @@
+<!--
+  Vista de nueva pieza.
+  Crea una nueva pieza a la api.
+  Solo puede acceder los usuarios de tipo admin.
+-->
 <template>
   <div>
     <card-sin-logo>
@@ -130,6 +135,7 @@ import VButton from "../components/v-button";
 import Validation from "../components/validation.vue";
 import CardSinLogo from "../components/card-sin-logo.vue";
 import ImageServer from "../components/image-server.vue";
+import Commons from '../../helpers/commons';
 
 export default {
   components: {
@@ -146,7 +152,7 @@ export default {
     this.$store.commit("SET_TITLE", "Mis piezas cerámicas -> Nueva pieza");
     this.user = JSON.parse(sessionStorage.getItem("user"));
   },
-  mounted() {
+  mounted() {    
     var id = this.$route.params.id;
     axios
       .get(`${process.env.VUE_APP_API}/newmypiece/${this.user.id}`)
@@ -176,6 +182,7 @@ export default {
     };
   },
   methods: {
+    //No puedo usar el común porque guarda IMG
     save: function () {
       if (!this.validate()) {
         return;
@@ -210,19 +217,17 @@ export default {
           }
         )
         .then((result) => {
-          this.messageType = "success";
-          this.message = "La pieza ha sido creada correctamente";
+          Commons.showSuccess(this,"La pieza ha sido creada correctamente");
         })
         .catch((error) => {
-          this.messageType = "error";
           if (error.response.data) {
             for (let fieldError in error.response.data.errors) {
               this.error[fieldError] = error.response.data.errors[fieldError];
             }
           } else if (error.response) {
-            this.message = error.response.data.message;
+            Commons.showError(this,error.response.data.message);
           } else {
-            this.message = "Ha ocurrido un error inesperado";
+            Commons.showError(this,"Ha ocurrido un error inesperado");
           }
         });
     },
