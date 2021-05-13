@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div v-if="loading">HOLA</div>
+    <!--Para cuando la vista está cargando-->
+    <!-- <div id="overlay" onclick="off()"></div> -->
+    
+    <!-- <div v-if="loading">HOLA</div> -->
+    <div v-if="loading">
+    <div>CARGANDO</div></div>
     <component :is="layout"></component>
   </div>
 </template>

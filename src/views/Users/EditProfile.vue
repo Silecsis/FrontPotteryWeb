@@ -216,8 +216,17 @@ export default {
           },
         })
         .then((result) => {
-          this.messageType = "success";
-          this.message = "Se han guardado los cambios de su perfil";
+          //Actualizamos la caché del registro
+          let userStorage = JSON.stringify(this.user);
+          sessionStorage.setItem("user", userStorage);
+
+          //Mandamos el mensaje de éxito
+          Commons.showSuccess(this,"Se han guardado los cambios de su perfil.Se va a refrescar los datos en 5 segundos.");
+
+          //Recargamos página de edit perfil para que aparezcan los nuevos cambios
+          setTimeout(function () {
+            location.reload()
+          }, 5000);
         })
         .catch((error) => {
           this.messageType = "error";
