@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="max-w-md  mt-4 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
     <!-- Session Status -->
     <message :message="message" :type="messageType" />
 
-    <form method="POST">
+    <form method="POST" class="w-full sm:max-w-md ">
       <!-- Email Address -->
       <div>
         <v-label for="email">Email</v-label>
@@ -89,10 +89,6 @@ export default {
   },
   methods: {
     enter: function () {
-      //   if (this.user.name.length == 0) {
-      //     this.error.name = "Campo obligatorio";
-      //     return;
-      //   }
 
       axios
         .post(`${process.env.VUE_APP_API}/login`, this.user)

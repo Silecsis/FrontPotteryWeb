@@ -39,6 +39,14 @@ router.beforeEach((to, from, next) => {
       router.app.$store.commit('SET_LAYOUT', 'login-layout');
       break;
 
+    case 'Register':
+      router.app.$store.commit('SET_LAYOUT', 'login-layout');
+      break;
+
+    case 'PasswordRequest':
+      router.app.$store.commit('SET_LAYOUT', 'login-layout');
+      break;  
+
     default:
       router.app.$store.commit('SET_LAYOUT', 'principal-layout');
       break;
