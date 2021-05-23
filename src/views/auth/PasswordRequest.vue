@@ -36,7 +36,7 @@
 
       <v-button
         class="ml-4 flex float-right text-white font-bold p-4 rounded p-1.5"
-        @click.native="save"
+        @click.native="request"
       >
         Solicitar cambio
       </v-button>
@@ -77,22 +77,22 @@ export default {
     };
   },
   methods: {
-    save: function () {
+    request: function () {
       if (!this.validate()) {
         return;
       }
 
       axios
-        .post(`${process.env.VUE_APP_API}/register`, this.user)
+        .post(`${process.env.VUE_APP_API}/password`, this.user)
         .then((result) => {
-          this.enter();
+          Commons.showSuccess(this,"Correo enviado. Revise la bandeja de entrada del email introducido");
         })
         .catch((error) => {
-          if (error.response.data) {
+          if (error.response.data.errors) {
             for (let fieldError in error.response.data.errors) {
               this.error[fieldError] = error.response.data.errors[fieldError];
             }
-          } else if (error.response) {
+          } else if (error.response.data) {
             Commons.showError(this, error.response.data.message);
           } else {
             Commons.showError(this, "Ha ocurrido un error inesperado");
