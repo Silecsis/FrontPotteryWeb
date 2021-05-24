@@ -27,6 +27,8 @@ import EditSale from '@/views/Sales/EditSale'
 import EditMySale from '@/views/Sales/MyEditSale'
 import NewMyPiece from '@/views/Pieces/NewMyPiece'
 
+import Msg from '@/views/Messages/Msg'
+
 import Login from '@/views/auth/login'
 
 Vue.use(Router)
@@ -74,7 +76,8 @@ router.beforeEach((to, from, next) => {
              to.name == 'EditMySale' ||
              to.name == 'EditMyPiece' ||
              to.name == 'NewMyPiece' ||
-             to.name == 'AddMySale') && (!user)){
+             to.name == 'AddMySale' ||
+             to.name == 'Msg') && (!user)){
     next({ name: 'Dashboard', query: { error: 'no-login' } });
   }else{
     next();
@@ -156,7 +159,6 @@ router.addRoutes(
       component: EditMyPiece
     },
     {
-      //METER ID DE USER
       path: '/mypieces',
       name: 'NewMyPiece',
       component: NewMyPiece
@@ -208,6 +210,12 @@ router.addRoutes(
       path: '/mysales/:idUser/:id',
       name: 'EditMySale',
       component: EditMySale
+    },
+    //MENSAJES
+    {
+      path: '/menssage/:idUser',
+      name: 'Msg',
+      component: Msg
     },
   ]
 

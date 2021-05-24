@@ -110,6 +110,14 @@
               <dropdown-link @click.native="logout"> Salir </dropdown-link>
             </template>
           </dropdown>
+          <div class="flex justify-center items-center mt-2">
+            <button-icon
+              type="msg"
+              @click.native="msg()"
+              class="font-bold"
+            >
+            </button-icon>
+          </div>   
         </div>
 
         <div v-else>
@@ -126,6 +134,7 @@ import NavLink from "../components/nav-link.vue";
 import Dropdown from "../components/dropdown.vue";
 import DropdownLink from "../components/dropdown-link.vue";
 import VButton from "../components/v-button.vue";
+import ButtonIcon from "../components/button-icon";
 
 export default {
   components: {
@@ -134,6 +143,7 @@ export default {
     Dropdown,
     DropdownLink,
     VButton,
+    ButtonIcon
   },
 
   data: function () {
@@ -164,6 +174,9 @@ export default {
     },
     myPieces: function (id) {
       this.$router.push({ name: "MyPieces", params: { idUser: id } });
+    },
+    msg: function () {
+      this.$router.push({ name: "Msg", params: { idUser:this.user.id} });
     },
   },
   mounted() {

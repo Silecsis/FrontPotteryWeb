@@ -42,8 +42,15 @@
 
       <!-- Settings Dropdown -->
       <div v-if="user" class="hidden sm:flex sm:items-center sm:ml-6">
+        <button-icon
+              type="msg"
+              @click.native="msg()"
+              class="font-bold"
+            >
+            </button-icon>
         <dropdown align="right">
           <template v-slot:trigger>
+            
             <button
               class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
             >
@@ -144,6 +151,7 @@ import Dropdown from "../components/dropdown.vue";
 import DropdownLink from "../components/dropdown-link.vue";
 import VButton from "../components/v-button.vue";
 import ImageServer from "../components/image-server.vue";
+import ButtonIcon from "../components/button-icon";
 
 export default {
   components: {
@@ -153,6 +161,7 @@ export default {
     DropdownLink,
     VButton,
     ImageServer,
+    ButtonIcon
   },
   data: function () {
     return {
@@ -182,6 +191,9 @@ export default {
     },
     myPieces: function (id) {
       this.$router.push({ name: "MyPieces", params: { idUser: id } });
+    },
+    msg: function () {
+      this.$router.push({ name: "Msg", params: { idUser:this.user.id} });
     },
   },
   mounted() {
