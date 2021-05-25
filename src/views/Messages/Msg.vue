@@ -11,7 +11,7 @@
 
       <!-- Cuadro de mensajes -->
       <div
-        class="items-center bg-white rounded p-5 my-2 min-w-min overscroll-auto"
+        class="items-center bg-white rounded p-5 my-2 min-w-min overscroll-auto min-w-max"
       >
         <!-- Lista de opciones -->
         <div
@@ -22,15 +22,20 @@
             <button-icon type="remove" class="font-bold inline-flex">
             </button-icon>
 
-
-            <button-icon 
+            <button-icon
               v-if="this.show == 'received'"
-              type="sended" class="font-bold inline-flex" @click.native="changeShow('sended')">
+              type="sended"
+              class="font-bold inline-flex"
+              @click.native="changeShow('sended')"
+            >
             </button-icon>
 
-            <button-icon 
+            <button-icon
               v-if="this.show == 'sended'"
-              type="received" class="font-bold inline-flex" @click.native="changeShow('received')">
+              type="received"
+              class="font-bold inline-flex"
+              @click.native="changeShow('received')"
+            >
             </button-icon>
           </div>
 
@@ -66,7 +71,9 @@
             >
               <option disabled value="">Usuario</option>
               <option value="">Todos</option>
-              <option v-for="u in users" v-bind:key="u.id" :value="u.id">{{u.email}}</option>
+              <option v-for="u in users" v-bind:key="u.id" :value="u.id">
+                {{ u.email }}
+              </option>
             </select>
 
             <input
@@ -150,20 +157,28 @@
                 <u
                   ><h3 class="text-gray-600 font-bold uppercase m-2">
                     Lista de mensajes
+                    <span v-if="this.show == 'received'"> recibidos</span>
+                    <span v-if="this.show == 'sended'"> enviados</span>
                   </h3></u
                 >
               </li>
               <li
                 v-for="msg in paginated('msgs')"
                 v-bind:key="msg.id"
-                class="rounded bg-white w-full p-2 border-2 border-gray-200 overflow-auto"
+                @click="showId(msg.id)"
+                :id="msg.id"
+                class="rounded w-full p-2 border-2 border-gray-200 overflow-auto"
+                :class="{
+                  'bg-gray-300': selectMsg == msg.id,
+                  'bg-white': selectMsg != msg.id,
+                }"
               >
                 <input
                   type="checkbox"
                   class="inline-flex pt-1 rounded form-checkbox h-4 w-4 mr-2 text-orange-600"
                   name="msgSelected"
                 />
-                <p class="inline-flex font-bold">
+                <p class="inline-flex font-bold w-20">
                   {{ msg.title }}
                   <span class="font-extralight pl-2"
                     >({{ msg.emailUser }})</span
@@ -177,6 +192,8 @@
                 <u
                   ><h3 class="text-gray-600 font-bold uppercase m-2">
                     Lista de mensajes
+                    <span v-if="this.show == 'received'"> recibidos</span>
+                    <span v-if="this.show == 'sended'"> enviados</span>
                   </h3></u
                 >
               </li>
@@ -193,11 +210,25 @@
             class="h-full flex justify-center overflow-hidden shadow-sm border-2 border-gray-400 inline-flex rounded bg-blue-100 w-2/3 p-2"
           >
             <div
-              id="content"
-              class="flex justify-center bg-white w-full flex m-2 rounded"
-              hidden
+              v-if="this.hiddenWindow"
+              class="flex justify-center bg-blue-100 w-full flex m-2 rounded"
             >
-              Hi
+              <!-- Este div es necesario o sino se descuadra la vista -->
+              <p class="text-blue-100">hi</p>
+            </div>
+
+            <div
+              v-if="!this.hiddenWindow"
+              class="flex block justify-left bg-white w-full m-2 rounded"
+            >
+              <ul class="px-2 w-full">
+                <li class="text-white"> .</li>
+                <li v-if="this.show == 'received'" class="justify-center font-bold text-xs pb-2"><u class="text-gray-500">De:</u> <spand class="font-extralight">{{ this.msg.emailUser }}</spand></li>
+                <li v-if="this.show == 'sended'" class="justify-center font-bold text-xs pb-2"><u class="text-gray-500">De:</u> <spand class="font-extralight">{{ this.msg.emailUser }}</spand></li>
+                <li class="justify-center font-bold text-center text-xl text-white rounded bg-blue-400 p-1 mb-2">{{ this.msg.title }}</li>
+                <li class="justify-center ">{{ this.msg.msg }}</li>
+                <li class="text-white"> .</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -236,16 +267,19 @@ export default {
   data: function () {
     return {
       users: [],
+      user: null,
       msgs: [],
+      msg: null,
       paginate: ["msgs"],
       message: null,
       messageType: null,
       errorTabla: "",
-      user: null,
       pageSize: 4,
       searchForm: {},
       reload: false,
-      show:"received",
+      show: "received",
+      hiddenWindow: true,
+      selectMsg: "",
     };
   },
   mounted() {
@@ -295,9 +329,29 @@ export default {
           }
         });
     },
-    changeShow:function(option){
+    changeShow: function (option) {
       this.show = option;
+      this.hiddenWindow = true;
+      this.msg = null;
       this.search();
+    },
+    showId: function (idMsg) {
+      if (this.selectMsg == "") {
+        this.selectMsg = idMsg;
+        this.hiddenWindow = false;
+        this.getMsg(idMsg);
+      } else if (this.selectMsg != idMsg && this.selectMsg != "") {
+        this.selectMsg = idMsg;
+        this.hiddenWindow = false;
+        this.getMsg(idMsg);
+      }
+    },
+    getMsg: function (idMsg) {
+      this.msgs.forEach((m) => {
+        if (m.id == idMsg) {
+          this.msg = m;
+        }
+      });
     },
   },
 };
