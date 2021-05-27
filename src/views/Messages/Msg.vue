@@ -8,6 +8,7 @@
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <message :message="message" :type="messageType" />
+      <validation v-if="error.msgArr" :errors="error.msgArr" />
 
       <!-- Cuadro de mensajes -->
       <div
@@ -19,7 +20,7 @@
         >
           <!--Opciones -->
           <div class="w-1/3">
-            <button-icon type="remove" class="font-bold inline-flex">
+            <button-icon type="remove" @click.native="destroy()" class="font-bold inline-flex">
             </button-icon>
 
             <button-icon
@@ -176,7 +177,9 @@
                 <input
                   type="checkbox"
                   class="inline-flex pt-1 rounded form-checkbox h-4 w-4 mr-2 text-orange-600"
-                  name="msgSelected"
+                  v-bind:id="msg.id"
+                  v-bind:value="msg.id"
+                  v-model="msgArr"
                 />
                 <p class="inline-flex font-bold w-20">
                   {{ msg.title }}
@@ -249,6 +252,7 @@ import VButton from "../components/v-button";
 import Message from "../components/message";
 import ImageServer from "../components/image-server.vue";
 import Commons from "../../helpers/commons";
+import Validation from "../components/validation.vue";
 
 export default {
   components: {
@@ -260,6 +264,7 @@ export default {
     Message,
     ImageServer,
     VButton,
+    Validation,
   },
   created() {
     this.$store.commit("SET_TITLE", "Bandeja de mensajes");
@@ -280,6 +285,10 @@ export default {
       show: "received",
       hiddenWindow: true,
       selectMsg: "",
+      msgArr:[],
+      error: {
+        msgArr: [],
+      },
     };
   },
   mounted() {
@@ -288,9 +297,47 @@ export default {
     this.search();
   },
   methods: {
-    destroy: function (id) {},
-    edit: function (id) {},
-    detail: function (id) {},
+    destroy: function () {
+      if (!this.validate()) {
+        return;
+      }      
+
+      var formData = new FormData();
+      //GUARDA EL ARRAY EN EL FORMDATA
+      for(var i=0;i<this.msgArr.length;i++){
+        formData.append(`msgArr[${i}]`, this.msgArr[i]);
+      }
+
+      axios
+        .post(
+          `${process.env.VUE_APP_API}/messages/delete/${this.user.id}`,
+          formData,
+          {
+            headers: {
+              "content-type": "multipart/form-data",
+            },
+          }
+        )
+        .then((result) => {
+          Commons.showSuccess(this,"Se han eliminado los mensajes correctamente");
+        })
+        .catch((error) => {
+
+          if (error.response.data.messageNotMsg) {
+            Commons.showError(this,error.response.data.messageNotMsg);
+          } else if(error.response.data.errorNotFound){
+            Commons.showError(this,error.response.data.errorNotFound);
+          } else if(error.response.data.errorNotFound){
+            Commons.showError(this,error.response.data.errorNotDelete);
+          } if (error.response) {
+            for (let fieldError in error.response.errors) {
+              this.error[fieldError] = error.response.errors[fieldError];
+            }
+          } else {
+            Commons.showError(this,"Ha ocurrido un error inesperado");
+          }
+        });
+    },
     search: function () {
       let config = {
         params: this.searchForm,
@@ -352,6 +399,22 @@ export default {
           this.msg = m;
         }
       });
+    },
+    validate: function () {
+      var msgSelected = this.msgArr.length;
+      var valid = true;
+      this.error = {
+        msgArr: [],
+      };
+
+      if (msgSelected < 1) {
+        this.error.msgArr.push(
+          "Debes seleccionar, al menos, un mensaje para eliminar."
+        );
+        valid = false;
+      }
+
+      return valid;
     },
   },
 };
