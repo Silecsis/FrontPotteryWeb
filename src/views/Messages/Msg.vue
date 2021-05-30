@@ -8,12 +8,23 @@
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <message :message="message" :type="messageType" />
-      <div v-if="error.msgArr != '' || error.title != '' || error.msg != '' || error.user_id_receiver != ''" class="px-10 py-4 border-2 rounded border-gray-400 m-auto bg-white">
+      <div
+        v-if="
+          error.msgArr != '' ||
+          error.title != '' ||
+          error.msg != '' ||
+          error.user_id_receiver != ''
+        "
+        class="px-10 py-4 border-2 rounded border-gray-400 m-auto bg-white"
+      >
         <validation v-if="error.msgArr" :errors="error.msgArr" />
         <validation v-if="error.title" :errors="error.title" />
         <validation v-if="error.msg" :errors="error.msg" />
-        <validation v-if="error.user_id_receiver" :errors="error.user_id_receiver" />
-      </div> 
+        <validation
+          v-if="error.user_id_receiver"
+          :errors="error.user_id_receiver"
+        />
+      </div>
 
       <!-- Cuadro de mensajes -->
       <div
@@ -185,7 +196,7 @@
                 v-bind:key="msg.id"
                 @click="showId(msg.id)"
                 :id="msg.id"
-                class="rounded w-full p-2 border-2 border-gray-200 overflow-auto vueMsg "
+                class="rounded w-full p-2 border-2 border-gray-200 overflow-auto vueMsg"
                 :class="{
                   'bg-gray-300': selectMsg == msg.id,
                   'bg-white': selectMsg != msg.id,
@@ -197,19 +208,19 @@
                   v-bind:value="msg.id"
                   v-model="msgArr"
                 />
-                <p v-if="!msg.read " class="inline-flex h-8 font-bold">
-                  {{ msg.title }}</p>
-                  <span v-if="!msg.read" class="font-normal pl-2"
-                    >({{ msg.emailUser }})</span
-                  >
-                
+                <p v-if="!msg.read" class="inline-flex h-8 font-bold">
+                  {{ msg.title }}
+                </p>
+                <span v-if="!msg.read" class="font-normal pl-2"
+                  >({{ msg.emailUser }})</span
+                >
 
-                <p v-if="msg.read" class="inline-flex h-8  font-extralight ">
-                  {{ msg.title }}</p>
-                  <span v-if="msg.read" class="font-extralight pl-2"
-                    >({{ msg.emailUser }})</span
-                  >
-                
+                <p v-if="msg.read" class="inline-flex h-8 font-extralight">
+                  {{ msg.title }}
+                </p>
+                <span v-if="msg.read" class="font-extralight pl-2"
+                  >({{ msg.emailUser }})</span
+                >
               </li>
             </ul>
 
@@ -391,7 +402,6 @@ export default {
       errorTabla: "",
       pageSize: 4,
       searchForm: {},
-      reload: false,
       show: "received",
       hiddenWindowMsg: true,
       hiddenWindowNewMsg: true,
@@ -401,7 +411,7 @@ export default {
         msgArr: [],
         msg: [],
         title: [],
-        user_id_receiver:[],
+        user_id_receiver: [],
       },
     };
   },
@@ -456,7 +466,7 @@ export default {
           }
         });
     },
-    
+
     create: function () {
       if (!this.validate("create")) {
         return;
@@ -464,10 +474,15 @@ export default {
 
       axios
         .post(
-          `${process.env.VUE_APP_API}/messages/create/${this.user.id}`,this.msgNew
+          `${process.env.VUE_APP_API}/messages/create/${this.user.id}`,
+          this.msgNew
         )
         .then((result) => {
-          Commons.showSuccess(this,"Se ha enviado el mensaje correctamente",5);
+          Commons.showSuccess(
+            this,
+            "Se ha enviado el mensaje correctamente",
+            5
+          );
           this.clearMsgNew();
         })
         .catch((error) => {
@@ -493,17 +508,25 @@ export default {
           config
         )
         .then((result) => {
-          if(this.show == "sended"){ 
-            this.msgs = result.data.msgs.filter((msg) => {
-            msg.created_at = msg.created_at.substring(0, 10);
-            msg.read = true; //Si es de la bandeja de enviados, configuraremos su leido a true para que no lo muestre como no leido
-            return true; 
-          });
-          }else if(this.show == "received"){
-            this.msgs = result.data.msgs.filter((msg) => {
-            msg.created_at = msg.created_at.substring(0, 10); //Modificacion
-            return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
-          });
+          if (this.show == "sended") {
+            this.msgs.splice(0, this.msgs.length);
+            this.msgs.push(
+              ...result.data.msgs.filter((msg) => {
+                msg.created_at = msg.created_at.substring(0, 10);
+                msg.read = true; //Si es de la bandeja de enviados, configuraremos su leido a true para que no lo muestre como no leido
+                return true;
+              })
+            );
+            this.$refs.paginator.goToPage(1);
+          } else if (this.show == "received") {
+            this.msgs.splice(0, this.msgs.length);
+            this.msgs.push(
+              ...result.data.msgs.filter((msg) => {
+                msg.created_at = msg.created_at.substring(0, 10);
+                return true;
+              })
+            );
+            this.$refs.paginator.goToPage(1);
           }
 
           this.users = result.data.users;
@@ -511,11 +534,6 @@ export default {
 
           if (this.msgs.length == 0) {
             this.errorTabla = "No existen mensajes";
-            this.reload = true;
-          } else {
-            if (this.reload) {
-              location.reload();
-            }
           }
         })
         .catch((error) => {
@@ -529,7 +547,7 @@ export default {
           }
         });
     },
-    editRead:function(){
+    editRead: function () {
       axios
         .post(
           `${process.env.VUE_APP_API}/messages/edit-read/${this.user.id}/${this.msg.id}`
@@ -574,9 +592,9 @@ export default {
       this.msgs.forEach((m) => {
         if (m.id == idMsg) {
           this.msg = m;
-          
+
           //Solo se editará su condición de read si está desde la bandeja de mensajes recibidos
-          if(!m.read && this.show == 'received'){
+          if (!m.read && this.show == "received") {
             this.editRead();
             this.search();
           }
@@ -594,21 +612,27 @@ export default {
         title: [],
       };
 
-      if (option == 'delete' && msgSelected < 1) {
+      if (option == "delete" && msgSelected < 1) {
         this.error.msgArr.push(
           "Debes seleccionar, al menos, un mensaje para eliminar."
         );
         valid = false;
       }
 
-      if (option == 'create' && (!titleErr || titleErr.length < 5 || titleErr.length > 30)) {
+      if (
+        option == "create" &&
+        (!titleErr || titleErr.length < 5 || titleErr.length > 30)
+      ) {
         this.error.title.push(
           "El campo 'asunto del mensaje' debe tener al menos de 5 carácteres y no más de 30."
         );
         valid = false;
       }
 
-      if (option == 'create' && (!msgErr || msgErr.length < 2 || msgErr.length > 255)) {
+      if (
+        option == "create" &&
+        (!msgErr || msgErr.length < 2 || msgErr.length > 255)
+      ) {
         this.error.msg.push(
           "El campo 'contenido del mensaje' debe tener al menos de 2 carácteres y no más de 255."
         );
@@ -617,12 +641,11 @@ export default {
 
       return valid;
     },
-    clearMsgNew:function(){
-      this.msgNew.title="";
-      this.msgNew.msg="";
-      this.msgNew.user_id_receiver="";
+    clearMsgNew: function () {
+      this.msgNew.title = "";
+      this.msgNew.msg = "";
+      this.msgNew.user_id_receiver = "";
     },
-
   },
 };
 </script>
