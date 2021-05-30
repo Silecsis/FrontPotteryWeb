@@ -26,6 +26,7 @@
           <!--Opciones -->
           <div class="w-1/3">
             <button-icon
+              v-if="this.show == 'received'"
               type="remove"
               @click.native="destroy()"
               class="font-bold inline-flex"
@@ -164,10 +165,10 @@
         </div>
 
         <!-- Tratamiento de mensajes -->
-        <div class="h-80 mt-3">
+        <div class="h-80 mt-3 flex justify-center overflow-auto">
           <!-- Lista de mensajes -->
           <div
-            class="h-full flex justify-center overflow-hidden shadow-sm border-2 border-gray-400 inline-flex rounded bg-indigo-200 w-1/3 p-2"
+            class="h-full flex justify-center overflow-auto shadow-sm border-2 border-gray-400 inline-flex rounded bg-indigo-200 w-80 p-2"
           >
             <ul v-if="msgs.length != 0" class="w-full">
               <li class="flex justify-center">
@@ -184,7 +185,7 @@
                 v-bind:key="msg.id"
                 @click="showId(msg.id)"
                 :id="msg.id"
-                class="rounded w-full p-2 border-2 border-gray-200 overflow-auto"
+                class="rounded w-full p-2 border-2 border-gray-200 overflow-auto vueMsg "
                 :class="{
                   'bg-gray-300': selectMsg == msg.id,
                   'bg-white': selectMsg != msg.id,
@@ -192,24 +193,23 @@
               >
                 <input
                   type="checkbox"
-                  class="inline-flex pt-1 rounded form-checkbox h-4 w-4 mr-2 text-orange-600"
-                  v-bind:id="msgNew.id"
-                  v-bind:value="msgNew.id"
+                  class="pt-1 rounded form-checkbox h-4 w-4 mr-2 text-orange-600"
+                  v-bind:value="msg.id"
                   v-model="msgArr"
                 />
-                <p v-if="!msg.read " class="inline-flex font-bold w-20">
-                  {{ msg.title }}
-                  <span class="font-normal pl-2"
+                <p v-if="!msg.read " class="inline-flex h-8 font-bold">
+                  {{ msg.title }}</p>
+                  <span v-if="!msg.read" class="font-normal pl-2"
                     >({{ msg.emailUser }})</span
                   >
-                </p>
+                
 
-                <p v-if="msg.read" class="inline-flex font-extralight w-20">
-                  {{ msg.title }}
-                  <span class="font-extralight pl-2"
+                <p v-if="msg.read" class="inline-flex h-8  font-extralight ">
+                  {{ msg.title }}</p>
+                  <span v-if="msg.read" class="font-extralight pl-2"
                     >({{ msg.emailUser }})</span
                   >
-                </p>
+                
               </li>
             </ul>
 
@@ -233,7 +233,7 @@
 
           <!-- Desarrollo de opciones CRUD -->
           <div
-            class="h-full flex justify-center overflow-hidden shadow-sm border-2 border-gray-400 inline-flex rounded bg-blue-100 w-2/3 p-2"
+            class="h-full flex justify-center overflow-hidden shadow-sm border-2 border-gray-400 inline-flex rounded bg-blue-100 w-120 p-2"
           >
             <div
               v-if="this.hiddenWindowMsg && this.hiddenWindowNewMsg"
@@ -437,6 +437,7 @@ export default {
             this,
             "Se han eliminado los mensajes correctamente"
           );
+          this.search();
         })
         .catch((error) => {
           if (error.response.data.messageNotMsg) {

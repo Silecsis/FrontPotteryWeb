@@ -218,6 +218,16 @@
                   >
                   </button-icon>
                 </div>
+                
+                <div class="my-4">
+                  <link-button
+                    v-if="!piece.sold && piece.user_id != user.id"
+                    @click.native="buy(piece.id)"
+                    class="text-sm text-white font-bold bg-yellow-500 ml-4 p-4 rounded p-1.5"
+                  >
+                    Comprar
+                  </link-button>
+                </div>
                 <div class="flex justify-center space-x-1">
                   <link-button
                     @click.native="detail(piece.id)"
@@ -242,7 +252,7 @@
                   >
                     Añadir venta
                   </link-button>
-                </div>
+                </div> 
               </td>
             </tr>
           </tbody>
@@ -305,7 +315,7 @@ export default {
       messageType: null,
       errorTabla: "",
       user: null,
-      pageSize: 4,
+      pageSize: 2,
       searchForm: {},
     };
   },
@@ -353,6 +363,26 @@ export default {
     },
     detail: function (id) {
       this.$router.push({ name: "DetailPiece", params: { id: id } });
+    },
+    buy: function (id) {
+      if(!this.user){
+        var idUser = -1;
+      }else{
+        var idUser = this.user.id;
+      }
+
+       axios
+        .get(`${process.env.VUE_APP_API}/buyPiece/${idUser}/${id}`)
+        .then((result) => {
+          Commons.showSuccess(this,"Mensaje de solicitud de compra enviado correctamente");
+        })
+        .catch((error) => {
+          if (error.response) {
+            Commons.showError(this,error.response.data.message);
+          } else {
+            Commons.showError(this,"Ha ocurrido un error inesperado");
+          }
+        });
     },
     addSale: function (id) {
       this.$router.push({ name: "AddSale", params: { id: id } });

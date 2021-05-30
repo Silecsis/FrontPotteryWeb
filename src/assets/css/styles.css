@@ -50,4 +50,6 @@
     cursor: pointer;
   }
 
-
+.vueMsg {
+    cursor:pointer;
+}
