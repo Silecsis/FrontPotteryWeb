@@ -466,7 +466,6 @@ export default {
           }
         });
     },
-
     create: function () {
       if (!this.validate("create")) {
         return;
@@ -610,6 +609,7 @@ export default {
         msgArr: [],
         msg: [],
         title: [],
+        user_id_receiver:[],
       };
 
       if (option == "delete" && msgSelected < 1) {

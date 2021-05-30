@@ -5,7 +5,10 @@ module.exports = {
     extend: {
       spacing: {
         '120': '48rem',
-      }
+      },
+      colors:{
+        jeje:'#000000',
+      },
     },
   },
   variants: {
