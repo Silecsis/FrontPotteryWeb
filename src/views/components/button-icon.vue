@@ -38,7 +38,7 @@
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      class="h-9 w-9 text-blue-100 mr-5 px-0.5 bg-blue-600 rounded"
+      class="h-9 w-9 text-blue-100 px-0.5 bg-blue-600 rounded"
     >
       <path
         stroke-linecap="round"

@@ -4,7 +4,7 @@
     <div class="pt-2 pb-3 space-y-1">
       <!-- Navigation Links -->
       <!--HOME-->
-      <nav-link name="Dashboard" responsive="true" class="font-bold">
+      <nav-link name="Dashboard" @click.native="countMsg()" responsive="true" class="font-bold">
         Home
       </nav-link>
 
@@ -12,6 +12,7 @@
       <nav-link
         v-rol:admin="user"
         name="Users"
+        @click.native="countMsg()"
         responsive="true"
         class="font-bold"
       >
@@ -22,6 +23,7 @@
       <nav-link
         v-if="user"
         name="Materials"
+        @click.native="countMsg()"
         responsive="true"
         class="font-bold"
       >
@@ -29,12 +31,12 @@
       </nav-link>
 
       <!--Pieces-->
-      <nav-link name="Pieces" responsive="true" class="font-bold">
+      <nav-link name="Pieces" @click.native="countMsg()" responsive="true" class="font-bold">
         Piezas cerámicas
       </nav-link>
 
       <!--Sales-->
-      <nav-link name="Sales" responsive="true" class="font-bold">
+      <nav-link name="Sales" @click.native="countMsg()" responsive="true" class="font-bold">
         Ventas realizadas
       </nav-link>
     </div>
@@ -110,13 +112,17 @@
               <dropdown-link @click.native="logout"> Salir </dropdown-link>
             </template>
           </dropdown>
-          <div class="flex justify-center items-center mt-2">
+          <div class="flex justify-center items-center mt-2 w-20 text-blue-100 bg-blue-600 rounded mr-4">
             <button-icon
               type="msg"
               @click.native="msg()"
               class="font-bold"
             >
             </button-icon>
+            
+            <div v-if="this.msgCount != 0" class="mt-1.5 mb-1 mx-1">
+                <p  class="mr-1 px-2 text-blue-600 bg-blue-100 rounded-full">{{this.msgCount}}</p>
+            </div>
           </div>   
         </div>
 
@@ -129,6 +135,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 import ApplicationLogo from "../components/application-logo.vue";
 import NavLink from "../components/nav-link.vue";
 import Dropdown from "../components/dropdown.vue";
@@ -149,6 +157,7 @@ export default {
   data: function () {
     return {
       user: null,
+      msgCount:0,
     };
   },
   methods: {
@@ -167,20 +176,42 @@ export default {
       }
     },
     editProfile: function (id) {
+      this.countMsg();
       this.$router.push({ name: "EditProfile", params: { id: id } });
     },
     mySales: function (id) {
+      this.countMsg();
       this.$router.push({ name: "MySales", params: { idUser: id } });
     },
     myPieces: function (id) {
+      this.countMsg();
       this.$router.push({ name: "MyPieces", params: { idUser: id } });
     },
     msg: function () {
+      this.countMsg();
       this.$router.push({ name: "Msg", params: { idUser:this.user.id} });
+    },
+    countMsg:function(){
+      if(!this.user){
+        return;
+      }
+      axios
+        .post(
+          `${process.env.VUE_APP_API}/messages/count/${this.user.id}`
+        )
+        .then((result) => {
+          this.msgCount = result.data.count;
+        })
+        .catch((error) => {
+          if (error.data.message) {
+            Commons.showError(this, "Ha ocurrido un error inesperado");
+          }
+        });
     },
   },
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem("user"));
+    this.countMsg();
   },
 };
 </script>

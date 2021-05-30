@@ -16,25 +16,41 @@
         <!-- Navigation Links -->
         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
           <!--HOME-->
-          <nav-link name="Dashboard" class="font-bold"> Home </nav-link>
+          <nav-link
+            name="Dashboard"
+            @click.native="countMsg()"
+            class="font-bold"
+          >
+            Home
+          </nav-link>
 
           <!--Usuarios. SOLO SI ES ADMIN-->
-          <nav-link v-rol:admin="user" name="Users" class="font-bold">
+          <nav-link
+            v-rol:admin="user"
+            name="Users"
+            @click.native="countMsg()"
+            class="font-bold"
+          >
             Usuarios
           </nav-link>
 
           <!--Materials-->
-          <nav-link v-if="user" name="Materials" class="font-bold">
+          <nav-link
+            v-if="user"
+            name="Materials"
+            @click.native="countMsg()"
+            class="font-bold"
+          >
             Materiales
           </nav-link>
 
           <!--Pieces-->
-          <nav-link name="Pieces" class="font-bold">
+          <nav-link name="Pieces" @click.native="countMsg()" class="font-bold">
             Piezas cerámicas
           </nav-link>
 
           <!--Sales-->
-          <nav-link name="Sales" class="font-bold">
+          <nav-link name="Sales" @click.native="countMsg()" class="font-bold">
             Ventas realizadas
           </nav-link>
         </div>
@@ -42,15 +58,17 @@
 
       <!-- Settings Dropdown -->
       <div v-if="user" class="hidden sm:flex sm:items-center sm:ml-6">
-        <button-icon
-              type="msg"
-              @click.native="msg()"
-              class="font-bold"
-            >
-            </button-icon>
+        <div class="flex text-blue-100 bg-blue-600 rounded mr-4">
+          <button-icon type="msg" @click.native="msg()" class="font-bold">
+          </button-icon>
+          <div v-if="this.msgCount != 0" class="mt-1.5 mb-1 mx-1">
+            <p class="mr-1 px-2 text-blue-600 bg-blue-100 rounded-full">
+              {{ this.msgCount }}
+            </p>
+          </div>
+        </div>
         <dropdown align="right">
           <template v-slot:trigger>
-            
             <button
               class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
             >
@@ -145,6 +163,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 import ApplicationLogo from "../components/application-logo.vue";
 import NavLink from "../components/nav-link.vue";
 import Dropdown from "../components/dropdown.vue";
@@ -161,11 +181,12 @@ export default {
     DropdownLink,
     VButton,
     ImageServer,
-    ButtonIcon
+    ButtonIcon,
   },
   data: function () {
     return {
       user: null,
+      msgCount: 0,
     };
   },
   methods: {
@@ -184,20 +205,40 @@ export default {
       }
     },
     editProfile: function (id) {
+      this.countMsg();
       this.$router.push({ name: "EditProfile", params: { id: id } });
     },
     mySales: function (id) {
+      this.countMsg();
       this.$router.push({ name: "MySales", params: { idUser: id } });
     },
     myPieces: function (id) {
+      this.countMsg();
       this.$router.push({ name: "MyPieces", params: { idUser: id } });
     },
     msg: function () {
-      this.$router.push({ name: "Msg", params: { idUser:this.user.id} });
+      this.countMsg();
+      this.$router.push({ name: "Msg", params: { idUser: this.user.id } });
+    },
+    countMsg: function () {
+      if (!this.user) {
+        return;
+      }
+      axios
+        .post(`${process.env.VUE_APP_API}/messages/count/${this.user.id}`)
+        .then((result) => {
+          this.msgCount = result.data.count;
+        })
+        .catch((error) => {
+          if (error.data.message) {
+            Commons.showError(this, "Ha ocurrido un error inesperado");
+          }
+        });
     },
   },
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem("user"));
+    this.countMsg();
   },
 };
 </script>
