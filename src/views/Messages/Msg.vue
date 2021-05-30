@@ -8,7 +8,12 @@
   <div class="py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <message :message="message" :type="messageType" />
-      <validation v-if="error.msgArr" :errors="error.msgArr" />
+      <div v-if="error.msgArr != '' || error.title != '' || error.msg != '' || error.user_id_receiver != ''" class="px-10 py-4 border-2 rounded border-gray-400 m-auto bg-white">
+        <validation v-if="error.msgArr" :errors="error.msgArr" />
+        <validation v-if="error.title" :errors="error.title" />
+        <validation v-if="error.msg" :errors="error.msg" />
+        <validation v-if="error.user_id_receiver" :errors="error.user_id_receiver" />
+      </div> 
 
       <!-- Cuadro de mensajes -->
       <div
@@ -20,7 +25,11 @@
         >
           <!--Opciones -->
           <div class="w-1/3">
-            <button-icon type="remove" @click.native="destroy()" class="font-bold inline-flex">
+            <button-icon
+              type="remove"
+              @click.native="destroy()"
+              class="font-bold inline-flex"
+            >
             </button-icon>
 
             <button-icon
@@ -38,6 +47,13 @@
               @click.native="changeShow('received')"
             >
             </button-icon>
+
+            <link-button
+              @click.native="showNewMsg()"
+              class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5 mb-2"
+            >
+              Nueva mensaje
+            </link-button>
           </div>
 
           <!-- BUSCADOR  -->
@@ -177,11 +193,18 @@
                 <input
                   type="checkbox"
                   class="inline-flex pt-1 rounded form-checkbox h-4 w-4 mr-2 text-orange-600"
-                  v-bind:id="msg.id"
-                  v-bind:value="msg.id"
+                  v-bind:id="msgNew.id"
+                  v-bind:value="msgNew.id"
                   v-model="msgArr"
                 />
-                <p class="inline-flex font-bold w-20">
+                <p v-if="!msg.read " class="inline-flex font-bold w-20">
+                  {{ msg.title }}
+                  <span class="font-normal pl-2"
+                    >({{ msg.emailUser }})</span
+                  >
+                </p>
+
+                <p v-if="msg.read" class="inline-flex font-extralight w-20">
                   {{ msg.title }}
                   <span class="font-extralight pl-2"
                     >({{ msg.emailUser }})</span
@@ -213,7 +236,7 @@
             class="h-full flex justify-center overflow-hidden shadow-sm border-2 border-gray-400 inline-flex rounded bg-blue-100 w-2/3 p-2"
           >
             <div
-              v-if="this.hiddenWindow"
+              v-if="this.hiddenWindowMsg && this.hiddenWindowNewMsg"
               class="flex justify-center bg-blue-100 w-full flex m-2 rounded"
             >
               <!-- Este div es necesario o sino se descuadra la vista -->
@@ -221,16 +244,97 @@
             </div>
 
             <div
-              v-if="!this.hiddenWindow"
+              v-if="!this.hiddenWindowMsg && this.hiddenWindowNewMsg"
               class="flex block justify-left bg-white w-full m-2 rounded"
             >
               <ul class="px-2 w-full">
-                <li class="text-white"> .</li>
-                <li v-if="this.show == 'received'" class="justify-center font-bold text-xs pb-2"><u class="text-gray-500">De:</u> <spand class="font-extralight">{{ this.msg.emailUser }}</spand></li>
-                <li v-if="this.show == 'sended'" class="justify-center font-bold text-xs pb-2"><u class="text-gray-500">De:</u> <spand class="font-extralight">{{ this.msg.emailUser }}</spand></li>
-                <li class="justify-center font-bold text-center text-xl text-white rounded bg-blue-400 p-1 mb-2">{{ this.msg.title }}</li>
-                <li class="justify-center ">{{ this.msg.msg }}</li>
-                <li class="text-white"> .</li>
+                <li class="text-white">.</li>
+                <li
+                  v-if="this.show == 'received'"
+                  class="justify-center font-bold text-xs pb-2"
+                >
+                  <u class="text-gray-500">De:</u>
+                  <spand class="font-extralight">{{
+                    this.msg.emailUser
+                  }}</spand>
+                </li>
+                <li
+                  v-if="this.show == 'sended'"
+                  class="justify-center font-bold text-xs pb-2"
+                >
+                  <u class="text-gray-500">De:</u>
+                  <spand class="font-extralight">{{
+                    this.msg.emailUser
+                  }}</spand>
+                </li>
+                <li
+                  class="justify-center font-bold text-center text-xl text-white rounded bg-blue-400 p-1 mb-2"
+                >
+                  {{ this.msg.title }}
+                </li>
+                <li class="justify-center">{{ this.msg.msg }}</li>
+                <li class="text-white">.</li>
+              </ul>
+            </div>
+
+            <div
+              v-if="!this.hiddenWindowNewMsg && this.hiddenWindowMsg"
+              class="flex block justify-left bg-white w-full m-2 rounded"
+            >
+              <ul class="px-6 w-full">
+                <li class="text-white">hi</li>
+                <li>
+                  <form method="POST" action="" ref="form">
+                    <v-label for="user_id_receiver">Para: </v-label>
+                    <select
+                      name="user_id_receiver"
+                      class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      v-model="msgNew.user_id_receiver"
+                    >
+                      <option disabled selected value="">user@email</option>
+                      <option
+                        v-for="ur in usersNewMsg"
+                        v-bind:key="ur.id"
+                        :value="ur.id"
+                      >
+                        {{ ur.email }}
+                      </option>
+                    </select>
+
+                    <div class="pt-4">
+                      <v-input
+                        id="title"
+                        placeholder="Asunto del mensaje"
+                        class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        type="text"
+                        name="title"
+                        v-model="msgNew.title"
+                        required
+                      />
+                    </div>
+
+                    <div class="pt-4">
+                      <textarea
+                        placeholder="Escriba aquí el contenido de su mensaje"
+                        id="msg"
+                        class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        type="textarea"
+                        name="msg"
+                        v-model="msgNew.msg"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <v-button
+                        class="ml-4 mt-2 flex float-right text-white font-bold bg-indigo-500 p-4 rounded p-1.5"
+                        @click.native="create"
+                      >
+                        Enviar
+                      </v-button>
+                    </div>
+                  </form>
+                </li>
               </ul>
             </div>
           </div>
@@ -249,6 +353,8 @@ import DropdownLink from "../components/dropdown-link";
 import NavLink from "../components/nav-link";
 import ButtonIcon from "../components/button-icon";
 import VButton from "../components/v-button";
+import VLabel from "../components/v-label";
+import VInput from "../components/v-input";
 import Message from "../components/message";
 import ImageServer from "../components/image-server.vue";
 import Commons from "../../helpers/commons";
@@ -265,6 +371,8 @@ export default {
     ImageServer,
     VButton,
     Validation,
+    VLabel,
+    VInput,
   },
   created() {
     this.$store.commit("SET_TITLE", "Bandeja de mensajes");
@@ -272,9 +380,11 @@ export default {
   data: function () {
     return {
       users: [],
+      usersNewMsg: [],
       user: null,
       msgs: [],
       msg: null,
+      msgNew: {},
       paginate: ["msgs"],
       message: null,
       messageType: null,
@@ -283,11 +393,15 @@ export default {
       searchForm: {},
       reload: false,
       show: "received",
-      hiddenWindow: true,
+      hiddenWindowMsg: true,
+      hiddenWindowNewMsg: true,
       selectMsg: "",
-      msgArr:[],
+      msgArr: [],
       error: {
         msgArr: [],
+        msg: [],
+        title: [],
+        user_id_receiver:[],
       },
     };
   },
@@ -298,13 +412,13 @@ export default {
   },
   methods: {
     destroy: function () {
-      if (!this.validate()) {
+      if (!this.validate("delete")) {
         return;
-      }      
+      }
 
       var formData = new FormData();
       //GUARDA EL ARRAY EN EL FORMDATA
-      for(var i=0;i<this.msgArr.length;i++){
+      for (var i = 0; i < this.msgArr.length; i++) {
         formData.append(`msgArr[${i}]`, this.msgArr[i]);
       }
 
@@ -319,22 +433,51 @@ export default {
           }
         )
         .then((result) => {
-          Commons.showSuccess(this,"Se han eliminado los mensajes correctamente");
+          Commons.showSuccess(
+            this,
+            "Se han eliminado los mensajes correctamente"
+          );
         })
         .catch((error) => {
-
           if (error.response.data.messageNotMsg) {
-            Commons.showError(this,error.response.data.messageNotMsg);
-          } else if(error.response.data.errorNotFound){
-            Commons.showError(this,error.response.data.errorNotFound);
-          } else if(error.response.data.errorNotFound){
-            Commons.showError(this,error.response.data.errorNotDelete);
-          } if (error.response) {
+            Commons.showError(this, error.response.data.messageNotMsg);
+          } else if (error.response.data.errorNotFound) {
+            Commons.showError(this, error.response.data.errorNotFound);
+          } else if (error.response.data.errorNotFound) {
+            Commons.showError(this, error.response.data.errorNotDelete);
+          }
+          if (error.response) {
             for (let fieldError in error.response.errors) {
               this.error[fieldError] = error.response.errors[fieldError];
             }
           } else {
-            Commons.showError(this,"Ha ocurrido un error inesperado");
+            Commons.showError(this, "Ha ocurrido un error inesperado");
+          }
+        });
+    },
+    
+    create: function () {
+      if (!this.validate("create")) {
+        return;
+      }
+
+      axios
+        .post(
+          `${process.env.VUE_APP_API}/messages/create/${this.user.id}`,this.msgNew
+        )
+        .then((result) => {
+          Commons.showSuccess(this,"Se ha enviado el mensaje correctamente",5);
+          this.clearMsgNew();
+        })
+        .catch((error) => {
+          if (error.response.data.errors) {
+            for (let fieldError in error.response.data.errors) {
+              this.error[fieldError] = error.response.data.errors[fieldError];
+            }
+          } else if (error.response.data.message) {
+            Commons.showError(this, error.response.data.message);
+          } else {
+            Commons.showError(this, "Ha ocurrido un error inesperado");
           }
         });
     },
@@ -349,12 +492,21 @@ export default {
           config
         )
         .then((result) => {
-          this.msgs = result.data.msgs.filter((msg) => {
+          if(this.show == "sended"){ 
+            this.msgs = result.data.msgs.filter((msg) => {
+            msg.created_at = msg.created_at.substring(0, 10);
+            msg.read = true; //Si es de la bandeja de enviados, configuraremos su leido a true para que no lo muestre como no leido
+            return true; 
+          });
+          }else if(this.show == "received"){
+            this.msgs = result.data.msgs.filter((msg) => {
             msg.created_at = msg.created_at.substring(0, 10); //Modificacion
             return true; //True porque quiero que me devueva. Si fuera al contrario, pondria false
           });
+          }
 
           this.users = result.data.users;
+          this.usersNewMsg = result.data.usersNewMsg;
 
           if (this.msgs.length == 0) {
             this.errorTabla = "No existen mensajes";
@@ -376,46 +528,100 @@ export default {
           }
         });
     },
+    editRead:function(){
+      axios
+        .post(
+          `${process.env.VUE_APP_API}/messages/edit-read/${this.user.id}/${this.msg.id}`
+        )
+        .then((result) => {
+          this.search();
+          this.showId(this.msg.id);
+        })
+        .catch((error) => {
+          if (error.response.data.message) {
+            Commons.showError(this, error.response.data.message);
+          } else {
+            Commons.showError(this, "Ha ocurrido un error inesperado");
+          }
+        });
+    },
     changeShow: function (option) {
       this.show = option;
-      this.hiddenWindow = true;
+      this.hiddenWindowMsg = true;
+      this.hiddenWindowNewMsg = true;
       this.msg = null;
       this.search();
     },
     showId: function (idMsg) {
       if (this.selectMsg == "") {
         this.selectMsg = idMsg;
-        this.hiddenWindow = false;
+        this.hiddenWindowMsg = false;
+        this.hiddenWindowNewMsg = true;
         this.getMsg(idMsg);
       } else if (this.selectMsg != idMsg && this.selectMsg != "") {
         this.selectMsg = idMsg;
-        this.hiddenWindow = false;
+        this.hiddenWindowMsg = false;
+        this.hiddenWindowNewMsg = true;
         this.getMsg(idMsg);
       }
+    },
+    showNewMsg: function () {
+      this.hiddenWindowMsg = true;
+      this.hiddenWindowNewMsg = false;
     },
     getMsg: function (idMsg) {
       this.msgs.forEach((m) => {
         if (m.id == idMsg) {
           this.msg = m;
+          
+          //Solo se editará su condición de read si está desde la bandeja de mensajes recibidos
+          if(!m.read && this.show == 'received'){
+            this.editRead();
+            this.search();
+          }
         }
       });
     },
-    validate: function () {
+    validate: function (option) {
       var msgSelected = this.msgArr.length;
+      var msgErr = this.msgNew.msg;
+      var titleErr = this.msgNew.title;
       var valid = true;
       this.error = {
         msgArr: [],
+        msg: [],
+        title: [],
       };
 
-      if (msgSelected < 1) {
+      if (option == 'delete' && msgSelected < 1) {
         this.error.msgArr.push(
           "Debes seleccionar, al menos, un mensaje para eliminar."
         );
         valid = false;
       }
 
+      if (option == 'create' && (!titleErr || titleErr.length < 5 || titleErr.length > 30)) {
+        this.error.title.push(
+          "El campo 'asunto del mensaje' debe tener al menos de 5 carácteres y no más de 30."
+        );
+        valid = false;
+      }
+
+      if (option == 'create' && (!msgErr || msgErr.length < 2 || msgErr.length > 255)) {
+        this.error.msg.push(
+          "El campo 'contenido del mensaje' debe tener al menos de 2 carácteres y no más de 255."
+        );
+        valid = false;
+      }
+
       return valid;
     },
+    clearMsgNew:function(){
+      this.msgNew.title="";
+      this.msgNew.msg="";
+      this.msgNew.user_id_receiver="";
+    },
+
   },
 };
 </script>
