@@ -32,7 +32,7 @@
       >
         <!-- Lista de opciones -->
         <div
-          class="flex justify-center block col-span-2 bg-gray-200 rounded w-full p-2 my-1"
+          class="flex justify-center block col-span-2 bg-gray-200 rounded w-full p-2 my-1 pb-4"
         >
           <!--Opciones -->
           <div class="w-1/3">
@@ -61,9 +61,9 @@
 
             <link-button
               @click.native="showNewMsg()"
-              class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5 mb-2"
+              class="text-lg text-purple-700 font-bold bg-purple-200 border-4 border-purple-700 p-4 rounded p-1.5 mb-2"
             >
-              Nueva mensaje
+              Nuevo mensaje
             </link-button>
           </div>
 
@@ -123,7 +123,7 @@
             <dropdown>
               <template v-slot:trigger>
                 <button
-                  class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-400"
+                  class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-100"
                 >
                   Mostrar {{ pageSize }} por página
                   <div class="ml-1">
@@ -178,17 +178,15 @@
         <div class="h-80 mt-3 flex justify-center overflow-auto">
           <!-- Lista de mensajes -->
           <div
-            class="h-full flex justify-center overflow-auto shadow-sm border-2 border-gray-400 inline-flex rounded bg-indigo-200 w-80 p-2"
+            class="h-full flex justify-center overflow-auto shadow-sm border-2 border-gray-100 inline-flex rounded msg-purple-full w-80 p-2"
           >
             <ul v-if="msgs.length != 0" class="w-full">
               <li class="flex justify-center">
-                <u
-                  ><h3 class="text-gray-600 font-bold uppercase m-2">
+                <h3 class="text-white font-bold uppercase m-2">
                     Lista de mensajes
                     <span v-if="this.show == 'received'"> recibidos</span>
                     <span v-if="this.show == 'sended'"> enviados</span>
-                  </h3></u
-                >
+                  </h3>
               </li>
               <li
                 v-for="msg in paginated('msgs')"
@@ -243,14 +241,14 @@
 
           <!-- Desarrollo de opciones CRUD -->
           <div
-            class="h-full flex justify-center overflow-hidden shadow-sm border-2 border-gray-400 inline-flex rounded bg-blue-100 w-120 p-2"
+            class="h-full flex justify-center overflow-hidden shadow-sm border-2 border-gray-400 inline-flex rounded bg-purple-100 w-120 p-2"
           >
             <div
               v-if="this.hiddenWindowMsg && this.hiddenWindowNewMsg"
-              class="flex justify-center bg-blue-100 w-full flex m-2 rounded"
+              class="flex justify-center bg-purple-100 w-full flex m-2 rounded"
             >
               <!-- Este div es necesario o sino se descuadra la vista -->
-              <p class="text-blue-100">hi</p>
+              <p class="text-purple-100">hi</p>
             </div>
 
             <div
@@ -278,7 +276,7 @@
                   }}</spand>
                 </li>
                 <li
-                  class="justify-center font-bold text-center text-xl text-white rounded bg-blue-400 p-1 mb-2"
+                  class="justify-center font-bold text-center text-xl text-white rounded msg-purple-full p-1 mb-2"
                 >
                   {{ this.msg.title }}
                 </li>
@@ -298,7 +296,7 @@
                     <v-label for="user_id_receiver">Para: </v-label>
                     <select
                       name="user_id_receiver"
-                      class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      class="rounded-md shadow-sm border-gray-300 focus:border-pott-dark-full focus:ring focus:border-pott-dark-full focus:ring-opacity-50"
                       v-model="msgNew.user_id_receiver"
                     >
                       <option disabled selected value="">user@email</option>
@@ -315,7 +313,7 @@
                       <v-input
                         id="title"
                         placeholder="Asunto del mensaje"
-                        class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-pott-dark-full focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                         type="text"
                         name="title"
                         v-model="msgNew.title"
@@ -337,7 +335,7 @@
 
                     <div>
                       <v-button
-                        class="ml-4 mt-2 flex float-right text-white font-bold bg-indigo-500 p-4 rounded p-1.5"
+                        class="ml-4 mt-2 flex float-right text-white font-bold pott-dark-full p-4 rounded p-1.5"
                         @click.native="create"
                       >
                         Enviar

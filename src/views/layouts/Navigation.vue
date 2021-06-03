@@ -1,5 +1,5 @@
 <template>
-  <nav x-data="{ open: false }" class="bg-gray-100 border-b border-gray-300">
+  <nav x-data="{ open: false }" class="pott-grey border-b border-gray-100 fixed w-full">
     <navigation-normal/>
     <navigation-responsive/>
   </nav>

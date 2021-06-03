@@ -1,3 +1,8 @@
+<!--
+  Vista de principal que genera la web.
+  Desde aquí parte el resto de la web.
+-->
+
 <template>
   <div>
     <!--Para cuando la vista está cargando-->

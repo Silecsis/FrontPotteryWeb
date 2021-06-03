@@ -58,11 +58,11 @@
 
       <!-- Settings Dropdown -->
       <div v-if="user" class="hidden sm:flex sm:items-center sm:ml-6">
-        <div class="flex text-blue-100 bg-blue-600 rounded mr-4 ml-6">
+        <div class="flex text-purple-100 msg-purple-full rounded mr-4 ml-6">
           <button-icon type="msg" @click.native="msg()" class="font-bold">
           </button-icon>
           <div v-if="this.msgCount != 0" class="mt-1.5 mb-1 mx-1">
-            <p class="mr-1 px-2 text-blue-600 bg-blue-100 rounded-full">
+            <p class="mr-1 px-2 text-purple-600 bg-purple-100 rounded-full">
               {{ this.msgCount }}
             </p>
           </div>

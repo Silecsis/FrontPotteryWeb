@@ -1,3 +1,6 @@
+/* Fichero de rutas de la web.
+   Llama a las diferentes vistas. */
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import Register from '@/views/auth/Register'

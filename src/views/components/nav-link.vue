@@ -1,3 +1,9 @@
+<!--
+  Componente que carga unos estilos específicos de maquetación.
+  Son los estilos y funcionalidad específicos de los enlaces
+  de la barra de navegacion (navigation, navigation-normal,navigation-responsive)
+-->
+
 <template>
   <a
     href="javascript:void(0)"
@@ -23,7 +29,7 @@ export default {
           "block pl-3 pr-4 py-2 border-l-4 text-base font-medium focus:outline-none transition duration-150 ease-in-out";
         if (this.isActive) {
           return (
-            comunes + " border-indigo-400  text-indigo-700 bg-indigo-50 focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 "
+            comunes + " border-pott-dark-full  text-indigo-700 bg-indigo-50 focus:text-indigo-800 focus:bg-indigo-100 focus:border-pott-dark-full "
           );
         } else {
           return (
@@ -37,7 +43,7 @@ export default {
           "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out";
         if (this.isActive) {
           return (
-            comunes + " border-indigo-400 text-gray-900 focus:border-indigo-700"
+            comunes + " border-pott-dark-full text-gray-900 focus:border-pott-dark-full"
           );
         } else {
           return (

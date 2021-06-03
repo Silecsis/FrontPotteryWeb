@@ -1,3 +1,7 @@
+<!--
+  Componente que carga unos estilos específicos de maquetación.
+  Carga en concreto los estilos y funciones de un button
+-->
 <template>
   <button
     type="button"

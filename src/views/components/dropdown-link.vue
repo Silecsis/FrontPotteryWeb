@@ -1,3 +1,8 @@
+<!--
+  Componente que carga unos estilos específicos de maquetación.
+  Carga en concreto los estilos y funciones de la barra desplegable.
+  Tienen los estilos de un enlace.
+-->
 <template>
   <a
     href="javascript:void(0)"

@@ -129,7 +129,7 @@
           <!-- Boton-->
           <div class="mt-4">
             <v-button
-              class="ml-4 flex float-right text-white font-bold bg-indigo-500 p-4 rounded p-1.5"
+              class="ml-4 flex float-right text-white font-bold bg-purple-600 p-4 rounded p-1.5"
               @click.native="save"
             >
               Guardar

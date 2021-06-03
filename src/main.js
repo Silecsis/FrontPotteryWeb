@@ -1,3 +1,7 @@
+/*<!--
+  Javascript principal de la web
+--> */
+
 import Vue from 'vue';
 import App from './App.vue';
 import { store } from './store';

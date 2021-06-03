@@ -1,3 +1,7 @@
+<!--
+  Componente que carga unos estilos específicos de maquetación.
+  Incluye unos estilos específicos para cargar imágenes
+-->
 <template>
   <div
     class="min-h-screen flex flex-col sm:justify-center items-center pt-0 bg-blue-100"

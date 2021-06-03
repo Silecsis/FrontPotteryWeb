@@ -1,4 +1,9 @@
-<!--Vista home-->
+<!--
+  Vista dashboard.
+  Es la vista principal de la web.
+  Es también la vista home.
+  Pueden acceder los usuarios logados y no logados
+-->
 <template>
   <div class="py-16">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -8,16 +13,16 @@
         class="flex items-center overflow-hidden shadow-sm sm:rounded-lg m-auto"
       >
         <div
-          class="px-10 py-4 bg-white border-2 rounded border-gray-400 m-auto"
+          class="px-10 py-4 bg-white border-2 rounded border-gray-100 m-auto"
         >
           <h2 class="font-bold text-xl text-gray-800">
-            ¡Bienvenido a PotterWeb!
+            ¡Bienvenido a PotteryWeb!
           </h2>
         </div>
       </div>
 
       <div
-        class="bg-white overflow-hidden shadow-sm sm:rounded-lg w-1/2 m-auto border-2 border-gray-400"
+        class="bg-white overflow-hidden shadow-sm sm:rounded-lg w-1/2 m-auto border-2 border-gray-100"
       >
         <div class="p-6 bg-white">
           <img src="../assets/img/fotoHome.jpg" />

@@ -112,7 +112,7 @@
               <dropdown-link @click.native="logout"> Salir </dropdown-link>
             </template>
           </dropdown>
-          <div class="flex justify-center items-center mt-2 w-20 text-blue-100 bg-blue-600 rounded mr-4">
+          <div class="flex justify-center items-center mt-2 w-20 text-purple-100 msg-purple-full rounded mr-4">
             <button-icon
               type="msg"
               @click.native="msg()"
@@ -121,7 +121,7 @@
             </button-icon>
             
             <div v-if="this.msgCount != 0" class="mt-1.5 mb-1 mx-1">
-                <p  class="mr-1 px-2 text-blue-600 bg-blue-100 rounded-full">{{this.msgCount}}</p>
+                <p  class="mr-1 px-2 text-purple-600 bg-purple-100 rounded-full">{{this.msgCount}}</p>
             </div>
           </div>   
         </div>

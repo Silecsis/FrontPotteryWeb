@@ -1,3 +1,7 @@
+<!--
+  Componente que carga iconos de la web.
+  Según el tipo que especifique, se carga un icono u otro.
+-->
 <template>
   <a href="javascript:void(0)">
     <svg
@@ -38,7 +42,7 @@
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      class="h-9 w-9 text-blue-100 px-0.5 bg-blue-600 rounded"
+      class="h-9 w-9 text-purple-100 px-0.5 msg-purple-full rounded"
     >
       <path
         stroke-linecap="round"

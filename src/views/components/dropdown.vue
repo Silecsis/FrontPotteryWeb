@@ -1,3 +1,7 @@
+<!--
+  Componente que carga unos estilos específicos de maquetación.
+  Carga en concreto los estilos y funciones de la barra desplegable.
+-->
 <template>
   <div class="relative" x-data="{open : false}" x-on:click.away="open = false" x-on:close.stop="open = false">
     <div x-on:click="open = !open">

@@ -1,3 +1,12 @@
+
+/* Fichero css con los estilos propios */
+
+
+/* #DDD6FE
+#8B5CF6
+#5B21B6  */
+
+
 .paginate-links{
     width:100%;
     list-style: none;
@@ -6,7 +15,7 @@
 }
 .paginate-links li {
     display: inline;
-    background-color:#C9E5F1 ;
+    background-color:#DDD6FE ;
     color:black;
     padding:10px;
     margin-left:3px;
@@ -19,8 +28,8 @@
 }
 
 .paginate-links li.active{
-    background-color: #8CD7ED;
-    color: #808384;
+    background-color: #7554A9;
+    color: white;
 }
 
 .paginate-links li.active a{
@@ -28,12 +37,18 @@
 }
 
 .paginate-links li.disabled{
-    background-color: #B1BCC0;
-    color: #E6EAEC;
+    border: 1px solid;
+    border-color: #928DAD;
+    background-color: #D1D1D5;
+    color: #928DAD;
 }
 
 .paginate-links li.disabled a{
     cursor: default;
+}
+
+.form-control :focus-within{
+    border-color: black;
 }
 
 .overlay {
@@ -56,10 +71,50 @@
 
 /*---------------------MODIFICACIONES PROPIAS DE ESTILO------------------------------------------*/
 /*------MIS COLORES-----------*/
-.pottery-ligth {
-    background-color: "#e4c192" ;
+.pott-grey {
+    background-color: #F6F1E9 ;
   }
-  
+
+.pott-ligth{
+    background-color: #DFCAAD;
+} 
+
+.pott-normal{
+    background-color: #D9A782;
+} 
+
+.msg-green-lit{
+    background-color: #DEF8EB;
+}
+
+.msg-green-med{
+    background-color: #4EDD96;
+}
+
+.msg-purple-full{
+    background-color: #7554A9;
+}
+
+
+/* Pequeña escala */
+.pott-dark-litt{
+    background-color: #CAA979;
+}
+
+.pott-dark-medd{
+    background-color: #A7895E;
+}
+.pott-dark-full{
+    background-color: #706049;
+}
+/* fin Pequeña escala */
+
+.border-pott-dark-full {
+    --tw-border-opacity: 1;
+    border-color: #6E4F22;
+  }
+
+/*------MIS FORMAS-----------*/
 .w-120{
   width:48rem;
 }

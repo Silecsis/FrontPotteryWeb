@@ -1,3 +1,6 @@
+<!--
+  Componente que carga las imágenes desde el backend.
+-->
 <template>
   <div>
     <img

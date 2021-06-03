@@ -1,3 +1,12 @@
+<!--
+  Vista de Registrarme.
+  Pueden acceder todos los usuarios no logados y logados.
+  Al pulsar registrar entrada directamente logado a la web .
+
+  También tiene las opciones de: 
+    ·Volver a login. 
+    ·Volver a dashboard (clicando sobre el logo).
+-->
 <template>
   <div
     class="max-w-2xl mt-4 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
@@ -96,7 +105,7 @@
       <div class="mt-4">
         <link-button
           name="Login"
-          class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 flex float-left text-white font-bold bg-blue-400 p-4 rounded p-1.5"
+          class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 flex float-left text-white font-bold bg-purple-600 p-4 rounded p-1.5"
         >
           Volver a "Login"
         </link-button>

@@ -1,3 +1,12 @@
+<!--
+  Vista Login.
+  Pueden acceder todos los usuarios no logados.
+  Tiene las opciones de:
+    ·Registrarme.
+    ·Olvidé mi contraseña. 
+    ·Login. 
+    ·Ir al dashboard (clicando en la img)
+-->
 <template>
   <div class="max-w-md  mt-4 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
     <!-- Session Status -->
@@ -52,7 +61,7 @@
       <div class="flex items-center justify-end mt-4">
         <nav-link
           name="Register"
-          class="mr-6 text-sm text-white font-bold bg-blue-500 rounded p-1.5"
+          class="mr-6 px-2 text-sm text-purple-100 font-bold bg-purple-600 rounded p-1.5"
           >Registrarme</nav-link
         >
 

@@ -11,8 +11,8 @@
 
       <div v-if="auth == true">
         <nav class="navbar navbar-light py-6 mb-4">
-          <div class="bg-white py-4 px-2 rounded border-2 border-gray-300">
-            <div class="flex bg-blue-400 rounded pt-4">
+          <div class="bg-white py-4 px-2 rounded border-2 border-yellow-100">
+            <div class="flex bg-yellow-500 rounded pt-4">
               <h4 class="pb-4 m-auto text-white font-bold text-lg">
                 Cuadro de búsqueda
               </h4>
@@ -51,7 +51,7 @@
                 v-model="searchForm.buscaFechaLogin"
               />
 
-              <label for="tipo" class="ml-4">Tipo de usuario:</label>
+              <label for="tipo" class="ml-4 mr-2">Tipo de usuario:</label>
               <select
                 name="buscaTipo"
                 class="form-control mr-sm-2 rounded bg-gray-200"
@@ -62,7 +62,7 @@
                 <option value="user">Socio</option>
               </select>
               <button
-                class="btn btn-outline-success bg-blue-200 border-2 text-gray-500 font-bold border-gray-400 rounded p-2 float-right"
+                class="btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 float-right"
                 type="button"
                 @click="search"
               >
@@ -74,7 +74,7 @@
 
         <link-button
           name="NewUser"
-          class="text-lg text-gray-600 font-bold bg-yellow-300 border-4 border-gray-400 p-4 rounded p-1.5"
+          class="text-lg text-purple-700 font-bold bg-purple-200 border-4 border-purple-700 p-4 rounded p-1.5"
         >
           Nuevo usuario
         </link-button>
@@ -84,7 +84,7 @@
           <dropdown>
             <template v-slot:trigger>
               <button
-                class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-400"
+                class="flex items-center bg-white mr-sm-2 px-6 rounded text-gray-600 font-bold border-2 border-gray-100"
               >
                 Mostrar {{ pageSize }} por página
                 <div class="ml-1">
@@ -121,7 +121,7 @@
 
         <!--TABLA-->
         <div
-          class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
+          class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-100 p-4"
         >
           <!-- PAGINACION CON VUE-PAGINATE -->
           <paginate
@@ -139,7 +139,7 @@
           <table
             class="overflow-x-auto overflow-y-auto w-full bg-white divide-y divide-gray-200 mt-4"
           >
-            <thead class="bg-blue-300">
+            <thead class="bg-purple-200">
               <tr class="divide-x">
                 <th
                   class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"

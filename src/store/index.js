@@ -1,3 +1,5 @@
+/*Fichero necesario para cargar vue */
+
 'use strict'
 
 import Vue from 'vue';
