@@ -189,6 +189,7 @@ export default {
       msgCount: 0,
     };
   },
+  
   methods: {
     logIn: function () {
       this.$router.push({ name: "Login" });
