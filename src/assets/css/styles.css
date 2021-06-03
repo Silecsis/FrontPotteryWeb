@@ -53,3 +53,13 @@
 .vueMsg {
     cursor:pointer;
 }
+
+/*---------------------MODIFICACIONES PROPIAS DE ESTILO------------------------------------------*/
+/*------MIS COLORES-----------*/
+.pottery-ligth {
+    background-color: "#e4c192" ;
+  }
+  
+.w-120{
+  width:48rem;
+}

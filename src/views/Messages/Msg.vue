@@ -37,9 +37,8 @@
           <!--Opciones -->
           <div class="w-1/3">
             <button-icon
-              v-if="this.show == 'received'"
               type="remove"
-              @click.native="destroy()"
+              @click.native="deleteLogic()"
               class="font-bold inline-flex"
             >
             </button-icon>
@@ -466,6 +465,51 @@ export default {
           }
         });
     },
+    deleteLogic: function () {
+      if (!this.validate("delete")) {
+        return;
+      }
+
+      var formData = new FormData();
+      //GUARDA EL ARRAY EN EL FORMDATA
+      for (var i = 0; i < this.msgArr.length; i++) {
+        formData.append(`msgArr[${i}]`, this.msgArr[i]);
+      }
+
+      axios
+        .post(
+          `${process.env.VUE_APP_API}/messages/delete/${this.show}/${this.user.id}`,
+          formData,
+          {
+            headers: {
+              "content-type": "multipart/form-data",
+            },
+          }
+        )
+        .then((result) => {
+          Commons.showSuccess(
+            this,
+            "Se han eliminado los mensajes correctamente"
+          );
+          this.search();
+        })
+        .catch((error) => {
+          if (error.response.data.messageNotMsg) {
+            Commons.showError(this, error.response.data.messageNotMsg);
+          } else if (error.response.data.errorNotFound) {
+            Commons.showError(this, error.response.data.errorNotFound);
+          } else if (error.response.data.errorNotFound) {
+            Commons.showError(this, error.response.data.errorNotDelete);
+          }
+          if (error.response) {
+            for (let fieldError in error.response.errors) {
+              this.error[fieldError] = error.response.errors[fieldError];
+            }
+          } else {
+            Commons.showError(this, "Ha ocurrido un error inesperado");
+          }
+        });
+    },
     create: function () {
       if (!this.validate("create")) {
         return;
@@ -568,6 +612,7 @@ export default {
       this.hiddenWindowMsg = true;
       this.hiddenWindowNewMsg = true;
       this.msg = null;
+      this.msgArr=[];
       this.search();
     },
     showId: function (idMsg) {
