@@ -13,6 +13,7 @@
   >
     <!-- Session Status -->
     <message :message="message" :type="messageType" />
+    <message :message="message1" :type="messageType1" />
 
     <form method="POST" action="">
       <div class="inline-flex w-full">
@@ -149,6 +150,20 @@ export default {
         password_confirmation: [],
       },
     };
+  },
+  computed: {
+    message1: function () {
+      var error = this.$route.query.error;
+      if (error == "no-log") {
+        return "Para poder comprar una pieza debe estar registrado en la web";
+      }
+    },
+    messageType1: function () {
+      var error = this.$route.query.error;
+      if (error == "no-log") {
+        return 'error';//Por si el mensaje trae un success o error
+      }
+    },
   },
   methods: {
     save: function () {

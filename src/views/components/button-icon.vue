@@ -10,7 +10,7 @@
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      class="h-4 w-4 text-red-500"
+      class="h-5 w-5 text-red-500"
     >
       <path
         stroke-linecap="round"
@@ -26,7 +26,7 @@
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      class="h-4 w-4 text-indigo-500"
+      class="h-5 w-5 text-indigo-500"
     >
       <path
         stroke-linecap="round"

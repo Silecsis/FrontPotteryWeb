@@ -75,6 +75,10 @@
     background-color: #F6F1E9 ;
   }
 
+.pott-grey-med {
+  background-color: #DEDAD2 ;
+}
+
 .pott-ligth{
     background-color: #DFCAAD;
 } 
@@ -117,4 +121,13 @@
 /*------MIS FORMAS-----------*/
 .w-120{
   width:48rem;
+}
+
+.h-120{
+    height: 38rem;
+}
+
+.aling-vert{
+    margin-top: auto;
+    margin-bottom: auto;
 }

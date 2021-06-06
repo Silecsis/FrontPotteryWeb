@@ -71,7 +71,7 @@
       </nav>
 
       <!--SELECCION DE PAGINACION-->
-      <div class="hidden sm:flex mt-8 mb-1">
+      <div class="hidden sm:flex mt-8 mb-1" v-if="pieces.length != 0">
         <dropdown>
           <template v-slot:trigger>
             <button
@@ -94,116 +94,144 @@
             </button>
           </template>
           <template v-slot:content>
-            <dropdown-link @click.native="pageSize = 4">
-              Paginación de 4
+            <dropdown-link @click.native="pageSize = 3">
+              Paginación de 3
             </dropdown-link>
             <dropdown-link @click.native="pageSize = 6">
               Paginación de 6
             </dropdown-link>
-            <dropdown-link @click.native="pageSize = 8">
-              Paginación de 8
+            <dropdown-link @click.native="pageSize = 9">
+              Paginación de 9
             </dropdown-link>
-            <dropdown-link @click.native="pageSize = 10">
-              Paginación de 10
+            <dropdown-link @click.native="pageSize = 12">
+              Paginación de 12
             </dropdown-link>
           </template>
         </dropdown>
       </div>
 
       <!--TABLA-->
-      <div
-        class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-100 p-4"
-      >
-        <!-- PAGINACION CON VUE-PAGINATE -->
-        <paginate
-          ref="paginator"
-          name="pieces"
-          :list="pieces"
-          :per="pageSize"
-        />
-        <paginate-links
-          for="pieces"
-          :limit="4"
-          :show-step-links="true"
-        ></paginate-links>
+      <div class="bg-white pt-2 rounded container my-6 mx-auto px-4 md:px-12">
+        <!-- Paginación -->
+        <div 
+          v-if="pieces.length != 0">
+          <paginate
+            ref="paginator"
+            name="pieces"
+            :list="pieces"
+            :per="pageSize"
+          />
+          <paginate-links
+            for="pieces"
+            :limit="4"
+            :show-step-links="true"
+          ></paginate-links>
+        </div>
 
-        <table
-          class="overflow-x-auto overflow-y-auto w-full bg-white divide-y divide-gray-200 mt-4"
+        <div
+          v-if="pieces.length != 0"
+          class="py-4 flex flex-wrap -mx-1 lg:-mx-2"
         >
-          <thead class="bg-purple-200">
-            <tr class="divide-x">
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                Imagen
-              </th>
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                Nombre
-              </th>
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                Usuario
-              </th>
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                Descripción
-              </th>
-
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                ¿Vendida?
-              </th>
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                Fecha creación
-              </th>
-              <th
-                class="px-3 py-2 text-xs font-medium text-gray-700 font-bold uppercase"
-              >
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody
-            v-if="pieces.length != 0"
-            class="text-gray-500 text-xs divide-y divide-gray-200"
+          <!-- Piezas -->
+          <div
+            v-for="piece in paginated('pieces')"
+            v-bind:key="piece.id"
+            class="my-1 px-1 pt-2 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3"
           >
-            <tr
-              v-for="piece in paginated('pieces')"
-              v-bind:key="piece.id"
-              class="text-center"
+            <!-- Piece -->
+            <div
+              class="border border-4 border-gray-700 h-120 overflow-auto rounded-lg shadow-lg"
             >
-              <td class="py-3 flex justify-center">
-                <image-server
-                  :params="{
-                    width: '48',
-                    height: '48',
-                    class: 'rounded w-20 h-20 shadow-lg',
-                    alt: 'imagen pieza',
-                  }"
-                  type="img"
-                  :id="piece.id"
-                />
-              </td>
-              <td class="py-3">{{ piece.name }}</td>
-              <td class="py-3">{{ piece.emailUser }}</td>
-              <td class="py-3">{{ piece.description }}</td>
-              <td
-                v-if="piece.sold == 1"
-                class="py-3 bg-green-500 text-white font-bold"
+              <!-- IMG -->
+              <div class="flex h-72 inline-block pott-grey-med">
+                <span class="mb-auto mt-auto"
+                  ><image-server
+                    :params="{
+                      class: 'object-scale-down w-full max-h-72',
+                      alt: 'imagen pieza',
+                    }"
+                    type="img"
+                    :id="piece.id"
+                  />
+                </span>
+              </div>
+
+              <!-- Nombre pieza -->
+              <header
+                class="flex items-center justify-between leading-tight p-2 md:p-3"
               >
-                Vendida
-              </td>
-              <td v-else class="py-3 bg-green-100 font-bold">No vendida</td>
-              <td class="py-3">{{ piece.created_at }}</td>
-              <td class="py-3">
-                <div class="flex justify-center space-x-1" v-rol:admin="user">
+                <h1
+                  class="msg-purple-full text-white font-bold py-1 w-full rounded text-lg text-center"
+                >
+                  {{ piece.name }}
+                </h1>
+              </header>
+              <!-- Descripción -->
+              <div
+                class="flex items-center justify-between leading-none p-2 md:p-3"
+              >
+                <p class="ml-2 text-base">
+                  {{ piece.description }}
+                </p>
+              </div>
+              <!-- User y fecha de la pieza y vendida o no -->
+              <div
+                class="flex items-center justify-between leading-none p-2 md:p-2"
+              >
+                <p class="ml-2 text-sm">
+                  {{ piece.emailUser }} ||
+                  {{ piece.created_at }}
+                </p>
+              </div>
+
+              <!-- campo sold y acción comprar y acción ver en detalle -->
+              <div
+                class="flex items-center justify-between leading-none p-2 md:p-2"
+              >
+                <p
+                  v-if="piece.sold == 1"
+                  class="text-center rounded border border-2 border-green-500 p-3 bg-green-500 text-white font-bold"
+                >
+                  Vendida
+                </p>
+                <p
+                  v-else
+                  class="text-center rounded border border-2 border-green-500 p-3 bg-green-100 font-bold"
+                >
+                  No vendida
+                </p>
+
+                <link-button
+                  v-if="user && !piece.sold && piece.user_id != user.id"
+                  @click.native="buy(piece.id)"
+                  class="text-base text-white font-bold bg-yellow-500 ml-4 p-4 rounded p-1.5"
+                >
+                  Comprar
+                </link-button>
+
+                <!-- Si el user no está logado se le envia a la pag de registro-->
+                <link-button
+                  v-if="!user && !piece.sold"
+                  @click.native="buyNoLog()"
+                  class="text-base text-white font-bold bg-yellow-500 ml-4 p-4 rounded p-1.5"
+                >
+                  Comprar
+                </link-button>
+
+                <link-button
+                  @click.native="detail(piece.id)"
+                  class="text-center text-base text-white font-bold bg-purple-500 ml-4 p-4 rounded p-1.5"
+                >
+                  Ver en detalle
+                </link-button>
+              </div>
+
+              <!-- Acciones admin -->
+              <div
+                v-rol:admin="user"
+                class=" border-t-2 border-gray-500  flex items-center justify-between leading-none p-2 md:p-2"
+              >
+                <div class="flex justify-center space-x-1" >
                   <button-icon
                     type="edit"
                     @click.native="edit(piece.id)"
@@ -218,28 +246,13 @@
                   >
                   </button-icon>
                 </div>
-                
-                <div class="my-4">
-                  <link-button
-                    v-if="!piece.sold && piece.user_id != user.id"
-                    @click.native="buy(piece.id)"
-                    class="text-sm text-white font-bold bg-yellow-500 ml-4 p-4 rounded p-1.5"
-                  >
-                    Comprar
-                  </link-button>
-                </div>
                 <div class="flex justify-center space-x-1">
-                  <link-button
-                    @click.native="detail(piece.id)"
-                    class="text-sm text-white font-bold bg-purple-500 ml-4 p-4 rounded p-1.5"
-                  >
-                    Ver en detalle
-                  </link-button>
+
                   <button
                     v-if="piece.sold"
                     v-rol:admin="user"
                     @click="delSale(piece.id)"
-                    class="text-sm text-white font-bold bg-gray-500 ml-4 p-4 rounded p-1.5"
+                    class="text-base text-white font-bold bg-gray-500 ml-4 p-4 rounded p-1.5"
                   >
                     Quitar venta
                   </button>
@@ -248,32 +261,22 @@
                     v-rol:admin="user"
                     name="AddSale"
                     :params="{ id: piece.id }"
-                    class="text-sm text-white font-bold bg-green-500 ml-4 p-4 rounded p-1.5"
+                    class="text-base text-white font-bold bg-green-500 ml-4 p-4 rounded p-1.5"
                   >
                     Añadir venta
                   </link-button>
-                </div> 
-              </td>
-            </tr>
-          </tbody>
+                </div>
+              </div>
+            </div>
+            <!-- END Article -->
+          </div>
+        </div>
 
-          <tbody v-else class="text-gray-500 text-xs divide-y divide-gray-200">
-            <tr v-rol:admin="user" class="text-center">
-              <td colspan="7" class="py-3 font-bold text-red-600 text-lg">
-                {{ errorTabla }}
-              </td>
-            </tr>
-
-            <tr
-              v-if="!user || (user != null && user.type != 'admin')"
-              class="text-center"
-            >
-              <td colspan="6" class="py-3 font-bold text-red-600 text-lg">
-                {{ errorTabla }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div v-if="pieces.length == 0" class="flex flex-wrap -mx-1 lg:-mx-2">
+          <p class="py-3 font-bold text-red-600 text-lg">
+            {{ errorTabla }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -315,7 +318,7 @@ export default {
       messageType: null,
       errorTabla: "",
       user: null,
-      pageSize: 2,
+      pageSize: 3,
       searchForm: {},
     };
   },
@@ -323,7 +326,11 @@ export default {
     this.searchForm = { buscaUser: "", buscaVendido: "" };
     var success = this.$route.query.success;
     if (success && success == "addSale") {
-      Commons.showSuccess(this,"La pieza ha sido actualizada a vendida correctamente",5);
+      Commons.showSuccess(
+        this,
+        "La pieza ha sido actualizada a vendida correctamente",
+        5
+      );
     }
 
     this.search();
@@ -331,7 +338,13 @@ export default {
   },
   methods: {
     destroy: function (id) {
-      Commons.destroy(this,"pieces", id, "pieces", "No existen piezas para este criterio de búsqueda");
+      Commons.destroy(
+        this,
+        "pieces",
+        id,
+        "pieces",
+        "No existen piezas para este criterio de búsqueda"
+      );
     },
     //No se puede utilizar el del commun porque no es el mismo
     delSale: function (id) {
@@ -340,21 +353,21 @@ export default {
         .then((result) => {
           if (result.data.success) {
             this.search();
-            Commons.showSuccess(this,result.data.message,5);
+            Commons.showSuccess(this, result.data.message, 5);
 
             if (this.pieces.length == 0) {
               this.errorTabla =
                 "No existen piezas para este criterio de búsqueda";
             }
           } else {
-            Commons.showError(this,result.data.message);
+            Commons.showError(this, result.data.message);
           }
         })
         .catch((error) => {
           if (error.response) {
-            Commons.showError(this,error.response.data.message);
+            Commons.showError(this, error.response.data.message);
           } else {
-            Commons.showError(this,"Ha ocurrido un error inesperado");
+            Commons.showError(this, "Ha ocurrido un error inesperado");
           }
         });
     },
@@ -365,24 +378,30 @@ export default {
       this.$router.push({ name: "DetailPiece", params: { id: id } });
     },
     buy: function (id) {
-      if(!this.user){
+      if (!this.user) {
         var idUser = -1;
-      }else{
+      } else {
         var idUser = this.user.id;
       }
 
-       axios
+      axios
         .get(`${process.env.VUE_APP_API}/buyPiece/${idUser}/${id}`)
         .then((result) => {
-          Commons.showSuccess(this,"Mensaje de solicitud de compra enviado correctamente");
+          Commons.showSuccess(
+            this,
+            "Mensaje de solicitud de compra enviado correctamente"
+          );
         })
         .catch((error) => {
           if (error.response) {
-            Commons.showError(this,error.response.data.message);
+            Commons.showError(this, error.response.data.message);
           } else {
-            Commons.showError(this,"Ha ocurrido un error inesperado");
+            Commons.showError(this, "Ha ocurrido un error inesperado");
           }
         });
+    },
+    buyNoLog: function(){
+      this.$router.push({ name: "Register",query: { error: 'no-log' } });
     },
     addSale: function (id) {
       this.$router.push({ name: "AddSale", params: { id: id } });
@@ -409,7 +428,7 @@ export default {
         })
         .catch((error) => {
           if (error.response.data.message == "Unauthenticated.") {
-            Commons.showError(this,"No estás autorizado para esta vista");
+            Commons.showError(this, "No estás autorizado para esta vista");
             this.$store.commit("SET_TITLE", "Ventas realizadas --> Error");
             this.auth = false;
           } else {
