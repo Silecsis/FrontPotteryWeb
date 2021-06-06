@@ -9,6 +9,10 @@
       <!-- Información operación -->
       <message :message="message" :type="messageType" />
 
+      <h2 class="mt-4 justify-center font-bold text-center text-xl text-white rounded pott-dark-full p-1 mb-2">
+        Mi venta: {{sale.name}}
+      </h2>
+
       <form method="POST">
         <!-- Price -->
         <div class="mt-4">

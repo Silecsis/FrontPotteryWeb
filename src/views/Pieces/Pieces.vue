@@ -71,7 +71,7 @@
       </nav>
 
       <!--SELECCION DE PAGINACION-->
-      <div class="hidden sm:flex mt-8 mb-1" v-if="pieces.length != 0">
+      <div class="hidden sm:flex mt-2 mb-1" v-if="pieces.length != 0">
         <dropdown>
           <template v-slot:trigger>
             <button

@@ -8,6 +8,9 @@
     <card-sin-logo>
       <!-- Información operación -->
       <message :message="message" :type="messageType" />
+      <h2 class="mt-4 justify-center font-bold text-center text-xl text-white rounded pott-dark-full p-1 mb-2">
+        Registrar Material
+      </h2>
 
       <form method="POST" action="">
         <div>

@@ -242,7 +242,7 @@
                   <link-button
                     v-else
                     v-rol:admin="user"
-                    name="AddSale"
+                    name="AddMySale"
                     :params="{ id: piece.id }"
                     class="text-base text-white font-bold bg-green-500 ml-4 p-4 rounded p-1.5"
                   >

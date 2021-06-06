@@ -8,6 +8,10 @@
     <card-sin-logo>
       <!-- Información operación -->
       <message :message="message" :type="messageType" />
+      <h2 class="mt-4 justify-center font-bold text-center text-xl text-white rounded pott-dark-full p-1 mb-2">
+        Mi pieza: {{piece.name}}
+      </h2>
+
       <div class="flex justify-center space-x-1">
         <div class="bg-white rounded p-4">
           <image-server
