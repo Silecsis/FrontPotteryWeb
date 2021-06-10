@@ -36,17 +36,18 @@
         >
           <!--Opciones -->
           <div class="w-1/3">
-            <button-icon
-              type="remove"
-              @click.native="deleteLogic()"
-              class="font-bold inline-flex"
+            <link-button
+              @click.native="showNewMsg()"
+              class="ml-2 text-lg text-purple-700 font-bold bg-purple-200 border-4 border-purple-700 p-4 rounded p-1.5 mb-3"
             >
-            </button-icon>
+              Nuevo mensaje
+            </link-button>
+
 
             <button-icon
               v-if="this.show == 'received'"
               type="sended"
-              class="font-bold inline-flex"
+              class="font-bold inline-flex mx-2"
               @click.native="changeShow('sended')"
             >
             </button-icon>
@@ -54,21 +55,22 @@
             <button-icon
               v-if="this.show == 'sended'"
               type="received"
-              class="font-bold inline-flex"
+              class="font-bold inline-flex mx-2"
               @click.native="changeShow('received')"
             >
             </button-icon>
 
-            <link-button
-              @click.native="showNewMsg()"
-              class="text-lg text-purple-700 font-bold bg-purple-200 border-4 border-purple-700 p-4 rounded p-1.5 mb-2"
+            <button-icon
+              type="removeXL"
+              @click.native="deleteLogic()"
+              class="font-bold inline-flex"
             >
-              Nuevo mensaje
-            </link-button>
+            </button-icon>
+            
           </div>
 
           <!-- BUSCADOR  -->
-          <div class="w-2/3">
+          <div class="w-2/3 mt-5 mb-2">
             <input
               name="buscaTitle"
               class="form-control mr-sm-2 rounded bg-white w-40"
