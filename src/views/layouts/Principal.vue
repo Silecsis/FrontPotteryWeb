@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen pott-ligth min-w-min">
+  <div class="min-h-screen pott-ligth sm:max-w-300">
     <navigation/>
     <!-- Page Heading -->
     <header class="bg-white shadow pt-14">

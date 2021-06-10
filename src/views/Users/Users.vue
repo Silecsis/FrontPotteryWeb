@@ -20,7 +20,7 @@
             <form class="form-inline pt-4" method="GET">
               <input
                 name="buscaNombre"
-                class="form-control mr-sm-2 rounded bg-gray-200 w-40"
+                class="form-control mr-sm-2 rounded bg-gray-200 w-40  m-2"
                 type="search"
                 placeholder="Por nombre"
                 aria-label="Search"
@@ -28,7 +28,7 @@
               />
               <input
                 name="buscaEmail"
-                class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+                class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
                 type="search"
                 placeholder="Por email"
                 aria-label="Search"
@@ -36,7 +36,7 @@
               />
               <input
                 name="buscaNick"
-                class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+                class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40 m-2"
                 type="search"
                 placeholder="Por nick"
                 aria-label="Search"
@@ -44,7 +44,7 @@
               />
               <input
                 name="buscaFechaLogin"
-                class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+                class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
                 type="date"
                 placeholder="Por fecha de creación"
                 aria-label="Search"
@@ -54,7 +54,7 @@
               <label for="tipo" class="ml-4 mr-2">Tipo de usuario:</label>
               <select
                 name="buscaTipo"
-                class="form-control mr-sm-2 rounded bg-gray-200"
+                class="form-control mr-sm-2 rounded bg-gray-200 m-2"
                 v-model="searchForm.buscaTipo"
               >
                 <option value="">Todos</option>
@@ -62,7 +62,7 @@
                 <option value="user">Socio</option>
               </select>
               <button
-                class="btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 float-right"
+                class=" m-2 btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 lg:float-right"
                 type="button"
                 @click="search"
               >
@@ -74,13 +74,13 @@
 
         <link-button
           name="NewUser"
-          class="text-lg text-purple-700 font-bold bg-purple-200 border-4 border-purple-700 p-4 rounded p-1.5"
+          class=" text-lg text-purple-700 font-bold bg-purple-200 border-4 border-purple-700 p-4 rounded p-1.5"
         >
           Nuevo usuario
         </link-button>
 
         <!--SELECCION DE PAGINACION-->
-        <div class="hidden sm:flex mt-8 mb-1">
+        <div class="sm:flex mt-10 mb-1">
           <dropdown>
             <template v-slot:trigger>
               <button
@@ -121,7 +121,7 @@
 
         <!--TABLA-->
         <div
-          class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-100 p-4"
+          class="bg-white overflow-auto shadow-sm sm:rounded-lg border-2 border-gray-100 p-4"
         >
           <!-- PAGINACION CON VUE-PAGINATE -->
           <paginate

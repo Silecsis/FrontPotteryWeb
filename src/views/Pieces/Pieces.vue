@@ -21,7 +21,7 @@
             <!--Lista todos los usuarios que tienen piezas:-->
             <select
               name="buscaUser"
-              class="form-control mr-sm-2 rounded bg-gray-200"
+              class="form-control mr-sm-2 rounded bg-gray-200  m-2"
               v-model="searchForm.buscaUser"
             >
               <option disabled value="">Buscar por correo</option>
@@ -33,7 +33,7 @@
 
             <select
               name="buscaVendido"
-              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
               v-model="searchForm.buscaVendido"
             >
               <option disabled value="">¿Vendido?</option>
@@ -44,7 +44,7 @@
 
             <input
               name="buscaNombre"
-              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40 m-2"
               type="search"
               placeholder="Por pieza"
               aria-label="Search"
@@ -52,7 +52,7 @@
             />
             <input
               name="buscaFechaLogin"
-              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
               type="date"
               placeholder="Por fecha de creación"
               aria-label="Search"
@@ -60,7 +60,7 @@
             />
 
             <button
-              class="btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 float-right"
+              class=" m-2 btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 lg:float-right"
               type="button"
               @click="search"
             >
@@ -71,7 +71,7 @@
       </nav>
 
       <!--SELECCION DE PAGINACION-->
-      <div class="hidden sm:flex mt-2 mb-1" v-if="pieces.length != 0">
+      <div class="sm:flex mt-2 mb-1" v-if="pieces.length != 0">
         <dropdown>
           <template v-slot:trigger>
             <button

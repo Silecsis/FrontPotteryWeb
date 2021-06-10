@@ -18,10 +18,10 @@
           </div>
           <form class="form-inline pt-4" method="GET">
             <!--Lista todas piezas que dispone el usurio logado:-->
-            <label for="buscaPiece" class="ml-4">Buscar por nombre:</label>
+            <label for="buscaPiece" class="ml-4  m-2">Buscar por nombre:</label>
             <select
               name="buscaNombre"
-              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 my-2 ml-2 "
               v-model="searchForm.buscaNombre"
             >
               <option value="">Todos</option>
@@ -36,7 +36,7 @@
 
             <select
               name="buscaVendido"
-              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
               v-model="searchForm.buscaVendido"
             >
               <option disabled value="">¿Vendido?</option>
@@ -47,7 +47,7 @@
 
             <input
               name="buscaFechaLogin"
-              class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+              class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
               type="date"
               placeholder="Por fecha de creación"
               aria-label="Search"
@@ -55,7 +55,7 @@
             />
 
             <button
-              class="btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 float-right"
+              class=" m-2 btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 lg:float-right"
               type="button"
               @click="search"
             >
@@ -74,7 +74,7 @@
       </link-button>
 
       <!--SELECCION DE PAGINACION-->
-      <div class="hidden sm:flex mt-8 mb-1" v-if="pieces.length != 0">
+      <div class="sm:flex mt-8 mb-1" v-if="pieces.length != 0">
         <dropdown>
           <template v-slot:trigger>
             <button

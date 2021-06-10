@@ -22,7 +22,7 @@
           <!--Lista todos los usuarios que tienen ventas:-->
           <select
             name="buscaUser"
-            class="form-control mr-sm-2 rounded bg-gray-200"
+            class="form-control mr-sm-2 rounded bg-gray-200 m-2"
             v-model="searchForm.buscaUser"
           >
             <option disabled value="">Buscar por correo</option>
@@ -39,7 +39,7 @@
           <!--Lista todas piezas que se han vendido:-->
           <select
             name="buscaPiece"
-            class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
             v-model="searchForm.buscaPiece"
           >
             <option disabled value="">Buscar por pieza</option>
@@ -55,7 +55,7 @@
 
           <input
             name="buscaNombre"
-            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40 m-2"
             type="search"
             placeholder="Por venta"
             aria-label="Search"
@@ -63,7 +63,7 @@
           />
           <input
             name="buscaPrecio"
-            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 w-40 m-2"
             type="search"
             placeholder="Por precio "
             aria-label="Search"
@@ -71,14 +71,14 @@
           />
           <input
             name="buscaFechaLogin"
-            class="form-control ml-2 mr-sm-2 rounded bg-gray-200"
+            class="form-control ml-2 mr-sm-2 rounded bg-gray-200 m-2"
             type="date"
             placeholder="Por fecha de creación"
             aria-label="Search"
             v-model="searchForm.buscaFechaLogin"
           />
           <button
-            class="btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 float-right"
+            class=" m-2 btn btn-outline-success bg-yellow-100 border-2 text-yellow-600 font-bold border-yellow-600 rounded p-2 lg:float-right"
             type="button"
             @click="search"
           >
@@ -88,7 +88,7 @@
       </nav>
 
       <!--SELECCION DE PAGINACION-->
-      <div class="hidden sm:flex mt-2 mb-1">
+      <div class="sm:flex mt-2 mb-1">
         <dropdown>
           <template v-slot:trigger>
             <button
@@ -129,7 +129,7 @@
 
       <!--TABLA-->
       <div
-        class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-100 p-4"
+        class="bg-white overflow-auto shadow-sm sm:rounded-lg border-2 border-gray-100 p-4"
       >
         <!-- PAGINACION CON VUE-PAGINATE -->
         <paginate ref="paginator" name="sales" :list="sales" :per="pageSize" />

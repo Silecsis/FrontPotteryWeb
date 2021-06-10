@@ -8,18 +8,18 @@
     ·Ir al dashboard (clicando en la img)
 -->
 <template>
-  <div class="max-w-md  mt-4 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+  <div class="w-56 md:w-1/4  mt-4 px-6 py-4 bg-white shadow-md overflow-auto sm:rounded-lg rounded">
     <!-- Session Status -->
     <message :message="message" :type="messageType" />
 
-    <form method="POST" class="w-full sm:max-w-md ">
+    <form method="POST" class=" ">
       <!-- Email Address -->
       <div>
         <v-label for="email">Email</v-label>
 
         <v-input
           id="email"
-          class="block mt-1 w-full"
+          class="block mt-1 w-36 md:w-full "
           type="email"
           name="email"
           v-model="user.email"
@@ -35,7 +35,7 @@
 
         <v-input
           id="password"
-          class="block mt-1 w-full"
+          class="block mt-1 w-36 md:w-full "
           v-model="user.password"
           type="password"
           name="password"
@@ -51,14 +51,14 @@
           <input
             id="remember_me"
             type="checkbox"
-            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            class="rounded border-gray-300 text-indigo-600 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             name="remember"
           />
           <span class="ml-2 text-sm text-gray-600">Recuérdame</span>
         </label>
       </div>
 
-      <div class="flex items-center justify-end mt-4">
+      <div class="md:flex items-center md:justify-end mt-4">
         <nav-link
           name="Register"
           class="mr-6 px-2 text-sm text-purple-100 font-bold bg-purple-600 rounded p-1.5"

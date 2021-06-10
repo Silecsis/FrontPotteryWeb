@@ -1,5 +1,5 @@
 <template>
-  <div class="font-sans text-gray-900 antialiased">
+  <div class="font-sans text-gray-900 antialiased min-h-full">
     <div
       class="min-h-screen min-w-max flex flex-col sm:justify-center items-center pt-5 pott-ligth pb-5"
     >
@@ -11,7 +11,7 @@
       </div>
 
       <div
-        class="w-full flex flex-col sm:justify-center items-center"
+        class="w-full min-h-80 flex flex-col sm:justify-center sm:w-100 items-center "
       >
         <router-view />
       </div>

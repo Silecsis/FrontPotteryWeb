@@ -58,22 +58,6 @@
           <validation v-if="error.description" :errors="error.description" />
         </div>
 
-        <!-- Vendida -->
-        <div class="mt-4">
-          <v-label for="sold">¿Vendida?</v-label>
-          <select
-            v-model="piece.sold"
-            name="sold"
-            id="sold"
-            class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          >
-            <option value="0">No</option>
-            <option value="1">Si</option>
-          </select>
-
-          <validation v-if="error.sold" :errors="error.sold" />
-        </div>
-
         <!-- Visualización cambio img-->
         <div class="mt-4">
           <v-label for="imgAct" class="font-bold"
@@ -112,13 +96,13 @@
         <div class="mt-4">
           <link-button
             name="MyPieces"
-            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4 flex float-left text-white font-bold pott-dark-full p-4 rounded p-1.5"
+            class="md:inline-flex mb-2 items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4 flex float-left text-white font-bold pott-dark-full p-4 rounded p-1.5"
           >
             Volver
           </link-button>
 
           <v-button
-            class="ml-4 flex float-right text-white font-bold bg-purple-600 p-4 rounded p-1.5"
+            class="ml-4 flex md:float-right mb-2 text-white font-bold bg-purple-600 p-4 rounded p-1.5"
             @click.native="save"
           >
             Guardar

@@ -61,9 +61,9 @@
           </div>
 
           <div
-            class="mt-6 bg-white mb-6 overflow-hidden shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
+            class="mt-6 bg-white mb-6 overflow-auto shadow-sm sm:rounded-lg border-2 border-gray-400 p-4"
           >
-            <div class="flex bg-purple-400 rounded p-4 rounded border-2">
+            <div class="flex bg-purple-400 rounded p-4 rounded border-2 w-full">
               <h4 class="m-auto text-white font-bold text-lg">
                 Materiales empleados en la pieza
               </h4>

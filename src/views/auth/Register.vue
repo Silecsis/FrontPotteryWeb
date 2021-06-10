@@ -9,21 +9,21 @@
 -->
 <template>
   <div
-    class="max-w-2xl mt-4 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+    class="w-56 md:w-1/3 mt-4 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg rounded"
   >
     <!-- Session Status -->
     <message :message="message" :type="messageType" />
     <message :message="message1" :type="messageType1" />
 
     <form method="POST" action="">
-      <div class="inline-flex w-full">
+      <div class="md:inline-flex w-full">
         <!-- Name -->
-        <div class="float-left mr-5 w-1/3">
+        <div class="md:float-left mr-5 w-1/3">
           <v-label for="name">Nombre</v-label>
 
           <v-input
             id="name"
-            class="block mt-1 w-full"
+            class="block mt-1 w-36 md:w-full"
             type="text"
             name="name"
             v-model="user.name"
@@ -34,12 +34,12 @@
         </div>
 
         <!-- Nick -->
-        <div class="float-left mr-5 w-1/3">
+        <div class="md:float-left mr-5 w-1/3">
           <v-label for="nick">Nick</v-label>
 
           <v-input
             id="nick"
-            class="block mt-1 w-full"
+            class="block mt-1 w-36 md:w-full"
             type="text"
             name="nick"
             v-model="user.nick"
@@ -50,12 +50,12 @@
         </div>
 
         <!-- Email Address -->
-        <div class="float-left w-1/2">
+        <div class="md:float-left w-1/2">
           <v-label for="email">Email</v-label>
 
           <v-input
             id="email"
-            class="block mt-1 w-full"
+            class="block mt-1 w-36 md:w-full"
             type="email"
             name="email"
             v-model="user.email"
@@ -66,14 +66,14 @@
         </div>
       </div>
 
-      <div class="inline-flex mt-4 w-full">
+      <div class="md:inline-flex mt-4 w-full">
         <!-- Password -->
-        <div class="float-left mr-5 w-full">
+        <div class="md:float-left mr-5 w-full">
           <v-label for="password">Contraseña</v-label>
 
           <v-input
             id="password"
-            class="block mt-1 w-full"
+            class="block mt-1 w-36 md:w-full"
             type="password"
             name="password"
             v-model="user.password"
@@ -84,12 +84,12 @@
         </div>
 
         <!-- Confirm Password -->
-        <div class="float-left w-full">
+        <div class="md:float-left w-full">
           <v-label for="password_confirmation">Confirmar contraseña</v-label>
 
           <v-input
             id="password_confirmation"
-            class="block mt-1 w-full"
+            class="block mt-1 w-36 md:w-full"
             type="password"
             name="password_confirmation"
             v-model="user.password_confirmation"
@@ -106,13 +106,13 @@
       <div class="mt-4">
         <link-button
           name="Login"
-          class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 flex float-left text-white font-bold bg-purple-600 p-4 rounded p-1.5"
+          class="md:inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 flex float-left text-white font-bold bg-purple-600 p-4 rounded p-1.5"
         >
           Volver a "Login"
         </link-button>
 
         <v-button
-          class="ml-4 flex float-right text-white font-bold p-4 rounded p-1.5"
+          class="md:ml-4 flex md:float-right text-white font-bold p-4 rounded p-1.5"
           @click.native="save"
         >
           Registrar mis datos
