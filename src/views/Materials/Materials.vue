@@ -73,6 +73,7 @@
       </nav>
 
       <link-button
+       v-rol:admin="userLog"
         name="NewMaterial"
         class="text-lg text-purple-700 font-bold bg-purple-200 border-4 border-purple-700 p-4 rounded p-1.5"
       >
