@@ -598,6 +598,7 @@ export default {
         .then((result) => {
           this.search();
           this.showId(this.msg.id);
+          this.$root.$emit("refresh-count-msg");
         })
         .catch((error) => {
           if (error.response.data.message) {

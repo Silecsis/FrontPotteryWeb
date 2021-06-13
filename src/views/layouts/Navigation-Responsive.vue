@@ -211,7 +211,12 @@ export default {
   },
   mounted() {
     this.user = JSON.parse(sessionStorage.getItem("user"));
+    this.$root.$on("refresh-count-msg",this.countMsg);
     this.countMsg();
+  },
+
+  beforeDestroy:function(){
+    this.$root.$off("refresh-count-msg",this.countMsg);
   },
 };
 </script>

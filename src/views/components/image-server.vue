@@ -18,10 +18,16 @@
 <script>
 export default {
   props: ["type", "id", "params"],
+  data: function(){
+    return {
+      now:Date.now(),
+
+    }
+  },
   computed: {
     url: function () {
       if (this.type && this.id) {
-        return `${process.env.VUE_APP_API}/${this.type}/${this.id}`;
+        return `${process.env.VUE_APP_API}/${this.type}/${this.id}?${this.now}`;
       }else{
         return `../../assets/img/default-img.png`;
       }
@@ -35,6 +41,9 @@ export default {
     urlOk: function () {
       this.$refs.imagen.style.display = null;
       this.$refs.default.style.display = "none";
+    },
+    refresh: function(){
+      this.now = Date.now();
     },
   },
 };

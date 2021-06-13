@@ -21,6 +21,7 @@
             }"
             type="img"
             :id="piece.id"
+            ref="imageSer"
           />
         </div>
       </div>
@@ -187,6 +188,7 @@ export default {
         })
         .then((result) => {
           Commons.showSuccess(this,"La pieza ha sido modificada correctamente");
+          this.$refs.imageSer.refresh();
         })
         .catch((error) => {
 
