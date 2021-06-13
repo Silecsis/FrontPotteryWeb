@@ -224,4 +224,14 @@ router.addRoutes(
 
 );
 
+//Parte para solucionar error que salta en consola sobre
+//la navegación al mismo lugar
+var originPush = Router.prototype.push;
+
+Router.prototype.push=function(location,oncomplete,onabort){
+  if(router.app.$route.name != location.name){
+    originPush.call(router,location,oncomplete,onabort);
+  }
+}
+
 export default router;

@@ -5,7 +5,7 @@
       <div class="flex">
         <!-- Logo -->
         <div class="flex-shrink-0 flex items-center">
-          <a href="javascript:void(0)" @click="$router.push('/')">
+          <a href="javascript:void(0)" @click="$router.push({name:'Dashboard'})">
             <application-logo
               size="small"
               class="block h-10 w-auto fill-current text-gray-600"
