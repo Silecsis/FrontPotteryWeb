@@ -4,14 +4,47 @@
 -->
 
 <template>
-  <div>
+  <!-- <div> -->
     <!--Para cuando la vista está cargando-->
     <!-- <div id="overlay" onclick="off()"></div> -->
     
     <!-- <div v-if="loading">HOLA</div> -->
-    <div v-if="loading">
+    <!-- <div v-if="loading">
     <div>CARGANDO</div></div>
     <component :is="layout"></component>
+  </div> -->
+  <div >
+    <transition v-if="loading" name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+
+          <div class="modal-header">
+            <h3>
+              CARGANDO
+            </h3>
+          </div>
+
+          <div class="modal-body">
+            <!-- <slot name="body">
+              img
+            </slot> -->
+            <img src="./assets/img/loading-42.gif"/>
+          </div>
+
+          <!-- <div class="modal-footer">
+            <slot name="footer">
+              default footer
+              <button class="modal-default-button" @click="$emit('close')">
+                OK
+              </button>
+            </slot>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </transition>
+  <component :is="layout"></component>
   </div>
 </template>
 <script>
